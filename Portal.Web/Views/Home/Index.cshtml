@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="layout-container">
+    <div class="header">
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <span>Portal da Saúde</span>
+    </div>
+
+    <div class="body-content">
+        <div class="sidebar" id="menuLateral">
+            <button onclick="abrirAba('Usuários')">Usuários</button>
+            <button onclick="abrirAba('Pacientes')">Pacientes</button>
+        </div>
+
+        <div class="main-content">
+            <!-- Abas fixas + dinâmicas -->
+            <div class="tabs" id="abas">
+                <div class="aba active" id="aba-Portal" onclick="ativarConteudo('Portal')">Portal</div>
+            </div>
+
+            <div class="conteudos" id="conteudos">
+                <div class="conteudo active" id="conteudo-Portal">
+                    <h2>Bem-vindo, @User.Identity.Name!</h2>
+                    <p>Esse é o painel inicial com métricas e informações gerais.</p>
+
+                    <div class="dashboard">
+                        <div class="card">📊 Relatórios</div>
+                        <div class="card">🧓 Idosos Ativos</div>
+                        <div class="card">⏰ Próximas Avaliações</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

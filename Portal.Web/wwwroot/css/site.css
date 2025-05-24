@@ -1,0 +1,198 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin-bottom: 0;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #019243;
+}
+
+.header {
+    height: 60px;
+    background-color: #017836;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+
+    .header .menu-toggle {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: white;
+        cursor: pointer;
+    }
+
+.body-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 220px;
+    background-color: #019243;
+    padding: 1rem;
+    color: white;
+    transition: width 0.3s ease, padding 0.3s ease;
+}
+
+    .sidebar.hidden {
+        width: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .sidebar button {
+        display: block;
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 10px;
+        background: white;
+        color: #019243;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+.main-content {
+    flex: 1;
+    padding: 1rem;
+    background-color: #e0e0e0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0.5rem;
+    background: #ffffff;
+    border-bottom: 2px solid #ccc;
+}
+
+.aba {
+    padding: 8px 12px;
+    background: #019243;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+    .aba .close {
+        margin-left: 8px;
+        cursor: pointer;
+    }
+
+.dashboard {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    min-width: 200px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    font-weight: bold;
+    text-align: center;
+}
+
+.conteudos .conteudo {
+    background: white;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 8px;
+    display: none;
+}
+
+    .conteudos .conteudo.active {
+        display: block;
+    }
+
+.input-validation-error {
+    border-color: #dc3545;
+}
+
+.has-tooltip {
+    position: relative;
+}
+
+.tooltip-message,
+.field-validation-error {
+    position: absolute;
+    top: -35px;
+    left: 0;
+    background-color: #dc3545;
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    z-index: 999;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+    .tooltip-message.active,
+    .field-validation-error:not(:empty) {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .tooltip-message.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .tooltip-message::after,
+    .field-validation-error::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 10px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #dc3545 transparent transparent transparent;
+    }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
