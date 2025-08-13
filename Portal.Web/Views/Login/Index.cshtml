@@ -8,39 +8,66 @@
 }
 
 <div class="login-container">
-    <div class="login-left"></div>
-    <div class="login-right">
-        <div class="login-overlay"></div>
-        <div class="login-form">
-            <form asp-action="Index" method="post">
+    <div class="login-overlay" aria-hidden="true"></div>
 
-                <h2>Bem-vindo</h2>
+    <div class="login-form" role="form" aria-labelledby="login-title">
+        <form asp-action="Index" method="post" novalidate>
+            <h2 id="login-title">Bem-vindo</h2>
 
-                <div class="form-group has-tooltip">
-                    @Html.TextBoxFor(m => m.Email, new
-                        {
-                            @class = "form-control",
-                            placeholder = "E-mail"
-                        })
-                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "tooltip-message text-danger" })
-                </div>
+            <div class="form-group has-tooltip">
+                @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.Email, new
+                    {
+                        @class = "form-control",
+                        placeholder = "seuemail@exemplo.com",
+                        autocomplete = "username",
+                        inputmode = "email",
+                        aria_describedby = "email-help"
+                    })
+                <small id="email-help" class="sr-only">Digite seu e-mail institucional</small>
+            </div>
 
-                <div class="form-group has-tooltip">
-                    @Html.PasswordFor(m => m.Senha, new
-                        {
-                            @class = "form-control",
-                            placeholder = "Senha"
-                        })
-                    @Html.ValidationMessageFor(m => m.Senha, "", new { @class = "tooltip-message text-danger" })
-                </div>
+            <div class="form-group has-tooltip password-wrapper">
+                @Html.LabelFor(m => m.Senha, new { @class = "form-label" })
+                @Html.PasswordFor(m => m.Senha, new
+                    {
+                        @class = "form-control",
+                        placeholder = "Senha",
+                        autocomplete = "current-password",
+                        aria_describedby = "senha-help",
+                        id = "Senha"
+                    })
+                <button type="button" class="toggle-password" aria-controls="Senha" aria-pressed="false" title="Mostrar/ocultar senha">👁</button>
+                <small id="senha-help" class="sr-only">Sua senha é confidencial</small>
+            </div>
 
-                <div>
-                    @Html.LabelFor(m => m.LembrarMe)
-                    @Html.CheckBoxFor(m => m.LembrarMe)
-                </div>
-
-                <button type="submit">Entrar</button>
-            </form>
-        </div>
+            <button type="submit" class="btn-submit" id="btnEntrar">Entrar</button>
+        </form>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var btn = document.querySelector('.toggle-password');
+            var input = document.getElementById('Senha');
+            if (btn && input) {
+                btn.addEventListener('click', function () {
+                    var isText = input.getAttribute('type') === 'text';
+                    input.setAttribute('type', isText ? 'password' : 'text');
+                    btn.setAttribute('aria-pressed', String(!isText));
+                    btn.classList.toggle('active', !isText);
+                });
+            }
+
+            var form = document.querySelector('.login-form form');
+            var submit = document.getElementById('btnEntrar');
+            if (form && submit) {
+                form.addEventListener('submit', function () {
+                    submit.disabled = true;
+                    submit.textContent = 'Entrando...';
+                });
+            }
+        })();
+    </script>
+}

@@ -26,7 +26,6 @@ function ativarConteudo(nome) {
         document.querySelectorAll(".conteudo").forEach(div => div.classList.remove("active"));
         conteudo.classList.add("active");
     }
-
 }
 
 function fecharAba(nome) {
