@@ -10,7 +10,7 @@ using System.Text;
 namespace GestaoSaudeIdosos.API.Controllers.Authorize
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/autenticar")]
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _config;
@@ -22,7 +22,7 @@ namespace GestaoSaudeIdosos.API.Controllers.Authorize
             _config = config;
         }
 
-        [HttpPost("token")]
+        [HttpPost]
         public IActionResult Token([FromBody] LoginDto dto)
         {
             if (!ModelState.IsValid)

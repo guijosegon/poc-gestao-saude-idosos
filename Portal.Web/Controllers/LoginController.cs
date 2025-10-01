@@ -32,21 +32,20 @@ public class LoginController : Controller
 
         if (usuario is null)
         {
-            ModelState.AddModelError(nameof(model.Email), "Este e-mail não está cadastrado.");
+            ModelState.AddModelError(nameof(model.Email), "Este e-mail é inválido, solicite acesso ao administrador");
             return View(model);
         }
 
         if (model.Senha != usuario.Senha)
         {
-            ModelState.AddModelError(nameof(model.Senha), "Senha incorreta.");
+            ModelState.AddModelError(nameof(model.Senha), "Senha inválido.");
             return View(model);
         }
 
         var claims = new List<Claim> { new Claim(ClaimTypes.Name, model.Email) };
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var authProperties = new AuthenticationProperties { IsPersistent = model.LembrarMe };
 
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
         return RedirectToAction("Index", "Home");
     }

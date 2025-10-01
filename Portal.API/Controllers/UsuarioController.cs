@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GestaoSaudeIdosos.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/usuarios")]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioAppService _usuarioAppService;
