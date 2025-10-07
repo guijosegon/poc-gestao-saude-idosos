@@ -6,10 +6,10 @@ namespace GestaoSaudeIdosos.Infra.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        protected readonly AppContexto _dbContext;
+        protected readonly Contexts.AppContext _dbContext;
         protected readonly DbSet<T> _dbSet;
 
-        public Repository(AppContexto dbContext)
+        public Repository(Contexts.AppContext dbContext)
         {
             _dbContext = dbContext;
             _dbSet = dbContext.Set<T>();

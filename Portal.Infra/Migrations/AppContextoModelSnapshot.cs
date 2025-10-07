@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace GestaoSaudeIdosos.Infra.Migrations
 {
-    [DbContext(typeof(AppContexto))]
+    [DbContext(typeof(Contexts.AppContext))]
     partial class AppContextoModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

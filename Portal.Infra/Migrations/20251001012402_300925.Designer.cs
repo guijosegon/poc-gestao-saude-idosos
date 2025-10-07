@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace GestaoSaudeIdosos.Infra.Migrations
 {
-    [DbContext(typeof(AppContexto))]
+    [DbContext(typeof(Contexts.AppContext))]
     [Migration("20251001012402_300925")]
     partial class _300925
     {

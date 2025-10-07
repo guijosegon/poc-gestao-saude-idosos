@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Portal.Domain\GestaoSaudeIdosos.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Seeders\" />
+  </ItemGroup>
+
 </Project>

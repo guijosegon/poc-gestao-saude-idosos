@@ -1,14 +1,13 @@
 ﻿using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Domain.Interfaces.Repositories;
-using GestaoSaudeIdosos.Infra.Contexts;
 
 namespace GestaoSaudeIdosos.Infra.Repositories
 {
     public class UsuarioRepository : Repository<Usuario>, IUsuarioRepository
     {
-        private readonly AppContexto _dbContext;
+        private readonly Contexts.AppContext _dbContext;
 
-        public UsuarioRepository(AppContexto dbContext) : base(dbContext)
+        public UsuarioRepository(Contexts.AppContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }

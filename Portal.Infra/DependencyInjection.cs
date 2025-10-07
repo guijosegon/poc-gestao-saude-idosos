@@ -11,7 +11,7 @@ namespace GestaoSaudeIdosos.Infra
     {
         public static IServiceCollection AddInfraServices(this IServiceCollection services, IConfiguration config)
         {
-            services.AddDbContext<AppContexto>(options => options.UseNpgsql(config.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<Contexts.AppContext>(options => options.UseNpgsql(config.GetConnectionString("DefaultConnection")));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 

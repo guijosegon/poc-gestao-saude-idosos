@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GestaoSaudeIdosos.Infra.Contexts
 {
-    public class AppContexto : DbContext
+    public class AppContext : DbContext
     {
-        public AppContexto(DbContextOptions<AppContexto> options) : base(options)
+        public AppContext(DbContextOptions<AppContext> options) : base(options)
         {
         }
 
