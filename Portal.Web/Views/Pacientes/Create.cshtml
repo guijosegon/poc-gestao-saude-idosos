@@ -1,0 +1,42 @@
+@model GestaoSaudeIdosos.Web.ViewModels.PacienteFormViewModel
+@{
+    ViewData["Title"] = "Novo paciente";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Novo paciente</h1>
+        <p class="page-subtitle">Cadastre um idoso para iniciar o acompanhamento preventivo.</p>
+    </div>
+    <a asp-action="Index" class="btn-link">Voltar</a>
+</section>
+
+<form asp-action="Create" method="post" class="form-card" novalidate>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false, "", new { @class = "form-summary text-danger" })
+
+    <div class="form-grid">
+        <div class="form-group">
+            @Html.LabelFor(m => m.Nome)
+            @Html.TextBoxFor(m => m.Nome, new { @class = "form-control", placeholder = "Nome completo" })
+            @Html.ValidationMessageFor(m => m.Nome, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.DataNascimento)
+            @Html.TextBoxFor(m => m.DataNascimento, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+            @Html.ValidationMessageFor(m => m.DataNascimento, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ResponsavelId)
+            @Html.DropDownListFor(m => m.ResponsavelId, Model.Responsaveis, "Selecione", new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.ResponsavelId, "", new { @class = "field-validation-error" })
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">Salvar</button>
+        <a asp-action="Index" class="btn-secondary">Cancelar</a>
+    </div>
+</form>

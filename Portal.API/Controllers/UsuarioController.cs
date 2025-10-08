@@ -1,8 +1,10 @@
-﻿using GestaoSaudeIdosos.API.DTOs;
+using GestaoSaudeIdosos.API.DTOs;
 using GestaoSaudeIdosos.API.Mappers;
 using GestaoSaudeIdosos.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GestaoSaudeIdosos.API.Controllers
 {
@@ -22,9 +24,9 @@ namespace GestaoSaudeIdosos.API.Controllers
         public async Task<ActionResult<IEnumerable<UsuarioDto>>> GetAll()
         {
             var usuarios = await _usuarioAppService.GetAllAsync();
-            var dtos = usuarios.Select(u => u.ToDto());
+            var dtos = usuarios.Select(u => u.ToDto()).ToList();
 
-            if (dtos is null || !dtos.Any()) 
+            if (!dtos.Any())
                 return NotFound();
 
             return Ok(dtos);
@@ -36,7 +38,7 @@ namespace GestaoSaudeIdosos.API.Controllers
         {
             var usuario = await _usuarioAppService.GetByIdAsync(id);
 
-            if (usuario is null) 
+            if (usuario is null)
                 return NotFound();
 
             return Ok(usuario.ToDto());
@@ -44,12 +46,16 @@ namespace GestaoSaudeIdosos.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrador")]
-        public async Task<ActionResult<UsuarioDto>> Create( [FromBody] UsuarioDto dto)
+        public async Task<ActionResult<UsuarioDto>> Create([FromBody] UsuarioDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var entidade = UsuarioMapper.ToEntity(dto);
+            var existente = _usuarioAppService.GetByEmail(dto.Email);
+            if (existente is not null)
+                return Conflict("E-mail já cadastrado para outro usuário.");
+
+            var entidade = dto.ToEntity();
             await _usuarioAppService.CreateAsync(entidade);
             var criadoDto = entidade.ToDto();
 
@@ -60,16 +66,19 @@ namespace GestaoSaudeIdosos.API.Controllers
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Update(int id, [FromBody] UsuarioDto dto)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var existente = await _usuarioAppService.GetByIdAsync(id);
 
-            if (existente is null) 
+            if (existente is null)
                 return NotFound();
 
-            UsuarioMapper.ToEntity(dto);
+            var outroUsuario = _usuarioAppService.GetByEmail(dto.Email);
+            if (outroUsuario is not null && outroUsuario.UsuarioId != id)
+                return Conflict("E-mail já utilizado por outro usuário.");
 
+            existente.UpdateEntity(dto);
             _usuarioAppService.Update(existente);
 
             return NoContent();
@@ -81,7 +90,7 @@ namespace GestaoSaudeIdosos.API.Controllers
         {
             var existente = await _usuarioAppService.GetByIdAsync(id);
 
-            if (existente is null) 
+            if (existente is null)
                 return NotFound();
 
             _usuarioAppService.Delete(existente);

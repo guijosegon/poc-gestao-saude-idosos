@@ -1,20 +1,37 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Portal</title>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     @RenderSection("Styles", required: false)
 </head>
 <body>
-    <header></header>
+    <div class="global-alerts">
+        @if (TempData["Sucesso"] is string sucesso)
+        {
+            <div class="alert success" role="alert">@sucesso</div>
+        }
+        @if (TempData["Erro"] is string erro)
+        {
+            <div class="alert danger" role="alert">@erro</div>
+        }
+    </div>
+
     <main role="main" class="container">
         @RenderBody()
     </main>
-    <footer></footer>
+
+    <footer class="footer">
+        <small>&copy; @DateTime.Now.Year - Portal de Gestão de Saúde para Idosos</small>
+    </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

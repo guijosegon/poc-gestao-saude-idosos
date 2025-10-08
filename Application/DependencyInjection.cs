@@ -1,4 +1,4 @@
-﻿using GestaoSaudeIdosos.Application.AppServices;
+using GestaoSaudeIdosos.Application.AppServices;
 using GestaoSaudeIdosos.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +10,8 @@ namespace GestaoSaudeIdosos.Application
         {
             services.AddScoped(typeof(IAppService<>), typeof(AppService<>));
             services.AddScoped<IUsuarioAppService, UsuarioAppService>();
+            services.AddScoped<IPacienteAppService, PacienteAppService>();
+            services.AddScoped<IFormularioAppService, FormularioAppService>();
 
             return services;
         }
