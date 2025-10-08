@@ -4,6 +4,7 @@ using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,9 +25,12 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var pacientes = await _pacienteAppService.GetAllAsync();
-            var model = pacientes
+            var pacientes = await _pacienteAppService
+                .AsQueryable(p => p.Responsavel)
                 .OrderByDescending(p => p.DataCadastro)
+                .ToListAsync();
+
+            var model = pacientes
                 .Select(p => new PacienteListItemViewModel
                 {
                     PacienteId = p.PacienteId,
@@ -43,7 +47,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var paciente = await _pacienteAppService.GetByIdAsync(id);
+            var paciente = await _pacienteAppService
+                .AsQueryable(p => p.Responsavel)
+                .FirstOrDefaultAsync(p => p.PacienteId == id);
 
             if (paciente is null)
                 return NotFound();
@@ -106,7 +112,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var paciente = await _pacienteAppService.GetByIdAsync(id);
+            var paciente = await _pacienteAppService
+                .AsQueryable(p => p.Responsavel)
+                .FirstOrDefaultAsync(p => p.PacienteId == id);
             if (paciente is null)
                 return NotFound();
 
@@ -137,7 +145,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var paciente = await _pacienteAppService.GetByIdAsync(id);
+            var paciente = await _pacienteAppService
+                .AsTracking(p => p.Responsavel)
+                .FirstOrDefaultAsync(p => p.PacienteId == id);
             if (paciente is null)
                 return NotFound();
 
@@ -160,7 +170,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var paciente = await _pacienteAppService.GetByIdAsync(id);
+            var paciente = await _pacienteAppService
+                .AsQueryable(p => p.Responsavel)
+                .FirstOrDefaultAsync(p => p.PacienteId == id);
             if (paciente is null)
                 return NotFound();
 
@@ -183,7 +195,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmDelete(int id)
         {
-            var paciente = await _pacienteAppService.GetByIdAsync(id);
+            var paciente = await _pacienteAppService
+                .AsTracking(p => p.Responsavel)
+                .FirstOrDefaultAsync(p => p.PacienteId == id);
             if (paciente is null)
                 return NotFound();
 
@@ -206,10 +220,12 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         private async Task<IEnumerable<SelectListItem>> ObterResponsaveisAsync()
         {
-            var usuarios = (await _usuarioAppService.GetAllAsync()).ToList();
+            var usuarios = await _usuarioAppService
+                .AsQueryable()
+                .OrderBy(u => u.Nome)
+                .ToListAsync();
 
             return usuarios
-                .OrderBy(u => u.Nome)
                 .Select(u => new SelectListItem
                 {
                     Value = u.UsuarioId.ToString(),
