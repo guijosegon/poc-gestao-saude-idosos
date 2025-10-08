@@ -3,6 +3,7 @@ using GestaoSaudeIdosos.API.Mappers;
 using GestaoSaudeIdosos.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +24,10 @@ namespace GestaoSaudeIdosos.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<UsuarioDto>>> GetAll()
         {
-            var usuarios = await _usuarioAppService.GetAllAsync();
+            var usuarios = await _usuarioAppService
+                .AsQueryable()
+                .ToListAsync();
+
             var dtos = usuarios.Select(u => u.ToDto()).ToList();
 
             if (!dtos.Any())
@@ -36,7 +40,9 @@ namespace GestaoSaudeIdosos.API.Controllers
         [Authorize]
         public async Task<ActionResult<UsuarioDto>> GetById(int id)
         {
-            var usuario = await _usuarioAppService.GetByIdAsync(id);
+            var usuario = await _usuarioAppService
+                .AsQueryable()
+                .FirstOrDefaultAsync(u => u.UsuarioId == id);
 
             if (usuario is null)
                 return NotFound();
@@ -69,7 +75,9 @@ namespace GestaoSaudeIdosos.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existente = await _usuarioAppService.GetByIdAsync(id);
+            var existente = await _usuarioAppService
+                .AsTracking()
+                .FirstOrDefaultAsync(u => u.UsuarioId == id);
 
             if (existente is null)
                 return NotFound();
@@ -88,7 +96,9 @@ namespace GestaoSaudeIdosos.API.Controllers
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int id)
         {
-            var existente = await _usuarioAppService.GetByIdAsync(id);
+            var existente = await _usuarioAppService
+                .AsTracking()
+                .FirstOrDefaultAsync(u => u.UsuarioId == id);
 
             if (existente is null)
                 return NotFound();

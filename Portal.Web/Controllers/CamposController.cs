@@ -5,6 +5,7 @@ using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,8 +29,13 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var campos = await _campoAppService.GetAllAsync();
-            var formularios = await _formularioAppService.GetAllAsync();
+            var campos = await _campoAppService
+                .AsQueryable(c => c.Usuario)
+                .ToListAsync();
+
+            var formularios = await _formularioAppService
+                .AsQueryable(f => f.Campos, f => f.Pacientes)
+                .ToListAsync();
 
             var model = campos
                 .Select(campo => new CampoListItemViewModel
@@ -49,11 +55,15 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var campo = await _campoAppService.GetByIdAsync(id);
+            var campo = await _campoAppService
+                .AsQueryable(c => c.Usuario)
+                .FirstOrDefaultAsync(c => c.CampoId == id);
             if (campo is null)
                 return NotFound();
 
-            var formularios = await _formularioAppService.GetAllAsync();
+            var formularios = await _formularioAppService
+                .AsQueryable(f => f.Campos, f => f.Pacientes)
+                .ToListAsync();
 
             var detalhes = new CampoDetalheViewModel
             {
@@ -106,7 +116,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var campo = await _campoAppService.GetByIdAsync(id);
+            var campo = await _campoAppService
+                .AsQueryable(c => c.Usuario)
+                .FirstOrDefaultAsync(c => c.CampoId == id);
             if (campo is null)
                 return NotFound();
 
@@ -136,7 +148,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var campo = await _campoAppService.GetByIdAsync(id);
+            var campo = await _campoAppService
+                .AsTracking(c => c.Usuario)
+                .FirstOrDefaultAsync(c => c.CampoId == id);
             if (campo is null)
                 return NotFound();
 
@@ -154,11 +168,15 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var campo = await _campoAppService.GetByIdAsync(id);
+            var campo = await _campoAppService
+                .AsQueryable(c => c.Usuario)
+                .FirstOrDefaultAsync(c => c.CampoId == id);
             if (campo is null)
                 return NotFound();
 
-            var formularios = await _formularioAppService.GetAllAsync();
+            var formularios = await _formularioAppService
+                .AsQueryable(f => f.Campos, f => f.Pacientes)
+                .ToListAsync();
 
             var model = new CampoDetalheViewModel
             {
@@ -183,7 +201,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmDelete(int id)
         {
-            var campo = await _campoAppService.GetByIdAsync(id);
+            var campo = await _campoAppService
+                .AsTracking(c => c.Usuario)
+                .FirstOrDefaultAsync(c => c.CampoId == id);
             if (campo is null)
                 return NotFound();
 

@@ -1,6 +1,6 @@
 using GestaoSaudeIdosos.Domain.Interfaces.Repositories;
-using GestaoSaudeIdosos.Infra.Contexts;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace GestaoSaudeIdosos.Infra.Repositories
 {
@@ -19,6 +19,38 @@ namespace GestaoSaudeIdosos.Infra.Repositories
         {
             await _dbSet.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public virtual IQueryable<T> AsQueryable(params Expression<Func<T, object?>>[] includes)
+        {
+            var query = _dbSet.AsQueryable().AsNoTracking();
+
+            if (includes is not null)
+            {
+                foreach (var include in includes)
+                {
+                    if (include is not null)
+                        query = query.Include(include);
+                }
+            }
+
+            return query;
+        }
+
+        public virtual IQueryable<T> AsTracking(params Expression<Func<T, object?>>[] includes)
+        {
+            var query = _dbSet.AsQueryable();
+
+            if (includes is not null)
+            {
+                foreach (var include in includes)
+                {
+                    if (include is not null)
+                        query = query.Include(include);
+                }
+            }
+
+            return query.AsTracking();
         }
 
         public virtual async Task<T?> GetByIdAsync(int id) => await _dbSet.FindAsync(id).AsTask();
