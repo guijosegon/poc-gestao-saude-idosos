@@ -1,0 +1,59 @@
+@model IEnumerable<GestaoSaudeIdosos.Web.ViewModels.CampoListItemViewModel>
+@{
+    ViewData["Title"] = "Campos";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Campos configuráveis</h1>
+        <p class="page-subtitle">Personalize as perguntas que serão reutilizadas nos formulários clínicos.</p>
+    </div>
+    <a asp-action="Create" class="btn-primary">Novo campo</a>
+</section>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <p>Nenhum campo cadastrado. Utilize o botão acima para iniciar as configurações.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Tipo</th>
+                    <th>Responsável</th>
+                    <th>Formulários</th>
+                    <th>Cadastro</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var campo in Model)
+            {
+                <tr>
+                    <td>
+                        <strong>@campo.Descricao</strong>
+                    </td>
+                    <td>@campo.Tipo</td>
+                    <td>@(string.IsNullOrEmpty(campo.Responsavel) ? "-" : campo.Responsavel)</td>
+                    <td>@campo.FormulariosVinculados</td>
+                    <td>@campo.DataCadastro.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <span class="status-badge @(campo.Ativo ? "success" : "warning")">@(campo.Ativo ? "Ativo" : "Inativo")</span>
+                    </td>
+                    <td class="table-actions">
+                        <a asp-action="Details" asp-route-id="@campo.CampoId" class="btn-link">Detalhes</a>
+                        <a asp-action="Edit" asp-route-id="@campo.CampoId" class="btn-link">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@campo.CampoId" class="btn-link text-danger">Excluir</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

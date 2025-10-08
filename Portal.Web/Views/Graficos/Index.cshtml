@@ -1,0 +1,40 @@
+@model IEnumerable<GestaoSaudeIdosos.Web.ViewModels.GraficoListItemViewModel>
+@{
+    ViewData["Title"] = "Gráficos";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Galeria de gráficos</h1>
+        <p class="page-subtitle">Monte visualizações com dados dos formulários para apoiar decisões clínicas.</p>
+    </div>
+    <a asp-action="Create" class="btn-primary">Novo gráfico</a>
+</section>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <p>Nenhum gráfico configurado ainda.</p>
+        <a asp-action="Create" class="btn-link">Criar visualização</a>
+    </div>
+}
+else
+{
+    <div class="card-grid">
+    @foreach (var grafico in Model)
+    {
+        <article class="summary-card">
+            <header>
+                <h2>@grafico.Descricao</h2>
+            </header>
+            <footer>
+                <div class="card-actions">
+                    <a asp-action="Details" asp-route-id="@grafico.GraficoId" class="btn-link">Detalhes</a>
+                    <a asp-action="Edit" asp-route-id="@grafico.GraficoId" class="btn-link">Editar</a>
+                    <a asp-action="Delete" asp-route-id="@grafico.GraficoId" class="btn-link text-danger">Excluir</a>
+                </div>
+            </footer>
+        </article>
+    }
+    </div>
+}

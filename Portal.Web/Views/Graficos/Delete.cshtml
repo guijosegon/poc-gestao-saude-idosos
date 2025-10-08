@@ -1,0 +1,23 @@
+@model GestaoSaudeIdosos.Web.ViewModels.GraficoDetalheViewModel
+@{
+    ViewData["Title"] = "Excluir gráfico";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Excluir gráfico</h1>
+        <p class="page-subtitle">Remova a visualização desta POC sem impactar dados reais.</p>
+    </div>
+    <a asp-action="Details" asp-route-id="@Model.GraficoId" class="btn-link">Cancelar</a>
+</section>
+
+<div class="alert danger">
+    Confirma a exclusão do gráfico <strong>@Model.Descricao</strong>? A remoção é apenas visual nesta demonstração.
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.GraficoId)
+    <button type="submit" class="btn-danger">Excluir gráfico</button>
+    <a asp-action="Details" asp-route-id="@Model.GraficoId" class="btn-secondary">Manter gráfico</a>
+</form>

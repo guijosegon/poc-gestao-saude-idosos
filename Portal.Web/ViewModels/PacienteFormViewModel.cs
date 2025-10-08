@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public DateTime? DataNascimento { get; set; }
 
         [Display(Name = "Responsável")]
+        [Required(ErrorMessage = "Selecione um responsável.")]
         public int? ResponsavelId { get; set; }
 
         public IEnumerable<SelectListItem> Responsaveis { get; set; } = Enumerable.Empty<SelectListItem>();

@@ -1,0 +1,56 @@
+@model GestaoSaudeIdosos.Web.ViewModels.UsuarioDetalheViewModel
+@{
+    ViewData["Title"] = "Detalhes do usuário";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@Model.Nome</h1>
+        <p class="page-subtitle">@Model.Email • Perfil @Model.Perfil</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Edit" asp-route-id="@Model.UsuarioId" class="btn-primary">Editar</a>
+        <a asp-action="Index" class="btn-secondary">Voltar</a>
+    </div>
+</section>
+
+<div class="detail-grid">
+    <article class="detail-card">
+        <h2>Informações de acesso</h2>
+        <dl>
+            <div>
+                <dt>Status</dt>
+                <dd>
+                    <span class="status-badge @(Model.Ativo ? "success" : "danger")">
+                        @(Model.Ativo ? "Ativo" : "Inativo")
+                    </span>
+                </dd>
+            </div>
+            <div>
+                <dt>Data de cadastro</dt>
+                <dd>@Model.CriadoEm.ToString("dd/MM/yyyy")</dd>
+            </div>
+            <div>
+                <dt>Último acesso</dt>
+                <dd>@(Model.UltimoAcesso.HasValue ? Model.UltimoAcesso.Value.ToString("dd/MM/yyyy") : "—")</dd>
+            </div>
+        </dl>
+    </article>
+
+    <article class="detail-card">
+        <h2>Ações recentes</h2>
+        @if (!Model.AcoesRecentes.Any())
+        {
+            <p class="empty-state">Sem atividades registradas na simulação.</p>
+        }
+        else
+        {
+            <ul class="list">
+            @foreach (var acao in Model.AcoesRecentes)
+            {
+                <li>@acao</li>
+            }
+            </ul>
+        }
+    </article>
+</div>

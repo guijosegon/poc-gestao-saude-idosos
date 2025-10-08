@@ -1,0 +1,78 @@
+@model GestaoSaudeIdosos.Web.ViewModels.CampoDetalheViewModel
+@{
+    ViewData["Title"] = "Detalhes do campo";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@Model.Descricao</h1>
+        <p class="page-subtitle">Informações completas do componente reutilizável.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Edit" asp-route-id="@Model.CampoId" class="btn-primary">Editar</a>
+        <a asp-action="Index" class="btn-secondary">Voltar</a>
+    </div>
+</section>
+
+<div class="detail-grid">
+    <article class="detail-card">
+        <h2>Características</h2>
+        <dl>
+            <div>
+                <dt>Tipo de dado</dt>
+                <dd>@Model.Tipo</dd>
+            </div>
+            <div>
+                <dt>Opções pré-definidas</dt>
+                <dd>
+                @if (!Model.Opcoes.Any())
+                {
+                    <span>—</span>
+                }
+                else
+                {
+                    <ul class="pill-list">
+                    @foreach (var opcao in Model.Opcoes)
+                    {
+                        <li>@opcao</li>
+                    }
+                    </ul>
+                }
+                </dd>
+            </div>
+            <div>
+                <dt>Status</dt>
+                <dd>
+                    <span class="status-badge @(Model.Ativo ? "success" : "danger")">
+                        @(Model.Ativo ? "Ativo" : "Inativo")
+                    </span>
+                </dd>
+            </div>
+            <div>
+                <dt>Texto de apoio</dt>
+                <dd>@(string.IsNullOrWhiteSpace(Model.TextoAjuda) ? "—" : Model.TextoAjuda)</dd>
+            </div>
+        </dl>
+    </article>
+
+    <article class="detail-card">
+        <h2>Utilização</h2>
+        <p>Presente nos seguintes formulários:</p>
+
+        <ul class="pill-list">
+        @foreach (var formulario in Model.FormulariosUtilizacao)
+        {
+            <li>@formulario</li>
+        }
+        </ul>
+
+        <div class="meta-info">
+            <span>
+                @(string.IsNullOrEmpty(Model.CriadoPor)
+                    ? "Autor não informado"
+                    : $"Criado por {Model.CriadoPor}")
+            </span>
+            <span>Registrado em @Model.DataCadastro.ToString("dd/MM/yyyy")</span>
+        </div>
+    </article>
+</div>

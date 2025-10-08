@@ -1,0 +1,23 @@
+@model GestaoSaudeIdosos.Web.ViewModels.CampoDetalheViewModel
+@{
+    ViewData["Title"] = "Excluir campo";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Excluir campo</h1>
+        <p class="page-subtitle">A remoção impede o uso deste componente em novos formulários.</p>
+    </div>
+    <a asp-action="Details" asp-route-id="@Model.CampoId" class="btn-link">Cancelar</a>
+</section>
+
+<div class="alert danger">
+    Tem certeza que deseja excluir o campo <strong>@Model.Descricao</strong>? Formulários que já utilizam este componente permanecerão inalterados, mas ele deixará de estar disponível para novas configurações.
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.CampoId)
+    <button type="submit" class="btn-danger">Confirmar exclusão</button>
+    <a asp-action="Details" asp-route-id="@Model.CampoId" class="btn-secondary">Manter campo</a>
+</form>

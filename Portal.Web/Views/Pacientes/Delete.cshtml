@@ -1,0 +1,23 @@
+@model GestaoSaudeIdosos.Web.ViewModels.PacienteDetalheViewModel
+@{
+    ViewData["Title"] = "Excluir paciente";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Excluir paciente</h1>
+        <p class="page-subtitle">Esta ação removerá o cadastro do paciente e seu histórico associado.</p>
+    </div>
+    <a asp-action="Details" asp-route-id="@Model.PacienteId" class="btn-link">Cancelar</a>
+</section>
+
+<div class="alert danger">
+    Tem certeza que deseja remover <strong>@Model.Nome</strong>? A exclusão é definitiva.
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.PacienteId)
+    <button type="submit" class="btn-danger">Excluir paciente</button>
+    <a asp-action="Details" asp-route-id="@Model.PacienteId" class="btn-secondary">Manter cadastro</a>
+</form>

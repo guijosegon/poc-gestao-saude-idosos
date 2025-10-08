@@ -1,0 +1,57 @@
+@model GestaoSaudeIdosos.Web.ViewModels.PacienteDetalheViewModel
+@{
+    ViewData["Title"] = "Detalhes do paciente";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@Model.Nome</h1>
+        <p class="page-subtitle">@Model.Idade anos • acompanhamento por @(string.IsNullOrEmpty(Model.Responsavel) ? "—" : Model.Responsavel)</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Edit" asp-route-id="@Model.PacienteId" class="btn-primary">Editar</a>
+        <a asp-action="Index" class="btn-secondary">Voltar</a>
+    </div>
+</section>
+
+<div class="detail-grid">
+    <article class="detail-card">
+        <h2>Dados gerais</h2>
+        <dl>
+            <div>
+                <dt>Data de nascimento</dt>
+                <dd>@Model.DataNascimento.ToString("dd/MM/yyyy")</dd>
+            </div>
+            <div>
+                <dt>Responsável direto</dt>
+                <dd>@(string.IsNullOrEmpty(Model.Responsavel) ? "—" : Model.Responsavel)</dd>
+            </div>
+            <div>
+                <dt>Última atualização</dt>
+                <dd>@Model.UltimaAtualizacao.ToString("dd/MM/yyyy")</dd>
+            </div>
+        </dl>
+    </article>
+
+    <article class="detail-card">
+        <h2>Formulários recentes</h2>
+        @if (!Model.FormulariosRecentes.Any())
+        {
+            <p class="empty-state">Nenhuma aplicação registrada.</p>
+        }
+        else
+        {
+            <ul class="list">
+            @foreach (var formulario in Model.FormulariosRecentes)
+            {
+                <li>
+                    <strong>@formulario.Formulario</strong>
+                    <span>@formulario.DataAplicacao.ToString("dd/MM/yyyy") • @formulario.ResponsavelAplicacao</span>
+                    <small>@formulario.Destaque</small>
+                </li>
+            }
+            </ul>
+        }
+    </article>
+
+</div>

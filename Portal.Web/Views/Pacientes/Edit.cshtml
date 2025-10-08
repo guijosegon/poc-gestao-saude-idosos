@@ -1,24 +1,25 @@
 @model GestaoSaudeIdosos.Web.ViewModels.PacienteFormViewModel
 @{
-    ViewData["Title"] = "Novo paciente";
+    ViewData["Title"] = "Editar paciente";
 }
 
 <section class="page-header">
     <div>
-        <h1>Novo paciente</h1>
-        <p class="page-subtitle">Cadastre um idoso para iniciar o acompanhamento preventivo.</p>
+        <h1>Editar paciente</h1>
+        <p class="page-subtitle">Atualize dados cadastrais e responsável pelo acompanhamento.</p>
     </div>
-    <a asp-action="Index" class="btn-link">Voltar</a>
+    <a asp-action="Details" asp-route-id="@Model.PacienteId" class="btn-link">Ver detalhes</a>
 </section>
 
-<form asp-action="Create" method="post" class="form-card" novalidate>
+<form asp-action="Edit" method="post" class="form-card" novalidate>
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.PacienteId)
     @Html.ValidationSummary(false, "", new { @class = "form-summary text-danger" })
 
     <div class="form-grid">
         <div class="form-group">
             @Html.LabelFor(m => m.Nome)
-            @Html.TextBoxFor(m => m.Nome, new { @class = "form-control", placeholder = "Nome completo" })
+            @Html.TextBoxFor(m => m.Nome, new { @class = "form-control" })
             @Html.ValidationMessageFor(m => m.Nome, "", new { @class = "field-validation-error" })
         </div>
 
@@ -37,7 +38,7 @@
     </div>
 
     <div class="form-actions">
-        <button type="submit" class="btn-primary">Salvar</button>
-        <a asp-action="Index" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary">Salvar alterações</button>
+        <a asp-action="Details" asp-route-id="@Model.PacienteId" class="btn-secondary">Cancelar</a>
     </div>
 </form>

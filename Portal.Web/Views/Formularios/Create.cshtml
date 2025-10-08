@@ -1,0 +1,53 @@
+@model GestaoSaudeIdosos.Web.ViewModels.FormularioFormViewModel
+@{
+    ViewData["Title"] = "Novo formulário";
+    var campos = Model.CamposDisponiveis?.ToList() ?? new List<SelectListItem>();
+}
+
+<section class="page-header">
+    <div>
+        <h1>Novo formulário</h1>
+        <p class="page-subtitle">Combine campos padronizados para agilizar a aplicação com os pacientes.</p>
+    </div>
+    <a asp-action="Index" class="btn-link">Voltar</a>
+</section>
+
+<form asp-action="Create" method="post" class="form-card" novalidate>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false, "", new { @class = "form-summary text-danger" })
+
+    <div class="form-grid">
+        <div class="form-group">
+            @Html.LabelFor(m => m.Descricao)
+            @Html.TextBoxFor(m => m.Descricao, new { @class = "form-control", placeholder = "Ex.: Avaliação multidisciplinar" })
+            @Html.ValidationMessageFor(m => m.Descricao, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            <label>Campos disponíveis</label>
+            <div class="checkbox-grid">
+            @foreach (var campo in campos)
+            {
+                var selecionado = Model.CamposSelecionados.Contains(int.Parse(campo.Value));
+                <label class="checkbox-card">
+                    <input type="checkbox" name="CamposSelecionados" value="@campo.Value" @(selecionado ? "checked" : string.Empty) />
+                    <span>@campo.Text</span>
+                </label>
+            }
+            </div>
+            @Html.ValidationMessageFor(m => m.CamposSelecionados, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group form-switch">
+            <label class="switch-label">
+                @Html.CheckBoxFor(m => m.Ativo)
+                <span>Disponibilizar imediatamente</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">Salvar</button>
+        <a asp-action="Index" class="btn-secondary">Cancelar</a>
+    </div>
+</form>

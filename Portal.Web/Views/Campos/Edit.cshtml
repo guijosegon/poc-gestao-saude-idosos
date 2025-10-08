@@ -1,0 +1,55 @@
+@model GestaoSaudeIdosos.Web.ViewModels.CampoFormViewModel
+@{
+    ViewData["Title"] = "Editar campo";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Editar campo</h1>
+        <p class="page-subtitle">Atualize a descrição e regras do campo para manter o padrão assistencial.</p>
+    </div>
+    <a asp-action="Details" asp-route-id="@Model.CampoId" class="btn-link">Ver detalhes</a>
+</section>
+
+<form asp-action="Edit" method="post" class="form-card" novalidate>
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.CampoId)
+    @Html.ValidationSummary(false, "", new { @class = "form-summary text-danger" })
+
+    <div class="form-grid">
+        <div class="form-group">
+            @Html.LabelFor(m => m.Tipo)
+            @Html.DropDownListFor(m => m.Tipo, Model.TiposCampo, null, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Tipo, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Descricao)
+            @Html.TextBoxFor(m => m.Descricao, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Descricao, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.TextoAjuda)
+            @Html.TextAreaFor(m => m.TextoAjuda, 3, 40, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.TextoAjuda, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Opcoes)
+            @Html.TextAreaFor(m => m.Opcoes, 4, 40, new { @class = "form-control" })
+        </div>
+
+        <div class="form-group form-switch">
+            <label class="switch-label">
+                @Html.CheckBoxFor(m => m.Ativo)
+                <span>Disponível para novos formulários</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">Salvar alterações</button>
+        <a asp-action="Details" asp-route-id="@Model.CampoId" class="btn-secondary">Cancelar</a>
+    </div>
+</form>

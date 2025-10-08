@@ -1,0 +1,30 @@
+@model GestaoSaudeIdosos.Web.ViewModels.GraficoFormViewModel
+@{
+    ViewData["Title"] = "Novo gráfico";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Novo gráfico</h1>
+        <p class="page-subtitle">Transforme respostas de formulários em visualizações do Google Charts.</p>
+    </div>
+    <a asp-action="Index" class="btn-link">Voltar</a>
+</section>
+
+<form asp-action="Create" method="post" class="form-card" novalidate>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false, "", new { @class = "form-summary text-danger" })
+
+    <div class="form-grid">
+        <div class="form-group">
+            @Html.LabelFor(m => m.Descricao)
+            @Html.TextBoxFor(m => m.Descricao, new { @class = "form-control", placeholder = "Ex.: Evolução da pressão arterial" })
+            @Html.ValidationMessageFor(m => m.Descricao, "", new { @class = "field-validation-error" })
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">Salvar gráfico</button>
+        <a asp-action="Index" class="btn-secondary">Cancelar</a>
+    </div>
+</form>

@@ -1,0 +1,84 @@
+@model GestaoSaudeIdosos.Web.ViewModels.UsuarioEdicaoViewModel
+@{
+    ViewData["Title"] = "Editar usuário";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Editar usuário</h1>
+        <p class="page-subtitle">Gerencie permissões e redefina a senha do colaborador.</p>
+    </div>
+    <a asp-action="Details" asp-route-id="@Model.UsuarioId" class="btn-link">Ver detalhes</a>
+</section>
+
+<form asp-action="Edit" method="post" class="form-card" novalidate>
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.UsuarioId)
+    @Html.ValidationSummary(false, "", new { @class = "form-summary text-danger" })
+
+    <div class="form-grid">
+        <div class="form-group">
+            @Html.LabelFor(m => m.Nome)
+            @Html.TextBoxFor(m => m.Nome, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Nome, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email)
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Perfil)
+            @if (Model.PermiteAlterarPerfil)
+            {
+                @Html.DropDownListFor(m => m.Perfil, Model.PerfisDisponiveis, new { @class = "form-control" })
+            }
+            else
+            {
+                @Html.HiddenFor(m => m.Perfil)
+                <p class="form-readonly">@Model.Perfil</p>
+            }
+            @Html.ValidationMessageFor(m => m.Perfil, "", new { @class = "field-validation-error" })
+        </div>
+
+        @if (Model.PermiteAlterarPerfil)
+        {
+            <div class="form-group form-switch">
+                <label class="switch-label">
+                    @Html.CheckBoxFor(m => m.Ativo)
+                    <span>Usuário ativo</span>
+                </label>
+            </div>
+        }
+        else
+        {
+            @Html.HiddenFor(m => m.Ativo)
+            <p class="form-readonly">Status atual: @(Model.Ativo ? "Ativo" : "Inativo")</p>
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.SenhaAtual)
+            @Html.PasswordFor(m => m.SenhaAtual, new { @class = "form-control", placeholder = "Informe sua senha atual" })
+            <small class="field-help">Solicitado apenas para alterações de senha.</small>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.NovaSenha)
+            @Html.PasswordFor(m => m.NovaSenha, new { @class = "form-control", placeholder = "Nova senha" })
+            @Html.ValidationMessageFor(m => m.NovaSenha, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ConfirmacaoSenha)
+            @Html.PasswordFor(m => m.ConfirmacaoSenha, new { @class = "form-control", placeholder = "Confirme a nova senha" })
+            @Html.ValidationMessageFor(m => m.ConfirmacaoSenha, "", new { @class = "field-validation-error" })
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">Salvar alterações</button>
+        <a asp-action="Details" asp-route-id="@Model.UsuarioId" class="btn-secondary">Cancelar</a>
+    </div>
+</form>

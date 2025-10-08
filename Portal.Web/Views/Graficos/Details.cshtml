@@ -1,0 +1,22 @@
+@model GestaoSaudeIdosos.Web.ViewModels.GraficoDetalheViewModel
+@{
+    ViewData["Title"] = "Detalhes do gráfico";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@Model.Descricao</h1>
+        <p class="page-subtitle">Visualização criada para acompanhamento de indicadores dos pacientes.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Edit" asp-route-id="@Model.GraficoId" class="btn-primary">Editar</a>
+        <a asp-action="Index" class="btn-secondary">Voltar</a>
+    </div>
+</section>
+
+<div class="detail-grid">
+    <article class="detail-card">
+        <h2>Resumo</h2>
+        <p>Utilize este gráfico para apresentar tendências e comparativos relevantes para a equipe assistencial.</p>
+    </article>
+</div>

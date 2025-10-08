@@ -22,8 +22,12 @@
     <div class="body-content">
         <div class="sidebar" id="menuLateral">
             <button onclick="abrirAba('Portal')">Dashboard</button>
-            <button onclick="abrirAba('Usuarios')">Usuários</button>
-            <button onclick="abrirAba('Pacientes')">Pacientes</button>
+            <button onclick="location.href='@Url.Action("Index", "Usuarios")'">Usuários</button>
+            <button onclick="location.href='@Url.Action("Index", "Pacientes")'">Pacientes</button>
+            <button onclick="location.href='@Url.Action("Index", "Campos")'">Campos</button>
+            <button onclick="location.href='@Url.Action("Index", "Formularios")'">Formulários</button>
+            <button onclick="location.href='@Url.Action("Index", "Graficos")'">Gráficos</button>
+            <button onclick="location.href='@Url.Action("Index", "Dashboard")'">Configurar dashboard</button>
         </div>
 
         <div class="main-content">
@@ -57,6 +61,25 @@
                             <strong>@Model.AlertasAtivos</strong>
                             <small>Riscos que demandam atenção</small>
                         </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <a class="quick-card" asp-controller="Pacientes" asp-action="Create">
+                            <span>Adicionar paciente</span>
+                            <small>Cadastre idosos e vincule responsáveis</small>
+                        </a>
+                        <a class="quick-card" asp-controller="Campos" asp-action="Index">
+                            <span>Configurar campos</span>
+                            <small>Personalize perguntas reutilizáveis</small>
+                        </a>
+                        <a class="quick-card" asp-controller="Formularios" asp-action="Index">
+                            <span>Montar formulário</span>
+                            <small>Combine campos para avaliações</small>
+                        </a>
+                        <a class="quick-card" asp-controller="Graficos" asp-action="Index">
+                            <span>Explorar gráficos</span>
+                            <small>Visualize indicadores dos pacientes</small>
+                        </a>
                     </div>
 
                     <div class="grid-two-columns">

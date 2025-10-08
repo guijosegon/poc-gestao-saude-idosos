@@ -1,0 +1,24 @@
+@model GestaoSaudeIdosos.Web.ViewModels.UsuarioDetalheViewModel
+@{
+    ViewData["Title"] = "Excluir usuário";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Excluir usuário</h1>
+        <p class="page-subtitle">Somente administradores (ou o próprio profissional) podem executar esta ação.</p>
+    </div>
+    <a asp-action="Details" asp-route-id="@Model.UsuarioId" class="btn-link">Cancelar</a>
+</section>
+
+<div class="alert danger">
+    Tem certeza que deseja excluir o usuário <strong>@Model.Nome</strong>? Após confirmar ele perderá o acesso ao portal.
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.UsuarioId)
+    <input type="hidden" name="email" value="@Model.Email" />
+    <button type="submit" class="btn-danger">Excluir usuário</button>
+    <a asp-action="Details" asp-route-id="@Model.UsuarioId" class="btn-secondary">Manter usuário</a>
+</form>
