@@ -1,0 +1,31 @@
+@model GestaoSaudeIdosos.Web.ViewModels.GraficoFormViewModel
+@{
+    ViewData["Title"] = "Editar gráfico";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Editar gráfico</h1>
+        <p class="page-subtitle">Ajuste dados de origem, campos analisados e configurações visuais.</p>
+    </div>
+    <a asp-action="Details" asp-route-id="@Model.GraficoId" class="btn-link">Ver detalhes</a>
+</section>
+
+<form asp-action="Edit" method="post" class="form-card" novalidate>
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.GraficoId)
+    @Html.ValidationSummary(false, "", new { @class = "form-summary text-danger" })
+
+    <div class="form-grid">
+        <div class="form-group">
+            @Html.LabelFor(m => m.Descricao)
+            @Html.TextBoxFor(m => m.Descricao, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Descricao, "", new { @class = "field-validation-error" })
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">Salvar alterações</button>
+        <a asp-action="Details" asp-route-id="@Model.GraficoId" class="btn-secondary">Cancelar</a>
+    </div>
+</form>

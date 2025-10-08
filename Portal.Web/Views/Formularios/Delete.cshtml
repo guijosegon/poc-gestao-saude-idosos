@@ -1,0 +1,26 @@
+@model GestaoSaudeIdosos.Web.ViewModels.FormularioDetalheViewModel
+@{
+    ViewData["Title"] = "Excluir formulário";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Excluir formulário</h1>
+        <p class="page-subtitle">Remova o instrumento da biblioteca desta prova de conceito.</p>
+    </div>
+    <a asp-action="Details" asp-route-id="@Model.FormularioId" class="btn-link">Cancelar</a>
+</section>
+
+<div class="alert danger">
+    <p>
+        Ao confirmar, o formulário <strong>@Model.Descricao</strong> será removido da interface demonstrativa.
+        Nenhuma informação operacional será impactada.
+    </p>
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.FormularioId)
+    <button type="submit" class="btn-danger">Excluir agora</button>
+    <a asp-action="Details" asp-route-id="@Model.FormularioId" class="btn-secondary">Manter formulário</a>
+</form>

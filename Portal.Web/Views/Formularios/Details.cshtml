@@ -1,0 +1,51 @@
+@model GestaoSaudeIdosos.Web.ViewModels.FormularioDetalheViewModel
+@{
+    ViewData["Title"] = "Detalhes do formulário";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@Model.Descricao</h1>
+        <p class="page-subtitle">Configuração do instrumento para aplicação aos pacientes.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Edit" asp-route-id="@Model.FormularioId" class="btn-primary">Editar</a>
+        <a asp-action="Index" class="btn-secondary">Voltar</a>
+    </div>
+</section>
+
+<div class="detail-grid">
+    <article class="detail-card">
+        <h2>Configuração</h2>
+        <dl>
+            <div>
+                <dt>Responsável</dt>
+                <dd>@(string.IsNullOrEmpty(Model.Responsavel) ? "—" : Model.Responsavel)</dd>
+            </div>
+            <div>
+                <dt>Status</dt>
+                <dd>
+                    <span class="status-badge @(Model.Ativo ? "success" : "danger")">
+                        @(Model.Ativo ? "Ativo" : "Inativo")
+                    </span>
+                </dd>
+            </div>
+        </dl>
+        <div class="meta-info">
+            <span>Criado em @Model.DataCadastro.ToString("dd/MM/yyyy")</span>
+        </div>
+    </article>
+
+    <article class="detail-card">
+        <h2>Campos do formulário</h2>
+        <ul class="pill-list">
+        @foreach (var campo in Model.Campos)
+        {
+            <li>
+                <strong>@campo.Ordem. @campo.NomeCampo</strong>
+                <span>@campo.Tipo • @(campo.Obrigatorio ? "Obrigatório" : "Opcional")</span>
+            </li>
+        }
+        </ul>
+    </article>
+</div>

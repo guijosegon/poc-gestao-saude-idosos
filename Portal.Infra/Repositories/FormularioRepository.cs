@@ -1,7 +1,9 @@
 using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GestaoSaudeIdosos.Infra.Repositories
 {
@@ -15,6 +17,7 @@ namespace GestaoSaudeIdosos.Infra.Repositories
         {
             return await _dbContext.Formularios
                 .Include(f => f.Campos)
+                    .ThenInclude(fc => fc.Campo)
                 .Include(f => f.Pacientes)
                 .AsNoTracking()
                 .OrderByDescending(f => f.DataCadastro)
@@ -25,6 +28,7 @@ namespace GestaoSaudeIdosos.Infra.Repositories
         {
             return await _dbContext.Formularios
                 .Include(f => f.Campos)
+                    .ThenInclude(fc => fc.Campo)
                 .Include(f => f.Pacientes)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(f => f.FormularioId == id);

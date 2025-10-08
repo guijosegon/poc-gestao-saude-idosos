@@ -1,0 +1,55 @@
+@model GestaoSaudeIdosos.Web.ViewModels.CampoFormViewModel
+@{
+    ViewData["Title"] = "Novo campo";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Novo campo</h1>
+        <p class="page-subtitle">Defina um componente reutilizável para enriquecer seus formulários clínicos.</p>
+    </div>
+    <a asp-action="Index" class="btn-link">Voltar</a>
+</section>
+
+<form asp-action="Create" method="post" class="form-card" novalidate>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false, "", new { @class = "form-summary text-danger" })
+
+    <div class="form-grid">
+        <div class="form-group">
+            @Html.LabelFor(m => m.Tipo)
+            @Html.DropDownListFor(m => m.Tipo, Model.TiposCampo, "Selecione", new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Tipo, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Descricao)
+            @Html.TextBoxFor(m => m.Descricao, new { @class = "form-control", placeholder = "Ex.: Pressão arterial" })
+            @Html.ValidationMessageFor(m => m.Descricao, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.TextoAjuda)
+            @Html.TextAreaFor(m => m.TextoAjuda, 3, 40, new { @class = "form-control", placeholder = "Orientações complementares para o preenchimento." })
+            @Html.ValidationMessageFor(m => m.TextoAjuda, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Opcoes)
+            @Html.TextAreaFor(m => m.Opcoes, 4, 40, new { @class = "form-control", placeholder = "Informe uma opção por linha." })
+            <small class="field-help">Utilize somente para campos do tipo seleção ou checkbox.</small>
+        </div>
+
+        <div class="form-group form-switch">
+            <label class="switch-label">
+                @Html.CheckBoxFor(m => m.Ativo)
+                <span>Disponível para novos formulários</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">Salvar</button>
+        <a asp-action="Index" class="btn-secondary">Cancelar</a>
+    </div>
+</form>
