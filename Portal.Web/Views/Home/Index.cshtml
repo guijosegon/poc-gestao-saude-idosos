@@ -1,36 +1,203 @@
-﻿@{
+@model GestaoSaudeIdosos.Web.ViewModels.DashboardViewModel
+@{
     ViewData["Title"] = "Home";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="layout-container">
     <div class="header">
-        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-        <span>Portal da Saúde</span>
+        <button class="menu-toggle" onclick="toggleMenu()" aria-label="Alternar menu">☰</button>
+        <div class="header-info">
+            <span>Portal da Saúde</span>
+            <div class="user-info">
+                <span class="user-name">@Model.UsuarioNome</span>
+                <form asp-controller="Login" asp-action="Logout" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-link">Sair</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <div class="body-content">
         <div class="sidebar" id="menuLateral">
-            <button onclick="abrirAba('Usuários')">Usuários</button>
+            <button onclick="abrirAba('Portal')">Dashboard</button>
+            <button onclick="abrirAba('Usuarios')">Usuários</button>
             <button onclick="abrirAba('Pacientes')">Pacientes</button>
         </div>
 
         <div class="main-content">
-            <!-- Abas fixas + dinâmicas -->
             <div class="tabs" id="abas">
                 <div class="aba active" id="aba-Portal" onclick="ativarConteudo('Portal')">Portal</div>
             </div>
 
             <div class="conteudos" id="conteudos">
                 <div class="conteudo active" id="conteudo-Portal">
-                    <h2>Bem-vindo, @User.Identity.Name!</h2>
-                    <p>Esse é o painel inicial com métricas e informações gerais.</p>
+                    <h2>Painel geral</h2>
+                    <p>Resumo das principais informações para apoiar a prevenção de doenças em idosos institucionalizados.</p>
 
-                    <div class="dashboard">
-                        <div class="card">📊 Relatórios</div>
-                        <div class="card">🧓 Idosos Ativos</div>
-                        <div class="card">⏰ Próximas Avaliações</div>
+                    <div class="dashboard-cards">
+                        <div class="card">
+                            <span class="card-title">Pacientes</span>
+                            <strong>@Model.TotalPacientes</strong>
+                            <small>Total de pacientes cadastrados</small>
+                        </div>
+                        <div class="card">
+                            <span class="card-title">Usuários</span>
+                            <strong>@Model.TotalUsuarios</strong>
+                            <small>Profissionais com acesso</small>
+                        </div>
+                        <div class="card">
+                            <span class="card-title">Formulários ativos</span>
+                            <strong>@Model.FormulariosAtivos</strong>
+                            <small>Instrumentos prontos para uso</small>
+                        </div>
+                        <div class="card @(Model.AlertasAtivos > 0 ? "alert" : string.Empty)">
+                            <span class="card-title">Alertas</span>
+                            <strong>@Model.AlertasAtivos</strong>
+                            <small>Riscos que demandam atenção</small>
+                        </div>
                     </div>
+
+                    <div class="grid-two-columns">
+                        <section class="panel">
+                            <div class="panel-header">
+                                <h3>Formulários recentes</h3>
+                                <a asp-controller="Pacientes" asp-action="Create" class="btn-link">Aplicar formulário</a>
+                            </div>
+
+                            @if (!Model.FormulariosRecentes.Any())
+                            {
+                                <p class="empty-state">Nenhum formulário cadastrado.</p>
+                            }
+                            else
+                            {
+                                <ul class="list">
+                                @foreach (var form in Model.FormulariosRecentes)
+                                {
+                                    <li>
+                                        <strong>@form.Descricao</strong>
+                                        <span>@form.CamposTotais campo(s) • @form.PacientesAssociados paciente(s)</span>
+                                        <small>Criado em @form.DataCadastro.ToString("dd/MM/yyyy")</small>
+                                    </li>
+                                }
+                                </ul>
+                            }
+                        </section>
+
+                        <section class="panel">
+                            <div class="panel-header">
+                                <h3>Relatórios e sugestões</h3>
+                                <a asp-controller="Pacientes" asp-action="Index" class="btn-link">Ver todos</a>
+                            </div>
+
+                            @if (!Model.Relatorios.Any())
+                            {
+                                <p class="empty-state">Nenhum relatório disponível.</p>
+                            }
+                            else
+                            {
+                                <ul class="list">
+                                @foreach (var relatorio in Model.Relatorios)
+                                {
+                                    <li>
+                                        <div class="list-title">
+                                            <strong>@relatorio.PacienteNome</strong>
+                                            <span class="status-badge @(relatorio.NivelRisco.ToLower() == "alto" ? "danger" : relatorio.NivelRisco.ToLower() == "moderado" ? "warning" : "success")">@relatorio.NivelRisco</span>
+                                        </div>
+                                        <span>@relatorio.Resumo</span>
+                                        <small>@relatorio.Sugestao</small>
+                                    </li>
+                                }
+                                </ul>
+                            }
+                        </section>
+                    </div>
+                </div>
+
+                <div class="conteudo" id="conteudo-Usuarios">
+                    <div class="panel-header">
+                        <h3>Usuários recentes</h3>
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <a asp-controller="Usuarios" asp-action="Create" class="btn-link">Novo usuário</a>
+                        }
+                        <a asp-controller="Usuarios" asp-action="Index" class="btn-link">Ver lista completa</a>
+                    </div>
+
+                    @if (!Model.UsuariosRecentes.Any())
+                    {
+                        <p class="empty-state">Nenhum usuário cadastrado.</p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>E-mail</th>
+                                        <th>Perfil</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var usuario in Model.UsuariosRecentes)
+                                {
+                                    <tr>
+                                        <td>@usuario.Nome</td>
+                                        <td>@usuario.Email</td>
+                                        <td>@usuario.Perfil</td>
+                                        <td>
+                                            <span class="status-badge @(usuario.Ativo ? "success" : "danger")">
+                                                @(usuario.Ativo ? "Ativo" : "Inativo")
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+
+                <div class="conteudo" id="conteudo-Pacientes">
+                    <div class="panel-header">
+                        <h3>Pacientes cadastrados</h3>
+                        <a asp-controller="Pacientes" asp-action="Create" class="btn-link">Novo paciente</a>
+                        <a asp-controller="Pacientes" asp-action="Index" class="btn-link">Ver lista</a>
+                    </div>
+
+                    @if (!Model.PacientesRecentes.Any())
+                    {
+                        <p class="empty-state">Nenhum paciente cadastrado.</p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Idade</th>
+                                        <th>Responsável</th>
+                                        <th>Última atualização</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var paciente in Model.PacientesRecentes)
+                                {
+                                    <tr>
+                                        <td>@paciente.Nome</td>
+                                        <td>@paciente.Idade anos</td>
+                                        <td>@(string.IsNullOrEmpty(paciente.Responsavel) ? "-" : paciente.Responsavel)</td>
+                                        <td>@paciente.DataCadastro.ToString("dd/MM/yyyy")</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

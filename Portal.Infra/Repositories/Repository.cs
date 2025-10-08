@@ -1,4 +1,4 @@
-﻿using GestaoSaudeIdosos.Domain.Interfaces.Repositories;
+using GestaoSaudeIdosos.Domain.Interfaces.Repositories;
 using GestaoSaudeIdosos.Infra.Contexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,17 +15,29 @@ namespace GestaoSaudeIdosos.Infra.Repositories
             _dbSet = dbContext.Set<T>();
         }
 
-        public async Task AddAsync(T entity) => await _dbSet.AddAsync(entity).AsTask();
+        public virtual async Task AddAsync(T entity)
+        {
+            await _dbSet.AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+        }
 
-        public async Task<T?> GetByIdAsync(int id) => await _dbSet.FindAsync(id).AsTask();
+        public virtual async Task<T?> GetByIdAsync(int id) => await _dbSet.FindAsync(id).AsTask();
 
-        public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
+        public virtual async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.AsNoTracking().ToListAsync();
 
         public IQueryable<T> Query() => _dbSet.AsQueryable();
 
-        public void Remove(T entity) => _dbSet.Remove(entity);
+        public virtual void Remove(T entity)
+        {
+            _dbSet.Remove(entity);
+            _dbContext.SaveChanges();
+        }
 
-        public void Update(T entity) => _dbSet.Update(entity);
+        public virtual void Update(T entity)
+        {
+            _dbSet.Update(entity);
+            _dbContext.SaveChanges();
+        }
 
         public async Task<int> SaveChangesAsync() => await _dbContext.SaveChangesAsync();
     }

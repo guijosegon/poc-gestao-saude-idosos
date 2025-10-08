@@ -1,52 +1,85 @@
-using Microsoft.AspNetCore.Mvc;
-using GestaoSaudeIdosos.Web.ViewModels;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
+using System;
 using System.Security.Claims;
 using GestaoSaudeIdosos.Application.Interfaces;
+using GestaoSaudeIdosos.Web.ViewModels;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-public class LoginController : Controller
+namespace GestaoSaudeIdosos.Web.Controllers
 {
-    private readonly IUsuarioAppService _service;
-
-    public LoginController(IUsuarioAppService service)
+    [AllowAnonymous]
+    public class LoginController : Controller
     {
-        _service = service;
-    }
+        private readonly IUsuarioAppService _service;
 
-    public IActionResult Index(string? returnUrl)
-    {
-        ViewData["Title"] = "Login";
-        ViewData["ReturnUrl"] = returnUrl;
-
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Index(LoginViewModel model, string returnUrl = null)
-    {
-        if (!ModelState.IsValid)
-            return View(model);
-
-        var usuario = _service.GetByEmail(model.Email);
-
-        if (usuario is null)
+        public LoginController(IUsuarioAppService service)
         {
-            ModelState.AddModelError(nameof(model.Email), "Este e-mail È inv·lido, solicite acesso ao administrador");
-            return View(model);
+            _service = service;
         }
 
-        if (model.Senha != usuario.Senha)
+        [HttpGet]
+        public IActionResult Index(string? returnUrl)
         {
-            ModelState.AddModelError(nameof(model.Senha), "Senha inv·lido.");
-            return View(model);
+            ViewData["Title"] = "Login";
+            ViewData["ReturnUrl"] = returnUrl;
+
+            return View();
         }
 
-        var claims = new List<Claim> { new Claim(ClaimTypes.Name, model.Email) };
-        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(LoginViewModel model, string? returnUrl = null)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
 
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+            var usuario = _service.GetByEmail(model.Email);
 
-        return RedirectToAction("Index", "Home");
+            if (usuario is null)
+            {
+                ModelState.AddModelError(nameof(model.Email), "Este e-mail n√£o est√° autorizado. Solicite acesso ao administrador.");
+                return View(model);
+            }
+
+            if (!usuario.Ativo)
+            {
+                ModelState.AddModelError(string.Empty, "Usu√°rio inativo. Entre em contato com o administrador.");
+                return View(model);
+            }
+
+            if (!string.Equals(model.Senha, usuario.Senha, StringComparison.Ordinal))
+            {
+                ModelState.AddModelError(nameof(model.Senha), "Senha inv√°lida.");
+                return View(model);
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, usuario.UsuarioId.ToString()),
+                new Claim(ClaimTypes.Name, usuario.Nome),
+                new Claim(ClaimTypes.Email, usuario.Email),
+                new Claim(ClaimTypes.Role, usuario.Perfil.ToString())
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

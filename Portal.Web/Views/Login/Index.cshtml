@@ -1,6 +1,7 @@
-﻿@model GestaoSaudeIdosos.Web.ViewModels.LoginViewModel
+@model GestaoSaudeIdosos.Web.ViewModels.LoginViewModel
 @{
     Layout = "_Layout";
+    ViewData["Title"] = "Login";
 }
 
 @section Styles {
@@ -12,7 +13,10 @@
 
     <div class="login-form" role="form" aria-labelledby="login-title">
         <form asp-action="Index" method="post" novalidate>
+            @Html.AntiForgeryToken()
             <h2 id="login-title">Bem-vindo</h2>
+
+            @Html.ValidationSummary(false, "", new { @class = "form-summary text-danger" })
 
             <div class="form-group has-tooltip">
                 @Html.LabelFor(m => m.Email, new { @class = "form-label" })
@@ -25,6 +29,7 @@
                         aria_describedby = "email-help"
                     })
                 <small id="email-help" class="sr-only">Digite seu e-mail institucional</small>
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "field-validation-error" })
             </div>
 
             <div class="form-group has-tooltip password-wrapper">
@@ -39,8 +44,10 @@
                     })
                 <button type="button" class="toggle-password" aria-controls="Senha" aria-pressed="false" title="Mostrar/ocultar senha">👁</button>
                 <small id="senha-help" class="sr-only">Sua senha é confidencial</small>
+                @Html.ValidationMessageFor(m => m.Senha, "", new { @class = "field-validation-error" })
             </div>
 
+            <input type="hidden" name="returnUrl" value="@(ViewData["ReturnUrl"] ?? string.Empty)" />
             <button type="submit" class="btn-submit" id="btnEntrar">Entrar</button>
         </form>
     </div>
@@ -49,19 +56,19 @@
 @section Scripts {
     <script>
         (function () {
-            var btn = document.querySelector('.toggle-password');
-            var input = document.getElementById('Senha');
+            const btn = document.querySelector('.toggle-password');
+            const input = document.getElementById('Senha');
             if (btn && input) {
                 btn.addEventListener('click', function () {
-                    var isText = input.getAttribute('type') === 'text';
+                    const isText = input.getAttribute('type') === 'text';
                     input.setAttribute('type', isText ? 'password' : 'text');
                     btn.setAttribute('aria-pressed', String(!isText));
                     btn.classList.toggle('active', !isText);
                 });
             }
 
-            var form = document.querySelector('.login-form form');
-            var submit = document.getElementById('btnEntrar');
+            const form = document.querySelector('.login-form form');
+            const submit = document.getElementById('btnEntrar');
             if (form && submit) {
                 form.addEventListener('submit', function () {
                     submit.disabled = true;

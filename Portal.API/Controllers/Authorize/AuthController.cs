@@ -1,9 +1,8 @@
-﻿using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.API.DTOs.Authorize;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Extensions;
+using GestaoSaudeIdosos.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
@@ -28,15 +27,19 @@ namespace GestaoSaudeIdosos.API.Controllers.Authorize
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var login = _usuarioAppService.GetByEmail(dto?.Email);
+            var login = _usuarioAppService.GetByEmail(dto?.Email ?? string.Empty);
 
-            if (login is null || login.Senha != dto.Senha)
+            if (login is null || !login.Ativo)
+                return Unauthorized("Credenciais inválidas");
+
+            if (!string.Equals(login.Senha, dto.Senha, StringComparison.Ordinal))
                 return Unauthorized("Credenciais inválidas");
 
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, login.Email),
-                new Claim(ClaimTypes.Role, login.Perfil.GetDisplayName()),
+                new Claim(ClaimTypes.Name, login.Nome),
+                new Claim(ClaimTypes.Role, login.Perfil.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

@@ -1,19 +1,26 @@
-﻿function abrirAba(nome) {
-    if (nome === "Portal") return;
+function abrirAba(nome) {
+    const abasContainer = document.getElementById("abas");
+    const conteudosContainer = document.getElementById("conteudos");
+    const abaId = "aba-" + nome;
+    const conteudoId = "conteudo-" + nome;
 
-    if (!document.getElementById("aba-" + nome)) {
-        let aba = document.createElement("div");
+    let aba = document.getElementById(abaId);
+    if (!aba) {
+        aba = document.createElement("div");
         aba.className = "aba";
-        aba.id = "aba-" + nome;
-        aba.innerHTML = nome + ' <span class="close" onclick="fecharAba(\'' + nome + '\')">×</span>';
+        aba.id = abaId;
+        aba.innerHTML = nome + (nome === "Portal" ? "" : " <span class=\"close\" onclick=\"fecharAba('" + nome + "')\">×</span>");
         aba.onclick = () => ativarConteudo(nome);
-        document.getElementById("abas").appendChild(aba);
+        abasContainer.appendChild(aba);
+    }
 
-        let conteudo = document.createElement("div");
-        conteudo.className = "conteudo active";
-        conteudo.id = "conteudo-" + nome;
+    let conteudo = document.getElementById(conteudoId);
+    if (!conteudo) {
+        conteudo = document.createElement("div");
+        conteudo.className = "conteudo";
+        conteudo.id = conteudoId;
         conteudo.innerHTML = "<h2>" + nome + "</h2><p>Conteúdo de " + nome + " em desenvolvimento.</p>";
-        document.getElementById("conteudos").appendChild(conteudo);
+        conteudosContainer.appendChild(conteudo);
     }
 
     ativarConteudo(nome);
@@ -21,15 +28,21 @@
 
 function ativarConteudo(nome) {
     const conteudo = document.getElementById("conteudo-" + nome);
+    const aba = document.getElementById("aba-" + nome);
 
     if (conteudo) {
         document.querySelectorAll(".conteudo").forEach(div => div.classList.remove("active"));
         conteudo.classList.add("active");
     }
+
+    if (aba) {
+        document.querySelectorAll(".aba").forEach(div => div.classList.remove("active"));
+        aba.classList.add("active");
+    }
 }
 
 function fecharAba(nome) {
-    if (nome === "Portal") return; // nunca fecha a aba fixa
+    if (nome === "Portal") return;
 
     const aba = document.getElementById("aba-" + nome);
     const conteudo = document.getElementById("conteudo-" + nome);
@@ -37,15 +50,12 @@ function fecharAba(nome) {
     if (aba) aba.remove();
     if (conteudo) conteudo.remove();
 
-    // buscar as abas restantes
     const abasRestantes = document.querySelectorAll(".aba");
     if (abasRestantes.length > 0) {
-        // pega a última aba da lista e ativa
         const ultimaAba = abasRestantes[abasRestantes.length - 1];
         const id = ultimaAba.id.replace("aba-", "");
         ativarConteudo(id);
     } else {
-        // fallback: ativa o Portal
         ativarConteudo("Portal");
     }
 }
@@ -55,7 +65,6 @@ function toggleMenu() {
     menu.classList.toggle("hidden");
 }
 
-// Mensagem de erro dos campos
 function ativarTooltips() {
     const tooltips = document.querySelectorAll('.tooltip-message, .field-validation-error');
 
@@ -69,16 +78,13 @@ function ativarTooltips() {
                 tooltip.classList.remove("hidden");
                 tooltip.classList.add("active");
 
-                // cancela timeout anterior, se existir
                 if (tooltip.timeoutId) clearTimeout(tooltip.timeoutId);
 
-                // autoesconde após 3s
                 tooltip.timeoutId = setTimeout(() => {
                     tooltip.classList.remove("active");
                     tooltip.classList.add("hidden");
                 }, 3000);
 
-                // fecha no clique
                 tooltip.addEventListener("click", () => {
                     tooltip.classList.remove("active");
                     tooltip.classList.add("hidden");
@@ -86,28 +92,28 @@ function ativarTooltips() {
             }
         };
 
-        // ativa quando sair do campo
         input.addEventListener("blur", () => {
             mostrarTooltip();
         });
 
-        // ⚠️ se a página já veio com erro do servidor, mostra também (mas temporário)
         if (tooltip.classList.contains("field-validation-error") && tooltip.textContent.trim() !== "") {
             mostrarTooltip();
         }
     });
 }
 
-document.addEventListener('DOMContentLoaded', ativarTooltips);
+document.addEventListener('DOMContentLoaded', () => {
+    ativarTooltips();
+    ativarConteudo('Portal');
+});
 
 $(document).ready(function () {
     $("form").each(function () {
-        $(this).removeData("validator"); // remove validação antiga
+        $(this).removeData("validator");
         $(this).removeData("unobtrusiveValidation");
-        $.validator.unobtrusive.parse($(this)); // reativa validação
+        $.validator.unobtrusive.parse($(this));
     });
 
-    // Ativa exibição do balão de erro dinâmico
     $("form input").on("input blur", function () {
         $(this).valid();
     });

@@ -1,0 +1,46 @@
+@model IEnumerable<GestaoSaudeIdosos.Web.ViewModels.PacienteListItemViewModel>
+@{
+    ViewData["Title"] = "Pacientes";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Pacientes</h1>
+        <p class="page-subtitle">Acompanhe os idosos cadastrados e suas últimas atualizações.</p>
+    </div>
+    <a asp-action="Create" class="btn-primary">Novo paciente</a>
+</section>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <p>Nenhum paciente cadastrado até o momento.</p>
+        <a asp-action="Create" class="btn-link">Cadastrar paciente</a>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Idade</th>
+                    <th>Responsável</th>
+                    <th>Cadastro</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var paciente in Model)
+            {
+                <tr>
+                    <td>@paciente.Nome</td>
+                    <td>@paciente.Idade anos</td>
+                    <td>@(string.IsNullOrEmpty(paciente.Responsavel) ? "-" : paciente.Responsavel)</td>
+                    <td>@paciente.DataCadastro.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

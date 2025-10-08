@@ -4,12 +4,13 @@ namespace GestaoSaudeIdosos.Web.ViewModels
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "O e-mail È obrigatÛrio.")]
-        [EmailAddress(ErrorMessage = "E-mail inv·lido.")]
-        public string Email { get; set; }
+        [Required(ErrorMessage = "O e-mail √© obrigat√≥rio.")]
+        [EmailAddress(ErrorMessage = "E-mail inv√°lido.")]
+        public string Email { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "A senha È obrigatÛria.")]
+        [Required(ErrorMessage = "A senha √© obrigat√≥ria.")]
         [DataType(DataType.Password)]
-        public string Senha { get; set; }
+        [MinLength(6, ErrorMessage = "A senha deve ter pelo menos 6 caracteres.")]
+        public string Senha { get; set; } = string.Empty;
     }
 }

@@ -1,0 +1,58 @@
+@model IEnumerable<GestaoSaudeIdosos.Web.ViewModels.UsuarioListItemViewModel>
+@{
+    ViewData["Title"] = "Usuários";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Gestão de usuários</h1>
+        <p class="page-subtitle">Cadastre e acompanhe os profissionais com acesso ao portal.</p>
+    </div>
+    @if (User.IsInRole("Administrador"))
+    {
+        <a asp-action="Create" class="btn-primary">Novo usuário</a>
+    }
+</section>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <p>Nenhum usuário cadastrado até o momento.</p>
+        @if (User.IsInRole("Administrador"))
+        {
+            <a asp-action="Create" class="btn-link">Clique aqui para cadastrar o primeiro usuário.</a>
+        }
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Perfil</th>
+                    <th>Status</th>
+                    <th>Cadastro</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var usuario in Model)
+            {
+                <tr>
+                    <td>@usuario.Nome</td>
+                    <td>@usuario.Email</td>
+                    <td>@usuario.Perfil</td>
+                    <td>
+                        <span class="status-badge @(usuario.Ativo ? "success" : "danger")">
+                            @(usuario.Ativo ? "Ativo" : "Inativo")
+                        </span>
+                    </td>
+                    <td>@usuario.DataCadastro.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
 using GestaoSaudeIdosos.Domain.Interfaces.Services;
 using GestaoSaudeIdosos.Domain.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GestaoSaudeIdosos.Domain
 {
@@ -10,6 +10,8 @@ namespace GestaoSaudeIdosos.Domain
         {
             services.AddScoped(typeof(IService<>), typeof(Service<>));
             services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IPacienteService, PacienteService>();
+            services.AddScoped<IFormularioService, FormularioService>();
 
             return services;
         }
