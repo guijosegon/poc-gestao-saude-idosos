@@ -4,7 +4,7 @@ using GestaoSaudeIdosos.Domain.Interfaces.Services;
 
 namespace GestaoSaudeIdosos.Domain.Services
 {
-    public class GraficoService : Service<Grafico>, IGraficoService
+    internal class GraficoService : Service<Grafico>, IGraficoService
     {
         public GraficoService(IGraficoRepository repository) : base(repository)
         {

@@ -144,9 +144,7 @@ body {
 
 .toggle-password {
     position: absolute;
-    right: .5rem;
-    top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-10%);
     background: transparent;
     border: 0;
     cursor: pointer;

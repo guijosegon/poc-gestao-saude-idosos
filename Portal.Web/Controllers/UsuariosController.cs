@@ -5,6 +5,7 @@ using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +24,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var usuarios = await _usuarioAppService.GetAllAsync();
+            var usuarios = await _usuarioAppService.AsQueryable().ToListAsync();
+
             var model = usuarios
                 .OrderByDescending(u => u.DataCadastro)
                 .Select(u => new UsuarioListItemViewModel
@@ -42,7 +44,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var usuario = await _usuarioAppService.GetByIdAsync(id);
+            var usuario = await _usuarioAppService.AsQueryable().FirstOrDefaultAsync(u => u.UsuarioId == id);
 
             if (usuario is null)
                 return NotFound();
@@ -78,7 +80,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var existente = _usuarioAppService.GetByEmail(model.Email);
+            var existente = _usuarioAppService.AsQueryable().FirstOrDefault(f => f.Email.Equals(model.Email ?? string.Empty));
+
             if (existente is not null)
             {
                 ModelState.AddModelError(nameof(model.Email), "Este e-mail já está cadastrado.");
@@ -102,7 +105,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var usuario = await _usuarioAppService.GetByIdAsync(id);
+            var usuario = await _usuarioAppService.AsQueryable().FirstOrDefaultAsync(u => u.UsuarioId == id);
+
             if (usuario is null)
                 return NotFound();
 
@@ -123,6 +127,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return Forbid();
 
             model.PermiteAlterarPerfil = isAdmin;
+
             if (!isAdmin)
             {
                 model.PerfisDisponiveis = model.PerfisDisponiveis
@@ -159,14 +164,16 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var usuario = await _usuarioAppService.GetByIdAsync(id);
+            var usuario = await _usuarioAppService.AsTracking().FirstOrDefaultAsync(u => u.UsuarioId == id);
+
             if (usuario is null)
                 return NotFound();
 
             if (!string.Equals(usuario.Email, model.Email, StringComparison.OrdinalIgnoreCase))
             {
-                var outro = _usuarioAppService.GetByEmail(model.Email);
-                if (outro is not null && outro.UsuarioId != usuario.UsuarioId)
+                var existente = _usuarioAppService.AsQueryable().FirstOrDefault(f => f.Email.Equals(usuario.Email ?? string.Empty));
+
+                if (existente is not null && existente.UsuarioId != usuario.UsuarioId)
                 {
                     ModelState.AddModelError(nameof(model.Email), "Este e-mail já está cadastrado.");
                     return View(model);
@@ -199,24 +206,25 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var detalhe = await _usuarioAppService.GetByIdAsync(id);
-            if (detalhe is null)
+            var usuario = await _usuarioAppService.AsQueryable().FirstOrDefaultAsync(u => u.UsuarioId == id);
+
+            if (usuario is null)
                 return NotFound();
 
             var isAdmin = User.IsInRole(Enums.PerfilUsuario.Administrador.ToString());
-            var isSelf = string.Equals(User.Identity?.Name, detalhe.Email, StringComparison.OrdinalIgnoreCase);
+            var isSelf = string.Equals(User.Identity?.Name, usuario.Email, StringComparison.OrdinalIgnoreCase);
 
             if (!isAdmin && !isSelf)
                 return Forbid();
 
             var model = new UsuarioDetalheViewModel
             {
-                UsuarioId = detalhe.UsuarioId,
-                Nome = detalhe.Nome,
-                Email = detalhe.Email,
-                Perfil = detalhe.Perfil.ToString(),
-                Ativo = detalhe.Ativo,
-                CriadoEm = detalhe.DataCadastro,
+                UsuarioId = usuario.UsuarioId,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
+                Perfil = usuario.Perfil.ToString(),
+                Ativo = usuario.Ativo,
+                CriadoEm = usuario.DataCadastro,
                 AcoesRecentes = Array.Empty<string>()
             };
 
@@ -233,7 +241,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!isAdmin && !isSelf)
                 return Forbid();
 
-            var usuario = await _usuarioAppService.GetByIdAsync(id);
+            var usuario = await _usuarioAppService.AsTracking().FirstOrDefaultAsync(u => u.UsuarioId == id);
+
             if (usuario is null)
                 return NotFound();
 

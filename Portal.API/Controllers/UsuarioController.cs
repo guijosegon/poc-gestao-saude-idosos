@@ -4,8 +4,6 @@ using GestaoSaudeIdosos.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace GestaoSaudeIdosos.API.Controllers
 {
@@ -24,14 +22,11 @@ namespace GestaoSaudeIdosos.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<UsuarioDto>>> GetAll()
         {
-            var usuarios = await _usuarioAppService
-                .AsQueryable()
-                .ToListAsync();
+            var usuarios = await _usuarioAppService.AsQueryable().ToListAsync();
 
             var dtos = usuarios.Select(u => u.ToDto()).ToList();
-
-            if (!dtos.Any())
-                return NotFound();
+            
+            if (!dtos.Any()) return NotFound();
 
             return Ok(dtos);
         }
@@ -40,12 +35,9 @@ namespace GestaoSaudeIdosos.API.Controllers
         [Authorize]
         public async Task<ActionResult<UsuarioDto>> GetById(int id)
         {
-            var usuario = await _usuarioAppService
-                .AsQueryable()
-                .FirstOrDefaultAsync(u => u.UsuarioId == id);
+            var usuario = await _usuarioAppService.AsQueryable().FirstOrDefaultAsync(u => u.UsuarioId == id);
 
-            if (usuario is null)
-                return NotFound();
+            if (usuario is null) return NotFound();
 
             return Ok(usuario.ToDto());
         }
@@ -57,7 +49,8 @@ namespace GestaoSaudeIdosos.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existente = _usuarioAppService.GetByEmail(dto.Email);
+            var existente = _usuarioAppService.AsQueryable().FirstOrDefault(f => f.Email.Equals(dto.Email ?? string.Empty));
+
             if (existente is not null)
                 return Conflict("E-mail já cadastrado para outro usuário.");
 
@@ -75,9 +68,7 @@ namespace GestaoSaudeIdosos.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existente = await _usuarioAppService
-                .AsTracking()
-                .FirstOrDefaultAsync(u => u.UsuarioId == id);
+            var existente = await _usuarioAppService.AsTracking().FirstOrDefaultAsync(u => u.UsuarioId == id);
 
             if (existente is null)
                 return NotFound();
@@ -96,12 +87,9 @@ namespace GestaoSaudeIdosos.API.Controllers
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int id)
         {
-            var existente = await _usuarioAppService
-                .AsTracking()
-                .FirstOrDefaultAsync(u => u.UsuarioId == id);
+            var existente = await _usuarioAppService.AsTracking().FirstOrDefaultAsync(u => u.UsuarioId == id);
 
-            if (existente is null)
-                return NotFound();
+            if (existente is null) return NotFound();
 
             _usuarioAppService.Delete(existente);
 

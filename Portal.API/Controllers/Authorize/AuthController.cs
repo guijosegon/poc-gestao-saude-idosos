@@ -27,7 +27,7 @@ namespace GestaoSaudeIdosos.API.Controllers.Authorize
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var login = _usuarioAppService.GetByEmail(dto?.Email ?? string.Empty);
+            var login = _usuarioAppService.AsQueryable().FirstOrDefault(f => f.Email.Equals(dto.Email ?? string.Empty));
 
             if (login is null || !login.Ativo)
                 return Unauthorized("Credenciais inválidas");

@@ -2,10 +2,6 @@ using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Domain.Interfaces.Repositories;
 using GestaoSaudeIdosos.Domain.Interfaces.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GestaoSaudeIdosos.Application.AppServices
 {

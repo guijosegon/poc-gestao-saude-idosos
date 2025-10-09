@@ -6,12 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -30,11 +26,11 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var campos = await _campoAppService
-                .AsQueryable(c => c.Usuario)
+                .AsQueryable(a => a.Usuario)
                 .ToListAsync();
 
             var formularios = await _formularioAppService
-                .AsQueryable(f => f.Campos, f => f.Pacientes)
+                .AsQueryable(a => a.Campos, a => a.Pacientes)
                 .ToListAsync();
 
             var model = campos
@@ -56,13 +52,14 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var campo = await _campoAppService
-                .AsQueryable(c => c.Usuario)
-                .FirstOrDefaultAsync(c => c.CampoId == id);
+                .AsQueryable(a => a.Usuario)
+                .FirstOrDefaultAsync(f => f.CampoId == id);
+
             if (campo is null)
                 return NotFound();
 
             var formularios = await _formularioAppService
-                .AsQueryable(f => f.Campos, f => f.Pacientes)
+                .AsQueryable(a => a.Campos, a => a.Pacientes)
                 .ToListAsync();
 
             var detalhes = new CampoDetalheViewModel
@@ -71,14 +68,11 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 Descricao = campo.Descricao,
                 Tipo = ObterDescricaoTipo(campo.Tipo),
                 TextoAjuda = campo.TextoAjuda,
-                Opcoes = campo.Opcoes ?? Array.Empty<string>(),
+                Opcoes = campo.Opcoes,
                 Ativo = campo.Ativo,
                 CriadoPor = campo.Usuario?.Nome,
                 DataCadastro = campo.DataCadastro,
-                FormulariosUtilizacao = formularios
-                    .Where(f => f.Campos.Any(fc => fc.CampoId == campo.CampoId))
-                    .Select(f => f.Descricao)
-                    .ToList()
+                FormulariosUtilizacao = formularios.Where(w => w.Campos.Any(a => a.CampoId == campo.CampoId)).Select(s => s.Descricao).ToList()
             };
 
             return View(detalhes);
@@ -117,8 +111,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var campo = await _campoAppService
-                .AsQueryable(c => c.Usuario)
-                .FirstOrDefaultAsync(c => c.CampoId == id);
+                .AsQueryable(a => a.Usuario)
+                .FirstOrDefaultAsync(f => f.CampoId == id);
+
             if (campo is null)
                 return NotFound();
 
@@ -151,6 +146,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var campo = await _campoAppService
                 .AsTracking(c => c.Usuario)
                 .FirstOrDefaultAsync(c => c.CampoId == id);
+
             if (campo is null)
                 return NotFound();
 
@@ -184,7 +180,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 Descricao = campo.Descricao,
                 Tipo = ObterDescricaoTipo(campo.Tipo),
                 TextoAjuda = campo.TextoAjuda,
-                Opcoes = campo.Opcoes ?? Array.Empty<string>(),
+                Opcoes = campo.Opcoes,
                 Ativo = campo.Ativo,
                 CriadoPor = campo.Usuario?.Nome,
                 DataCadastro = campo.DataCadastro,

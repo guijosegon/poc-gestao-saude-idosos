@@ -1,6 +1,5 @@
 using GestaoSaudeIdosos.API.DTOs;
 using GestaoSaudeIdosos.Domain.Entities;
-using System;
 
 namespace GestaoSaudeIdosos.API.Mappers
 {

@@ -9,7 +9,7 @@ namespace GestaoSaudeIdosos.Domain.Common.Helpers
             [Display(Name = "Comum")]
             Comum = 0,
 
-            [Display(Name = "Administrador")]
+            [Display(Name = "Administrador")] 
             Administrador = 1
         }
 

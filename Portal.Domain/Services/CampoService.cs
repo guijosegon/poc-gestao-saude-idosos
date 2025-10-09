@@ -4,7 +4,7 @@ using GestaoSaudeIdosos.Domain.Interfaces.Services;
 
 namespace GestaoSaudeIdosos.Domain.Services
 {
-    public class CampoService : Service<Campo>, ICampoService
+    internal class CampoService : Service<Campo>, ICampoService
     {
         public CampoService(ICampoRepository repository) : base(repository)
         {

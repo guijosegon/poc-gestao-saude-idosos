@@ -4,8 +4,6 @@ using GestaoSaudeIdosos.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace GestaoSaudeIdosos.API.Controllers
 {
@@ -24,14 +22,11 @@ namespace GestaoSaudeIdosos.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<PacienteDto>>> GetAll()
         {
-            var pacientes = await _pacienteAppService
-                .AsQueryable(p => p.Responsavel)
-                .ToListAsync();
+            var pacientes = await _pacienteAppService.AsQueryable(a => a.Responsavel).ToListAsync();
 
             var dtos = pacientes.Select(p => p.ToDto()).ToList();
 
-            if (!dtos.Any())
-                return NotFound();
+            if (!dtos.Any()) return NotFound();
 
             return Ok(dtos);
         }
@@ -40,12 +35,9 @@ namespace GestaoSaudeIdosos.API.Controllers
         [Authorize]
         public async Task<ActionResult<PacienteDto>> GetById(int id)
         {
-            var paciente = await _pacienteAppService
-                .AsQueryable(p => p.Responsavel)
-                .FirstOrDefaultAsync(p => p.PacienteId == id);
-
-            if (paciente is null)
-                return NotFound();
+            var paciente = await _pacienteAppService.AsQueryable(a => a.Responsavel).FirstOrDefaultAsync(f => f.PacienteId == id);
+            
+            if (paciente is null) return NotFound();
 
             return Ok(paciente.ToDto());
         }
@@ -70,12 +62,9 @@ namespace GestaoSaudeIdosos.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existente = await _pacienteAppService
-                .AsTracking(p => p.Responsavel)
-                .FirstOrDefaultAsync(p => p.PacienteId == id);
+            var existente = await _pacienteAppService.AsTracking(a => a.Responsavel).FirstOrDefaultAsync(f => f.PacienteId == id);
 
-            if (existente is null)
-                return NotFound();
+            if (existente is null) return NotFound();
 
             existente.UpdateEntity(dto);
             _pacienteAppService.Update(existente);
@@ -87,12 +76,9 @@ namespace GestaoSaudeIdosos.API.Controllers
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int id)
         {
-            var existente = await _pacienteAppService
-                .AsTracking(p => p.Responsavel)
-                .FirstOrDefaultAsync(p => p.PacienteId == id);
+            var existente = await _pacienteAppService.AsTracking(a => a.Responsavel).FirstOrDefaultAsync(f => f.PacienteId == id);
 
-            if (existente is null)
-                return NotFound();
+            if (existente is null) return NotFound();
 
             _pacienteAppService.Delete(existente);
 

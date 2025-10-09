@@ -63,7 +63,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 Responsavel = paciente.Responsavel?.Nome ?? string.Empty,
                 UltimaAtualizacao = paciente.DataCadastro,
                 FormulariosRecentes = Array.Empty<PacienteFormularioResultadoViewModel>(),
-                GraficosPersonalizados = Array.Empty<PacienteGraficoResumoViewModel>()
+                //GraficosPersonalizados = Array.Empty<PacienteGraficoResumoViewModel>()
             };
 
             return View(detalhe);
@@ -185,7 +185,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 Responsavel = paciente.Responsavel?.Nome ?? string.Empty,
                 UltimaAtualizacao = paciente.DataCadastro,
                 FormulariosRecentes = Array.Empty<PacienteFormularioResultadoViewModel>(),
-                GraficosPersonalizados = Array.Empty<PacienteGraficoResumoViewModel>()
+                //GraficosPersonalizados = Array.Empty<PacienteGraficoResumoViewModel>()
             };
 
             return View(model);
