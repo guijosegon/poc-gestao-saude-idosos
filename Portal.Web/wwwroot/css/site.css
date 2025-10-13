@@ -679,12 +679,12 @@ main.container {
 .quick-card small {
     color: var(--muted);
     font-size: 0.85rem;
-}
+} 
 
 .password-wrapper .toggle-password {
     position: absolute;
     right: 0.5rem;
-    top: 2.5rem;
+    top: 3.3rem;
     transform: translateY(-50%);
     background: transparent;
     border: none;

@@ -47,7 +47,6 @@
                 @Html.ValidationMessageFor(m => m.Senha, "", new { @class = "field-validation-error" })
             </div>
 
-            <input type="hidden" name="returnUrl" value="@(ViewData["ReturnUrl"] ?? string.Empty)" />
             <button type="submit" class="btn-submit" id="btnEntrar">Entrar</button>
         </form>
     </div>

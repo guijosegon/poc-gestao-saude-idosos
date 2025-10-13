@@ -1,4 +1,3 @@
-using System;
 using System.Security.Claims;
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Web.ViewModels;
@@ -20,22 +19,19 @@ namespace GestaoSaudeIdosos.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string? returnUrl)
+        public IActionResult Index()
         {
-            ViewData["Title"] = "Login";
-            ViewData["ReturnUrl"] = returnUrl;
-
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(LoginViewModel model, string? returnUrl = null)
+        public async Task<IActionResult> Index(LoginViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            var usuario = _service.GetByEmail(model.Email);
+            var usuario = _service.AsQueryable().FirstOrDefault(f => f.Email.Contains(model.Email));
 
             if (usuario is null)
             {
@@ -66,9 +62,6 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
-            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                return Redirect(returnUrl);
 
             return RedirectToAction("Index", "Home");
         }
