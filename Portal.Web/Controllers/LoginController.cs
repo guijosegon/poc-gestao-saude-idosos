@@ -19,15 +19,22 @@ namespace GestaoSaudeIdosos.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string? returnUrl = null)
         {
-            return View();
+            var model = new LoginViewModel
+            {
+                ReturnUrl = string.IsNullOrWhiteSpace(returnUrl) ? Url.Content("~/") : returnUrl
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(LoginViewModel model)
         {
+            model.ReturnUrl ??= Url.Content("~/");
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -62,6 +69,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+            if (!string.IsNullOrWhiteSpace(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                return LocalRedirect(model.ReturnUrl);
 
             return RedirectToAction("Index", "Home");
         }
