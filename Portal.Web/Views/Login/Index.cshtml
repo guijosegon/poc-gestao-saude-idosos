@@ -14,6 +14,7 @@
     <div class="login-form" role="form" aria-labelledby="login-title">
         <form asp-action="Index" method="post" novalidate>
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.ReturnUrl)
             <h2 id="login-title">Bem-vindo</h2>
 
             @Html.ValidationSummary(true, "", new { @class = "form-summary text-danger" })
@@ -69,7 +70,28 @@
             const form = document.querySelector('.login-form form');
             const submit = document.getElementById('btnEntrar');
             if (form && submit) {
-                form.addEventListener('submit', function () {
+                const $form = $(form);
+                $form.removeData('validator');
+                $form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse($form);
+
+                const validator = $form.data('validator');
+                if (validator) {
+                    validator.settings.onfocusout = false;
+                    validator.settings.onkeyup = false;
+                    validator.settings.onclick = false;
+                }
+
+                form.addEventListener('submit', function (event) {
+                    const isValid = !$form.length || $form.valid();
+
+                    if (!isValid) {
+                        submit.disabled = false;
+                        submit.textContent = 'Entrar';
+                        event.preventDefault();
+                        return;
+                    }
+
                     submit.disabled = true;
                     submit.textContent = 'Entrando...';
                 });
