@@ -1,5 +1,6 @@
 using GestaoSaudeIdosos.Application.AppServices;
 using GestaoSaudeIdosos.Application.Interfaces;
+using GestaoSaudeIdosos.Application.Security;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GestaoSaudeIdosos.Application
@@ -14,6 +15,7 @@ namespace GestaoSaudeIdosos.Application
             services.AddScoped<IFormularioAppService, FormularioAppService>();
             services.AddScoped<ICampoAppService, CampoAppService>();
             services.AddScoped<IGraficoAppService, GraficoAppService>();
+            services.AddSingleton<IPasswordHasher, Argon2PasswordHasher>();
 
             return services;
         }

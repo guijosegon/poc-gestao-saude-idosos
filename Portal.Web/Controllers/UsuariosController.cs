@@ -180,16 +180,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 }
             }
 
-            usuario.Nome = model.Nome.Trim();
-            usuario.Email = model.Email.Trim();
-            usuario.Ativo = model.Ativo;
-
-            if (isAdmin && model.PermiteAlterarPerfil && Enum.TryParse(model.Perfil, out Enums.PerfilUsuario perfil))
-                usuario.Perfil = perfil;
-
             if (!string.IsNullOrWhiteSpace(model.NovaSenha))
             {
-                if (!isAdmin && !string.Equals(usuario.Senha, model.SenhaAtual))
+                if (!isAdmin && !_usuarioAppService.VerifyPassword(usuario, model.SenhaAtual ?? string.Empty))
                 {
                     ModelState.AddModelError(nameof(model.SenhaAtual), "A senha atual informada não confere.");
                     return View(model);
@@ -197,6 +190,13 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
                 usuario.Senha = model.NovaSenha;
             }
+
+            usuario.Nome = model.Nome.Trim();
+            usuario.Email = model.Email.Trim();
+            usuario.Ativo = model.Ativo;
+
+            if (isAdmin && model.PermiteAlterarPerfil && Enum.TryParse(model.Perfil, out Enums.PerfilUsuario perfil))
+                usuario.Perfil = perfil;
 
             _usuarioAppService.Update(usuario);
 
