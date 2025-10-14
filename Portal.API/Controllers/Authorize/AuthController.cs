@@ -32,7 +32,7 @@ namespace GestaoSaudeIdosos.API.Controllers.Authorize
             if (login is null || !login.Ativo)
                 return Unauthorized("Credenciais inválidas");
 
-            if (!string.Equals(login.Senha, dto.Senha, StringComparison.Ordinal))
+            if (!_usuarioAppService.VerifyPassword(login, dto.Senha))
                 return Unauthorized("Credenciais inválidas");
 
             var claims = new[]

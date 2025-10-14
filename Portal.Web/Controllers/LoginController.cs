@@ -38,7 +38,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var usuario = _service.AsQueryable().FirstOrDefault(f => f.Email.Contains(model.Email));
+            var normalizedEmail = model.Email?.Trim() ?? string.Empty;
+            var usuario = _service.AsQueryable().FirstOrDefault(f => f.Email == normalizedEmail);
 
             if (usuario is null)
             {
@@ -52,7 +53,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return View(model);
             }
 
-            if (!string.Equals(model.Senha, usuario.Senha, StringComparison.Ordinal))
+            if (!_service.VerifyPassword(usuario, model.Senha))
             {
                 ModelState.AddModelError(nameof(model.Senha), "Senha inválida.");
                 return View(model);
