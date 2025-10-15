@@ -2,8 +2,7 @@ using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -26,9 +25,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var usuarios = (await _usuarioAppService.GetAllAsync()).ToList();
-            var pacientes = (await _pacienteAppService.GetAllAsync()).ToList();
-            var formularios = (await _formularioAppService.GetAllAsync()).ToList();
+            var usuarios = await _usuarioAppService.AsQueryable().ToListAsync();
+            var pacientes = await _pacienteAppService.AsQueryable().ToListAsync();
+            var formularios = await _formularioAppService.AsQueryable().ToListAsync();
 
             var usuariosRecentes = usuarios
                 .OrderByDescending(u => u.DataCadastro)

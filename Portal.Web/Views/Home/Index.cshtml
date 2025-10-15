@@ -8,7 +8,7 @@
     <div class="header">
         <button class="menu-toggle" onclick="toggleMenu()" aria-label="Alternar menu">☰</button>
         <div class="header-info">
-            <span>Portal da Saúde</span>
+            <span>Portal Gestão Idosos</span>
             <div class="user-info">
                 <span class="user-name">@Model.UsuarioNome</span>
                 <form asp-controller="Login" asp-action="Logout" method="post">
@@ -21,13 +21,12 @@
 
     <div class="body-content">
         <div class="sidebar" id="menuLateral">
-            <button onclick="abrirAba('Portal')">Dashboard</button>
             <button onclick="location.href='@Url.Action("Index", "Usuarios")'">Usuários</button>
             <button onclick="location.href='@Url.Action("Index", "Pacientes")'">Pacientes</button>
             <button onclick="location.href='@Url.Action("Index", "Campos")'">Campos</button>
             <button onclick="location.href='@Url.Action("Index", "Formularios")'">Formulários</button>
             <button onclick="location.href='@Url.Action("Index", "Graficos")'">Gráficos</button>
-            <button onclick="location.href='@Url.Action("Index", "Dashboard")'">Configurar dashboard</button>
+            <button onclick="location.href='@Url.Action("Index", "Dashboard")'">Dashboard</button>
         </div>
 
         <div class="main-content">
