@@ -2,6 +2,7 @@ using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Domain.Interfaces.Repositories;
 using GestaoSaudeIdosos.Domain.Interfaces.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestaoSaudeIdosos.Application.AppServices
 {
@@ -19,7 +20,7 @@ namespace GestaoSaudeIdosos.Application.AppServices
             _formularioCampoRepository = formularioCampoRepository;
         }
 
-        public async Task<Formulario?> GetCompletoPorIdAsync(int id) => await _formularioRepository.GetByIdAsync(id);
+        public async Task<Formulario?> GetCompletoPorIdAsync(int id) => await _formularioRepository.AsQueryable().FirstOrDefaultAsync(f => f.FormularioId == id);
 
         public async Task AtualizarCamposAsync(Formulario formulario, IEnumerable<int> camposIds)
         {

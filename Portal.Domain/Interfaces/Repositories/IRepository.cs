@@ -8,8 +8,6 @@ namespace GestaoSaudeIdosos.Domain.Interfaces.Repositories
         IQueryable<T> AsQueryable(params Expression<Func<T, object?>>[] includes);
         IQueryable<T> AsTracking(params Expression<Func<T, object?>>[] includes);
         IQueryable<T> Query();
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<T?> GetByIdAsync(int id);
         Task AddAsync(T entity);
         void Update(T entity);
         void Remove(T entity);

@@ -3,6 +3,7 @@ using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -18,7 +19,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var graficos = await _graficoAppService.GetAllAsync();
+            var graficos = await _graficoAppService.AsQueryable().ToListAsync();
             var model = graficos
                 .Select(g => new GraficoListItemViewModel
                 {
@@ -32,7 +33,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var grafico = await _graficoAppService.GetByIdAsync(id);
+            var grafico = await _graficoAppService.AsQueryable().FirstOrDefaultAsync(f => f.GraficoId == id);
+
             if (grafico is null)
                 return NotFound();
 
@@ -70,7 +72,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var grafico = await _graficoAppService.GetByIdAsync(id);
+            var grafico = await _graficoAppService.AsQueryable().FirstOrDefaultAsync(f => f.GraficoId == id);
+
             if (grafico is null)
                 return NotFound();
 
@@ -93,7 +96,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var grafico = await _graficoAppService.GetByIdAsync(id);
+            var grafico = await _graficoAppService.AsQueryable().FirstOrDefaultAsync(f => f.GraficoId == id);
+
             if (grafico is null)
                 return NotFound();
 
@@ -106,7 +110,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var grafico = await _graficoAppService.GetByIdAsync(id);
+            var grafico = await _graficoAppService.AsQueryable().FirstOrDefaultAsync(f => f.GraficoId == id);
+
             if (grafico is null)
                 return NotFound();
 
@@ -123,7 +128,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmDelete(int id)
         {
-            var grafico = await _graficoAppService.GetByIdAsync(id);
+            var grafico = await _graficoAppService.AsQueryable().FirstOrDefaultAsync(f => f.GraficoId == id);
+
             if (grafico is null)
                 return NotFound();
 

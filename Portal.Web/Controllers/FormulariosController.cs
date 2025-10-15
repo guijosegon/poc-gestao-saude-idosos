@@ -4,6 +4,7 @@ using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var formularios = await _formularioAppService.GetAllAsync();
+            var formularios = await _formularioAppService.AsQueryable().ToListAsync();
 
             var model = formularios
                 .Select(f => new FormularioListItemViewModel
@@ -180,7 +181,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmDelete(int id)
         {
-            var formulario = await _formularioAppService.GetByIdAsync(id);
+            var formulario = await _formularioAppService.AsTracking().FirstOrDefaultAsync(f => f.FormularioId == id);
             if (formulario is null)
                 return NotFound();
 
@@ -200,7 +201,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         private async Task<IEnumerable<SelectListItem>> ObterCamposAsync()
         {
-            var campos = await _campoAppService.GetAllAsync();
+            var campos = await _campoAppService.AsQueryable().ToListAsync();
 
             return campos
                 .Where(c => c.Ativo)
@@ -219,7 +220,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (string.IsNullOrWhiteSpace(email))
                 return null;
 
-            var usuarios = await _usuarioAppService.GetAllAsync();
+            var usuarios = await _usuarioAppService.AsQueryable().ToListAsync();
             return usuarios.FirstOrDefault(u => u.Email.Equals(email, System.StringComparison.OrdinalIgnoreCase))?.UsuarioId;
         }
     }

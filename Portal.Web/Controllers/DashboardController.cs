@@ -3,6 +3,7 @@ using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -43,7 +44,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         private async Task<DashboardConfigViewModel> CriarDashboardAsync()
         {
-            var graficos = (await _graficoAppService.GetAllAsync()).ToList();
+            var graficos = await _graficoAppService.AsQueryable().ToListAsync();
 
             var opcoesPeriodo = new List<SelectListItem>
             {

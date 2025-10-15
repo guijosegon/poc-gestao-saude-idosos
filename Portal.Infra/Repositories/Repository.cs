@@ -53,10 +53,6 @@ namespace GestaoSaudeIdosos.Infra.Repositories
             return query.AsTracking();
         }
 
-        public virtual async Task<T?> GetByIdAsync(int id) => await _dbSet.FindAsync(id).AsTask();
-
-        public virtual async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.AsNoTracking().ToListAsync();
-
         public IQueryable<T> Query() => _dbSet.AsQueryable();
 
         public virtual void Remove(T entity)

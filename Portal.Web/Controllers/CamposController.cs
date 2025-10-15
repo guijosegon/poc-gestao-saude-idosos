@@ -167,6 +167,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var campo = await _campoAppService
                 .AsQueryable(c => c.Usuario)
                 .FirstOrDefaultAsync(c => c.CampoId == id);
+
             if (campo is null)
                 return NotFound();
 
@@ -200,6 +201,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var campo = await _campoAppService
                 .AsTracking(c => c.Usuario)
                 .FirstOrDefaultAsync(c => c.CampoId == id);
+
             if (campo is null)
                 return NotFound();
 

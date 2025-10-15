@@ -1,6 +1,5 @@
 using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Domain.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace GestaoSaudeIdosos.Infra.Repositories
 {
@@ -8,23 +7,6 @@ namespace GestaoSaudeIdosos.Infra.Repositories
     {
         public CampoRepository(Contexts.AppContext dbContext) : base(dbContext)
         {
-        }
-
-        public override async Task<IEnumerable<Campo>> GetAllAsync()
-        {
-            return await _dbContext.Set<Campo>()
-                .Include(c => c.Usuario)
-                .AsNoTracking()
-                .OrderByDescending(c => c.DataCadastro)
-                .ToListAsync();
-        }
-
-        public override async Task<Campo?> GetByIdAsync(int id)
-        {
-            return await _dbContext.Set<Campo>()
-                .Include(c => c.Usuario)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.CampoId == id);
         }
     }
 }
