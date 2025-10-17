@@ -236,7 +236,7 @@ main.container {
 }
 
 .aba {
-    padding: 0.65rem 1.1rem;
+    padding: 0.65rem 0.4rem 0.65rem 0.65rem;
     background: var(--primary);
     color: #fff;
     border-radius: 999px;
@@ -252,8 +252,28 @@ main.container {
     box-shadow: 0 8px 18px rgba(1, 120, 54, 0.25);
 }
 
+.aba .aba-title {
+    padding: 0 0.25rem 0 0.45rem;
+}
+
 .aba .close {
+    background: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
     font-size: 1rem;
+    padding: 0;
+    margin-right: 0.15rem;
+}
+
+.aba .close:hover,
+.aba .close:focus {
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .conteudos {
@@ -271,6 +291,24 @@ main.container {
 
 .conteudo.active {
     display: block;
+}
+
+.conteudo.loading {
+    display: block;
+}
+
+.loading-state,
+.error-state {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--muted);
+}
+
+.error-state {
+    color: var(--danger);
 }
 
 .dashboard-cards {

@@ -1,6 +1,14 @@
-function abrirAba(nome) {
+function abrirAba(nome, url) {
+    if (!nome) {
+        return;
+    }
+
     const abasContainer = document.getElementById("abas");
     const conteudosContainer = document.getElementById("conteudos");
+    if (!abasContainer || !conteudosContainer) {
+        return;
+    }
+
     const abaId = "aba-" + nome;
     const conteudoId = "conteudo-" + nome;
 
@@ -9,8 +17,26 @@ function abrirAba(nome) {
         aba = document.createElement("div");
         aba.className = "aba";
         aba.id = abaId;
-        aba.innerHTML = nome + (nome === "Portal" ? "" : " <span class=\"close\" onclick=\"fecharAba('" + nome + "')\">×</span>");
-        aba.onclick = () => ativarConteudo(nome);
+
+        const titulo = document.createElement("span");
+        titulo.className = "aba-title";
+        titulo.textContent = nome;
+        aba.appendChild(titulo);
+
+        if (nome !== "Portal") {
+            const closeButton = document.createElement("button");
+            closeButton.type = "button";
+            closeButton.className = "close";
+            closeButton.setAttribute("aria-label", `Fechar aba ${nome}`);
+            closeButton.textContent = "×";
+            closeButton.addEventListener("click", (event) => {
+                event.stopPropagation();
+                fecharAba(nome);
+            });
+            aba.appendChild(closeButton);
+        }
+
+        aba.addEventListener("click", () => ativarConteudo(nome));
         abasContainer.appendChild(aba);
     }
 
@@ -19,8 +45,11 @@ function abrirAba(nome) {
         conteudo = document.createElement("div");
         conteudo.className = "conteudo";
         conteudo.id = conteudoId;
-        conteudo.innerHTML = "<h2>" + nome + "</h2><p>Conteúdo de " + nome + " em desenvolvimento.</p>";
         conteudosContainer.appendChild(conteudo);
+    }
+
+    if (url) {
+        carregarConteudoEmAba(conteudo, url, nome);
     }
 
     ativarConteudo(nome);
@@ -58,6 +87,75 @@ function fecharAba(nome) {
     } else {
         ativarConteudo("Portal");
     }
+}
+
+function carregarConteudoEmAba(container, url, nome) {
+    if (!container || !url) {
+        return;
+    }
+
+    if (container.dataset.url === url && container.dataset.loaded === "true") {
+        return;
+    }
+
+    container.dataset.url = url;
+    container.dataset.loaded = "false";
+    container.classList.add("loading");
+    container.innerHTML = "<div class=\"loading-state\">Carregando " + nome + "...</div>";
+
+    fetch(url, {
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erro ao carregar aba");
+            }
+            return response.text();
+        })
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const main = doc.querySelector("main.container") || doc.body;
+
+            container.innerHTML = main.innerHTML;
+            container.querySelectorAll("script").forEach(script => script.remove());
+            container.dataset.loaded = "true";
+            container.classList.remove("loading");
+
+            executarScriptsDoConteudo(doc, container);
+            ativarTooltips();
+            aplicarValidacao(container);
+        })
+        .catch(() => {
+            container.classList.remove("loading");
+            container.innerHTML = "<div class=\"error-state\">Não foi possível carregar esta rotina. Tente novamente mais tarde.</div>";
+        });
+}
+
+function executarScriptsDoConteudo(documento, container) {
+    if (!documento) {
+        return;
+    }
+
+    const scripts = documento.querySelectorAll("main.container script, body script");
+    scripts.forEach(script => {
+        const isExternal = script.src && script.src.length > 0;
+        if (isExternal) {
+            return;
+        }
+
+        const novoScript = document.createElement("script");
+        Array.from(script.attributes).forEach(attr => {
+            if (attr.name !== "src") {
+                novoScript.setAttribute(attr.name, attr.value);
+            }
+        });
+
+        novoScript.textContent = script.textContent;
+        container.appendChild(novoScript);
+    });
 }
 
 let menuIsOpen = false;
@@ -179,20 +277,41 @@ function ativarTooltips() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    ativarTooltips();
-    ativarConteudo('Portal');
-    setupMenuModalInteractions();
-});
+function aplicarValidacao(contexto = document) {
+    const $contexto = $(contexto);
 
-$(document).ready(function () {
-    $("form").each(function () {
+    $contexto.find("form").each(function () {
         $(this).removeData("validator");
         $(this).removeData("unobtrusiveValidation");
         $.validator.unobtrusive.parse($(this));
     });
 
-    $("form input").on("input blur", function () {
+    $contexto.find("form input").off("input.portal blur.portal").on("input.portal blur.portal", function () {
         $(this).valid();
     });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    ativarTooltips();
+    ativarConteudo('Portal');
+    setupMenuModalInteractions();
+    configurarAtalhosDeAbas();
+    aplicarValidacao(document);
 });
+
+function configurarAtalhosDeAbas() {
+    document.addEventListener("click", (event) => {
+        const alvo = event.target.closest("[data-open-tab]");
+        if (!alvo) {
+            return;
+        }
+
+        const nome = alvo.getAttribute("data-tab");
+        const url = alvo.getAttribute("data-url") || alvo.getAttribute("href");
+
+        if (nome && url) {
+            event.preventDefault();
+            abrirAba(nome, url);
+        }
+    });
+}
