@@ -6,7 +6,7 @@
 
 <div class="layout-container">
     <div class="header">
-        <button class="menu-toggle" onclick="toggleMenu()" aria-label="Alternar menu">☰</button>
+        <button id="menuToggle" class="menu-toggle" onclick="toggleMenu(event)" aria-label="Alternar menu" aria-expanded="false">☰</button>
         <div class="header-info">
             <span>Portal Gestão Idosos</span>
             <div class="user-info">
@@ -19,16 +19,60 @@
         </div>
     </div>
 
-    <div class="body-content">
-        <div class="sidebar" id="menuLateral">
-            <button onclick="location.href='@Url.Action("Index", "Usuarios")'">Usuários</button>
-            <button onclick="location.href='@Url.Action("Index", "Pacientes")'">Pacientes</button>
-            <button onclick="location.href='@Url.Action("Index", "Campos")'">Campos</button>
-            <button onclick="location.href='@Url.Action("Index", "Formularios")'">Formulários</button>
-            <button onclick="location.href='@Url.Action("Index", "Graficos")'">Gráficos</button>
-            <button onclick="location.href='@Url.Action("Index", "Dashboard")'">Dashboard</button>
+    <div class="menu-modal" id="menuModal" role="menu" aria-labelledby="menuToggle">
+        <div class="menu-card">
+            <div class="menu-header">
+                <span class="menu-title">Navegação rápida</span>
+                <small>Selecione uma área para continuar</small>
+            </div>
+            <div class="menu-grid">
+                <button type="button" class="menu-item" onclick="location.href='@Url.Action("Index", "Usuarios")'">
+                    <span class="menu-icon">👥</span>
+                    <div class="menu-text">
+                        <strong>Usuários</strong>
+                        <small>Gerencie os profissionais do portal</small>
+                    </div>
+                </button>
+                <button type="button" class="menu-item" onclick="location.href='@Url.Action("Index", "Pacientes")'">
+                    <span class="menu-icon">❤️</span>
+                    <div class="menu-text">
+                        <strong>Pacientes</strong>
+                        <small>Acompanhe os moradores cadastrados</small>
+                    </div>
+                </button>
+                <button type="button" class="menu-item" onclick="location.href='@Url.Action("Index", "Campos")'">
+                    <span class="menu-icon">✏️</span>
+                    <div class="menu-text">
+                        <strong>Campos</strong>
+                        <small>Configure perguntas reutilizáveis</small>
+                    </div>
+                </button>
+                <button type="button" class="menu-item" onclick="location.href='@Url.Action("Index", "Formularios")'">
+                    <span class="menu-icon">📝</span>
+                    <div class="menu-text">
+                        <strong>Formulários</strong>
+                        <small>Monte instrumentos de avaliação</small>
+                    </div>
+                </button>
+                <button type="button" class="menu-item" onclick="location.href='@Url.Action("Index", "Graficos")'">
+                    <span class="menu-icon">📊</span>
+                    <div class="menu-text">
+                        <strong>Gráficos</strong>
+                        <small>Visualize indicadores importantes</small>
+                    </div>
+                </button>
+                <button type="button" class="menu-item" onclick="location.href='@Url.Action("Index", "Dashboard")'">
+                    <span class="menu-icon">📋</span>
+                    <div class="menu-text">
+                        <strong>Dashboard</strong>
+                        <small>Acesse atalhos e relatórios</small>
+                    </div>
+                </button>
+            </div>
         </div>
+    </div>
 
+    <div class="body-content">
         <div class="main-content">
             <div class="tabs" id="abas">
                 <div class="aba active" id="aba-Portal" onclick="ativarConteudo('Portal')">Portal</div>

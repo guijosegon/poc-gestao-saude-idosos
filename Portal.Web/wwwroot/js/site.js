@@ -60,9 +60,86 @@ function fecharAba(nome) {
     }
 }
 
-function toggleMenu() {
-    const menu = document.getElementById("menuLateral");
-    menu.classList.toggle("hidden");
+let menuIsOpen = false;
+let menuHoverTimeout = null;
+let menuModalElement = null;
+let menuToggleElement = null;
+
+function openMenu() {
+    if (!menuModalElement || !menuToggleElement) return;
+    clearTimeout(menuHoverTimeout);
+    menuModalElement.classList.add("open");
+    menuToggleElement.setAttribute("aria-expanded", "true");
+    menuIsOpen = true;
+}
+
+function closeMenu() {
+    if (!menuModalElement || !menuToggleElement) return;
+    clearTimeout(menuHoverTimeout);
+    menuModalElement.classList.remove("open");
+    menuToggleElement.setAttribute("aria-expanded", "false");
+    menuIsOpen = false;
+}
+
+function scheduleMenuClose() {
+    clearTimeout(menuHoverTimeout);
+    menuHoverTimeout = setTimeout(() => {
+        closeMenu();
+    }, 180);
+}
+
+function toggleMenu(evt) {
+    if (evt) {
+        evt.stopPropagation();
+    }
+
+    if (menuIsOpen) {
+        closeMenu();
+    } else {
+        openMenu();
+    }
+}
+
+function setupMenuModalInteractions() {
+    menuModalElement = document.getElementById("menuModal");
+    menuToggleElement = document.getElementById("menuToggle");
+
+    if (!menuModalElement || !menuToggleElement) {
+        return;
+    }
+
+    const keepMenuOpen = () => {
+        openMenu();
+    };
+
+    menuToggleElement.addEventListener("mouseenter", keepMenuOpen);
+    menuToggleElement.addEventListener("focus", keepMenuOpen);
+    menuModalElement.addEventListener("mouseenter", keepMenuOpen);
+
+    menuToggleElement.addEventListener("mouseleave", scheduleMenuClose);
+    menuToggleElement.addEventListener("blur", scheduleMenuClose);
+    menuModalElement.addEventListener("mouseleave", scheduleMenuClose);
+
+    document.addEventListener("click", (event) => {
+        if (!menuIsOpen) return;
+
+        if (event.target === menuToggleElement) return;
+        if (menuModalElement.contains(event.target)) return;
+
+        closeMenu();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeMenu();
+        }
+    });
+
+    menuModalElement.querySelectorAll(".menu-item").forEach(button => {
+        button.addEventListener("click", () => {
+            closeMenu();
+        });
+    });
 }
 
 function ativarTooltips() {
@@ -105,6 +182,7 @@ function ativarTooltips() {
 document.addEventListener('DOMContentLoaded', () => {
     ativarTooltips();
     ativarConteudo('Portal');
+    setupMenuModalInteractions();
 });
 
 $(document).ready(function () {
