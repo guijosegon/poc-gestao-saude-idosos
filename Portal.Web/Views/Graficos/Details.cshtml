@@ -9,8 +9,11 @@
         <p class="page-subtitle">Visualização criada para acompanhamento de indicadores dos pacientes.</p>
     </div>
     <div class="page-actions">
-        <a asp-action="Edit" asp-route-id="@Model.GraficoId" class="btn-primary">Editar</a>
-        <a asp-action="Index" class="btn-secondary">Voltar</a>
+        <a asp-action="Edit" asp-route-id="@Model.GraficoId" class="btn-primary"
+           data-open-tab data-tab="GraficosEditar-@Model.GraficoId"
+           data-url='@Url.Action("Edit", "Graficos", new { id = Model.GraficoId })'>Editar</a>
+        <a asp-action="Index" class="btn-secondary"
+           data-open-tab data-close-current-tab data-tab="Graficos" data-url='@Url.Action("Index", "Graficos")'>Voltar</a>
     </div>
 </section>
 

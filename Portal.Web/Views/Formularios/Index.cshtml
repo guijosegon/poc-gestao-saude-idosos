@@ -8,14 +8,14 @@
         <h1>Biblioteca de formulários</h1>
         <p class="page-subtitle">Organize instrumentos clínicos com campos reutilizáveis e aplicáveis aos pacientes.</p>
     </div>
-    <a asp-action="Create" class="btn-primary">Novo formulário</a>
+    <a asp-action="Create" class="btn-primary" data-open-tab data-tab="FormulariosNovo" data-url='@Url.Action("Create", "Formularios")'>Novo formulário</a>
 </section>
 
 @if (!Model.Any())
 {
     <div class="empty-state">
         <p>Nenhum formulário cadastrado até o momento.</p>
-        <a asp-action="Create" class="btn-link">Criar primeiro formulário</a>
+        <a asp-action="Create" class="btn-link" data-open-tab data-tab="FormulariosNovo" data-url='@Url.Action("Create", "Formularios")'>Criar primeiro formulário</a>
     </div>
 }
 else
@@ -33,12 +33,46 @@ else
             <footer>
                 <span>Criado em @formulario.DataCadastro.ToString("dd/MM/yyyy")</span>
                 <div class="card-actions">
-                    <a asp-action="Details" asp-route-id="@formulario.FormularioId" class="btn-link">Detalhes</a>
-                    <a asp-action="Edit" asp-route-id="@formulario.FormularioId" class="btn-link">Editar</a>
-                    <a asp-action="Delete" asp-route-id="@formulario.FormularioId" class="btn-link text-danger">Excluir</a>
+                    <a asp-action="Details" asp-route-id="@formulario.FormularioId" class="btn-link"
+                       data-open-tab data-tab="FormulariosDetalhes-@formulario.FormularioId"
+                       data-url='@Url.Action("Details", "Formularios", new { id = formulario.FormularioId })'>Detalhes</a>
+                    <a asp-action="Edit" asp-route-id="@formulario.FormularioId" class="btn-link"
+                       data-open-tab data-tab="FormulariosEditar-@formulario.FormularioId"
+                       data-url='@Url.Action("Edit", "Formularios", new { id = formulario.FormularioId })'>Editar</a>
+                    <a asp-action="Delete" asp-route-id="@formulario.FormularioId" class="btn-link text-danger"
+                       data-open-tab data-tab="FormulariosExcluir-@formulario.FormularioId"
+                       data-url='@Url.Action("Delete", "Formularios", new { id = formulario.FormularioId })'>Excluir</a>
                 </div>
             </footer>
         </article>
     }
     </div>
+}
+
+@section Scripts {
+    <script>
+        (function () {
+            const scriptElement = document.currentScript;
+            const container = scriptElement ? scriptElement.closest(".conteudo") : null;
+            const destino = "Formularios";
+            const urlDestino = `@Url.Action("Index", "Formularios")`;
+
+            if (!container || !container.id) {
+                return;
+            }
+
+            const prefixo = "conteudo-";
+            if (!container.id.startsWith(prefixo)) {
+                return;
+            }
+
+            const abaAtual = container.id.substring(prefixo.length);
+            if (abaAtual === destino) {
+                return;
+            }
+
+            fecharAba(abaAtual);
+            abrirAba(destino, urlDestino);
+        })();
+    </script>
 }

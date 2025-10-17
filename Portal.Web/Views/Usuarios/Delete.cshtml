@@ -8,7 +8,8 @@
         <h1>Excluir usuário</h1>
         <p class="page-subtitle">Somente administradores (ou o próprio profissional) podem executar esta ação.</p>
     </div>
-    <a asp-action="Details" asp-route-id="@Model.UsuarioId" class="btn-link">Cancelar</a>
+    <a asp-action="Index" class="btn-link"
+       data-open-tab data-close-current-tab data-tab="Usuarios" data-url='@Url.Action("Index", "Usuarios")'>Cancelar</a>
 </section>
 
 <div class="alert danger">
@@ -20,5 +21,6 @@
     @Html.HiddenFor(m => m.UsuarioId)
     <input type="hidden" name="email" value="@Model.Email" />
     <button type="submit" class="btn-danger">Excluir usuário</button>
-    <a asp-action="Details" asp-route-id="@Model.UsuarioId" class="btn-secondary">Manter usuário</a>
+    <a asp-action="Index" class="btn-secondary"
+       data-open-tab data-close-current-tab data-tab="Usuarios" data-url='@Url.Action("Index", "Usuarios")'>Manter usuário</a>
 </form>

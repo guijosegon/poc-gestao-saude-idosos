@@ -8,7 +8,8 @@
         <h1>Novo usuário</h1>
         <p class="page-subtitle">Informe os dados de acesso para adicionar um novo colaborador.</p>
     </div>
-    <a asp-action="Index" class="btn-link">Voltar</a>
+    <a asp-action="Index" class="btn-link"
+       data-open-tab data-close-current-tab data-tab="Usuarios" data-url='@Url.Action("Index", "Usuarios")'>Voltar</a>
 </section>
 
 <form asp-action="Create" method="post" class="form-card" novalidate>
@@ -57,6 +58,7 @@
 
     <div class="form-actions">
         <button type="submit" class="btn-primary">Salvar</button>
-        <a asp-action="Index" class="btn-secondary">Cancelar</a>
+        <a asp-action="Index" class="btn-secondary"
+           data-open-tab data-close-current-tab data-tab="Usuarios" data-url='@Url.Action("Index", "Usuarios")'>Cancelar</a>
     </div>
 </form>

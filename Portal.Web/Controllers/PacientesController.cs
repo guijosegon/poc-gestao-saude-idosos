@@ -165,7 +165,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             _pacienteAppService.Update(paciente);
 
             TempData["Sucesso"] = "Dados do paciente atualizados com sucesso.";
-            return RedirectToAction(nameof(Details), new { id });
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)

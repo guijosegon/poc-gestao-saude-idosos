@@ -8,7 +8,9 @@
         <h1>Editar paciente</h1>
         <p class="page-subtitle">Atualize dados cadastrais e responsável pelo acompanhamento.</p>
     </div>
-    <a asp-action="Details" asp-route-id="@Model.PacienteId" class="btn-link">Ver detalhes</a>
+    <a asp-action="Details" asp-route-id="@Model.PacienteId" class="btn-link"
+       data-open-tab data-tab="PacientesDetalhes-@Model.PacienteId"
+       data-url='@Url.Action("Details", "Pacientes", new { id = Model.PacienteId })'>Ver detalhes</a>
 </section>
 
 <form asp-action="Edit" method="post" class="form-card" novalidate>
@@ -39,6 +41,7 @@
 
     <div class="form-actions">
         <button type="submit" class="btn-primary">Salvar alterações</button>
-        <a asp-action="Details" asp-route-id="@Model.PacienteId" class="btn-secondary">Cancelar</a>
+        <a asp-action="Index" class="btn-secondary"
+           data-open-tab data-close-current-tab data-tab="Pacientes" data-url='@Url.Action("Index", "Pacientes")'>Cancelar</a>
     </div>
 </form>

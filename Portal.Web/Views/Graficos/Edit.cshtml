@@ -8,7 +8,9 @@
         <h1>Editar gráfico</h1>
         <p class="page-subtitle">Ajuste dados de origem, campos analisados e configurações visuais.</p>
     </div>
-    <a asp-action="Details" asp-route-id="@Model.GraficoId" class="btn-link">Ver detalhes</a>
+    <a asp-action="Details" asp-route-id="@Model.GraficoId" class="btn-link"
+       data-open-tab data-tab="GraficosDetalhes-@Model.GraficoId"
+       data-url='@Url.Action("Details", "Graficos", new { id = Model.GraficoId })'>Ver detalhes</a>
 </section>
 
 <form asp-action="Edit" method="post" class="form-card" novalidate>
@@ -26,6 +28,7 @@
 
     <div class="form-actions">
         <button type="submit" class="btn-primary">Salvar alterações</button>
-        <a asp-action="Details" asp-route-id="@Model.GraficoId" class="btn-secondary">Cancelar</a>
+        <a asp-action="Index" class="btn-secondary"
+           data-open-tab data-close-current-tab data-tab="Graficos" data-url='@Url.Action("Index", "Graficos")'>Cancelar</a>
     </div>
 </form>

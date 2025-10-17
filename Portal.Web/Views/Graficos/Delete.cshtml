@@ -8,7 +8,8 @@
         <h1>Excluir gráfico</h1>
         <p class="page-subtitle">Remova a visualização desta POC sem impactar dados reais.</p>
     </div>
-    <a asp-action="Details" asp-route-id="@Model.GraficoId" class="btn-link">Cancelar</a>
+    <a asp-action="Index" class="btn-link"
+       data-open-tab data-close-current-tab data-tab="Graficos" data-url='@Url.Action("Index", "Graficos")'>Cancelar</a>
 </section>
 
 <div class="alert danger">
@@ -19,5 +20,6 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.GraficoId)
     <button type="submit" class="btn-danger">Excluir gráfico</button>
-    <a asp-action="Details" asp-route-id="@Model.GraficoId" class="btn-secondary">Manter gráfico</a>
+    <a asp-action="Index" class="btn-secondary"
+       data-open-tab data-close-current-tab data-tab="Graficos" data-url='@Url.Action("Index", "Graficos")'>Manter gráfico</a>
 </form>

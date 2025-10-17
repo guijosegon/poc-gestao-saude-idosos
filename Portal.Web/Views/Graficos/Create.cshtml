@@ -8,7 +8,8 @@
         <h1>Novo gráfico</h1>
         <p class="page-subtitle">Transforme respostas de formulários em visualizações do Google Charts.</p>
     </div>
-    <a asp-action="Index" class="btn-link">Voltar</a>
+    <a asp-action="Index" class="btn-link"
+       data-open-tab data-close-current-tab data-tab="Graficos" data-url='@Url.Action("Index", "Graficos")'>Voltar</a>
 </section>
 
 <form asp-action="Create" method="post" class="form-card" novalidate>
@@ -25,6 +26,7 @@
 
     <div class="form-actions">
         <button type="submit" class="btn-primary">Salvar gráfico</button>
-        <a asp-action="Index" class="btn-secondary">Cancelar</a>
+        <a asp-action="Index" class="btn-secondary"
+           data-open-tab data-close-current-tab data-tab="Graficos" data-url='@Url.Action("Index", "Graficos")'>Cancelar</a>
     </div>
 </form>

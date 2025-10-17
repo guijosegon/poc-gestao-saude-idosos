@@ -9,8 +9,11 @@
         <p class="page-subtitle">@Model.Idade anos • acompanhamento por @(string.IsNullOrEmpty(Model.Responsavel) ? "—" : Model.Responsavel)</p>
     </div>
     <div class="page-actions">
-        <a asp-action="Edit" asp-route-id="@Model.PacienteId" class="btn-primary">Editar</a>
-        <a asp-action="Index" class="btn-secondary">Voltar</a>
+        <a asp-action="Edit" asp-route-id="@Model.PacienteId" class="btn-primary"
+           data-open-tab data-tab="PacientesEditar-@Model.PacienteId"
+           data-url='@Url.Action("Edit", "Pacientes", new { id = Model.PacienteId })'>Editar</a>
+        <a asp-action="Index" class="btn-secondary"
+           data-open-tab data-close-current-tab data-tab="Pacientes" data-url='@Url.Action("Index", "Pacientes")'>Voltar</a>
     </div>
 </section>
 
