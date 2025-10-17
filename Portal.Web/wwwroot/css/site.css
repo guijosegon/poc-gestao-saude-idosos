@@ -233,9 +233,31 @@ main.container {
 .tabs {
     display: flex;
     gap: 10px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+    padding-bottom: 0.5rem;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(1, 146, 67, 0.35) transparent;
+}
+
+.tabs::-webkit-scrollbar {
+    height: 6px;
+}
+
+.tabs::-webkit-scrollbar-thumb {
+    background: rgba(1, 146, 67, 0.35);
+    border-radius: 999px;
+}
+
+.tabs::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .aba {
+    flex: 0 0 auto;
     padding: 0.65rem 0.4rem 0.65rem 0.65rem;
     background: var(--primary);
     color: #fff;
