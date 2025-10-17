@@ -8,14 +8,14 @@
         <h1>Biblioteca de formulários</h1>
         <p class="page-subtitle">Organize instrumentos clínicos com campos reutilizáveis e aplicáveis aos pacientes.</p>
     </div>
-    <a asp-action="Create" class="btn-primary">Novo formulário</a>
+    <a asp-action="Create" class="btn-primary" data-open-tab data-tab="FormulariosNovo" data-url='@Url.Action("Create", "Formularios")'>Novo formulário</a>
 </section>
 
 @if (!Model.Any())
 {
     <div class="empty-state">
         <p>Nenhum formulário cadastrado até o momento.</p>
-        <a asp-action="Create" class="btn-link">Criar primeiro formulário</a>
+        <a asp-action="Create" class="btn-link" data-open-tab data-tab="FormulariosNovo" data-url='@Url.Action("Create", "Formularios")'>Criar primeiro formulário</a>
     </div>
 }
 else

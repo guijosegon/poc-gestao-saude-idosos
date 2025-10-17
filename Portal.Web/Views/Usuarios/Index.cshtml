@@ -10,7 +10,7 @@
     </div>
     @if (User.IsInRole("Administrador"))
     {
-        <a asp-action="Create" class="btn-primary">Novo usuário</a>
+        <a asp-action="Create" class="btn-primary" data-open-tab data-tab="UsuariosNovo" data-url='@Url.Action("Create", "Usuarios")'>Novo usuário</a>
     }
 </section>
 
@@ -20,7 +20,7 @@
         <p>Nenhum usuário cadastrado até o momento.</p>
         @if (User.IsInRole("Administrador"))
         {
-            <a asp-action="Create" class="btn-link">Clique aqui para cadastrar o primeiro usuário.</a>
+            <a asp-action="Create" class="btn-link" data-open-tab data-tab="UsuariosNovo" data-url='@Url.Action("Create", "Usuarios")'>Clique aqui para cadastrar o primeiro usuário.</a>
         }
     </div>
 }

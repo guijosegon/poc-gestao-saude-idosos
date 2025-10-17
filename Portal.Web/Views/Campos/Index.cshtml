@@ -8,7 +8,7 @@
         <h1>Campos configuráveis</h1>
         <p class="page-subtitle">Personalize as perguntas que serão reutilizadas nos formulários clínicos.</p>
     </div>
-    <a asp-action="Create" class="btn-primary">Novo campo</a>
+    <a asp-action="Create" class="btn-primary" data-open-tab data-tab="CamposNovo" data-url='@Url.Action("Create", "Campos")'>Novo campo</a>
 </section>
 
 @if (!Model.Any())

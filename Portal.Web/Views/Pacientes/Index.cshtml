@@ -8,14 +8,14 @@
         <h1>Pacientes</h1>
         <p class="page-subtitle">Acompanhe os idosos cadastrados e suas últimas atualizações.</p>
     </div>
-    <a asp-action="Create" class="btn-primary">Novo paciente</a>
+    <a asp-action="Create" class="btn-primary" data-open-tab data-tab="PacientesNovo" data-url='@Url.Action("Create", "Pacientes")'>Novo paciente</a>
 </section>
 
 @if (!Model.Any())
 {
     <div class="empty-state">
         <p>Nenhum paciente cadastrado até o momento.</p>
-        <a asp-action="Create" class="btn-link">Cadastrar paciente</a>
+        <a asp-action="Create" class="btn-link" data-open-tab data-tab="PacientesNovo" data-url='@Url.Action("Create", "Pacientes")'>Cadastrar paciente</a>
     </div>
 }
 else
