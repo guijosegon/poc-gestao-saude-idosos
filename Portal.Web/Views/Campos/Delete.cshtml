@@ -8,7 +8,8 @@
         <h1>Excluir campo</h1>
         <p class="page-subtitle">A remoção impede o uso deste componente em novos formulários.</p>
     </div>
-    <a asp-action="Details" asp-route-id="@Model.CampoId" class="btn-link">Cancelar</a>
+    <a asp-action="Index" class="btn-link"
+       data-open-tab data-tab="Campos" data-url='@Url.Action("Index", "Campos")'>Cancelar</a>
 </section>
 
 <div class="alert danger">
@@ -19,5 +20,6 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.CampoId)
     <button type="submit" class="btn-danger">Confirmar exclusão</button>
-    <a asp-action="Details" asp-route-id="@Model.CampoId" class="btn-secondary">Manter campo</a>
+    <a asp-action="Index" class="btn-secondary"
+       data-open-tab data-tab="Campos" data-url='@Url.Action("Index", "Campos")'>Manter campo</a>
 </form>

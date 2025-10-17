@@ -33,9 +33,15 @@ else
             <footer>
                 <span>Criado em @formulario.DataCadastro.ToString("dd/MM/yyyy")</span>
                 <div class="card-actions">
-                    <a asp-action="Details" asp-route-id="@formulario.FormularioId" class="btn-link">Detalhes</a>
-                    <a asp-action="Edit" asp-route-id="@formulario.FormularioId" class="btn-link">Editar</a>
-                    <a asp-action="Delete" asp-route-id="@formulario.FormularioId" class="btn-link text-danger">Excluir</a>
+                    <a asp-action="Details" asp-route-id="@formulario.FormularioId" class="btn-link"
+                       data-open-tab data-tab="FormulariosDetalhes-@formulario.FormularioId"
+                       data-url='@Url.Action("Details", "Formularios", new { id = formulario.FormularioId })'>Detalhes</a>
+                    <a asp-action="Edit" asp-route-id="@formulario.FormularioId" class="btn-link"
+                       data-open-tab data-tab="FormulariosEditar-@formulario.FormularioId"
+                       data-url='@Url.Action("Edit", "Formularios", new { id = formulario.FormularioId })'>Editar</a>
+                    <a asp-action="Delete" asp-route-id="@formulario.FormularioId" class="btn-link text-danger"
+                       data-open-tab data-tab="FormulariosExcluir-@formulario.FormularioId"
+                       data-url='@Url.Action("Delete", "Formularios", new { id = formulario.FormularioId })'>Excluir</a>
                 </div>
             </footer>
         </article>

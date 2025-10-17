@@ -40,9 +40,15 @@ else
                     <td>@(string.IsNullOrEmpty(paciente.Responsavel) ? "-" : paciente.Responsavel)</td>
                     <td>@paciente.DataCadastro.ToString("dd/MM/yyyy")</td>
                     <td class="table-actions">
-                        <a asp-action="Details" asp-route-id="@paciente.PacienteId" class="btn-link">Detalhes</a>
-                        <a asp-action="Edit" asp-route-id="@paciente.PacienteId" class="btn-link">Editar</a>
-                        <a asp-action="Delete" asp-route-id="@paciente.PacienteId" class="btn-link text-danger">Excluir</a>
+                        <a asp-action="Details" asp-route-id="@paciente.PacienteId" class="btn-link"
+                           data-open-tab data-tab="PacientesDetalhes-@paciente.PacienteId"
+                           data-url='@Url.Action("Details", "Pacientes", new { id = paciente.PacienteId })'>Detalhes</a>
+                        <a asp-action="Edit" asp-route-id="@paciente.PacienteId" class="btn-link"
+                           data-open-tab data-tab="PacientesEditar-@paciente.PacienteId"
+                           data-url='@Url.Action("Edit", "Pacientes", new { id = paciente.PacienteId })'>Editar</a>
+                        <a asp-action="Delete" asp-route-id="@paciente.PacienteId" class="btn-link text-danger"
+                           data-open-tab data-tab="PacientesExcluir-@paciente.PacienteId"
+                           data-url='@Url.Action("Delete", "Pacientes", new { id = paciente.PacienteId })'>Excluir</a>
                     </td>
                 </tr>
             }

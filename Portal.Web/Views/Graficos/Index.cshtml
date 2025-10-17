@@ -29,9 +29,15 @@ else
             </header>
             <footer>
                 <div class="card-actions">
-                    <a asp-action="Details" asp-route-id="@grafico.GraficoId" class="btn-link">Detalhes</a>
-                    <a asp-action="Edit" asp-route-id="@grafico.GraficoId" class="btn-link">Editar</a>
-                    <a asp-action="Delete" asp-route-id="@grafico.GraficoId" class="btn-link text-danger">Excluir</a>
+                    <a asp-action="Details" asp-route-id="@grafico.GraficoId" class="btn-link"
+                       data-open-tab data-tab="GraficosDetalhes-@grafico.GraficoId"
+                       data-url='@Url.Action("Details", "Graficos", new { id = grafico.GraficoId })'>Detalhes</a>
+                    <a asp-action="Edit" asp-route-id="@grafico.GraficoId" class="btn-link"
+                       data-open-tab data-tab="GraficosEditar-@grafico.GraficoId"
+                       data-url='@Url.Action("Edit", "Graficos", new { id = grafico.GraficoId })'>Editar</a>
+                    <a asp-action="Delete" asp-route-id="@grafico.GraficoId" class="btn-link text-danger"
+                       data-open-tab data-tab="GraficosExcluir-@grafico.GraficoId"
+                       data-url='@Url.Action("Delete", "Graficos", new { id = grafico.GraficoId })'>Excluir</a>
                 </div>
             </footer>
         </article>
