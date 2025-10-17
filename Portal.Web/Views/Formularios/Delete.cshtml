@@ -8,7 +8,8 @@
         <h1>Excluir formulário</h1>
         <p class="page-subtitle">Remova o instrumento da biblioteca desta prova de conceito.</p>
     </div>
-    <a asp-action="Details" asp-route-id="@Model.FormularioId" class="btn-link">Cancelar</a>
+    <a asp-action="Index" class="btn-link"
+       data-open-tab data-tab="Formularios" data-url='@Url.Action("Index", "Formularios")'>Cancelar</a>
 </section>
 
 <div class="alert danger">
@@ -22,5 +23,6 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.FormularioId)
     <button type="submit" class="btn-danger">Excluir agora</button>
-    <a asp-action="Details" asp-route-id="@Model.FormularioId" class="btn-secondary">Manter formulário</a>
+    <a asp-action="Index" class="btn-secondary"
+       data-open-tab data-tab="Formularios" data-url='@Url.Action("Index", "Formularios")'>Manter formulário</a>
 </form>

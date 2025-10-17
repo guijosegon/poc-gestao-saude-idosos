@@ -10,7 +10,7 @@
     </div>
     @if (User.IsInRole("Administrador"))
     {
-        <a asp-action="Create" class="btn-primary">Novo usuário</a>
+        <a asp-action="Create" class="btn-primary" data-open-tab data-tab="UsuariosNovo" data-url='@Url.Action("Create", "Usuarios")'>Novo usuário</a>
     }
 </section>
 
@@ -20,7 +20,7 @@
         <p>Nenhum usuário cadastrado até o momento.</p>
         @if (User.IsInRole("Administrador"))
         {
-            <a asp-action="Create" class="btn-link">Clique aqui para cadastrar o primeiro usuário.</a>
+            <a asp-action="Create" class="btn-link" data-open-tab data-tab="UsuariosNovo" data-url='@Url.Action("Create", "Usuarios")'>Clique aqui para cadastrar o primeiro usuário.</a>
         }
     </div>
 }
@@ -52,11 +52,17 @@ else
                     </td>
                     <td>@usuario.DataCadastro.ToString("dd/MM/yyyy")</td>
                     <td class="table-actions">
-                        <a asp-action="Details" asp-route-id="@usuario.UsuarioId" class="btn-link">Detalhes</a>
-                        <a asp-action="Edit" asp-route-id="@usuario.UsuarioId" class="btn-link">Editar</a>
+                        <a asp-action="Details" asp-route-id="@usuario.UsuarioId" class="btn-link"
+                           data-open-tab data-tab="UsuariosDetalhes-@usuario.UsuarioId"
+                           data-url='@Url.Action("Details", "Usuarios", new { id = usuario.UsuarioId })'>Detalhes</a>
+                        <a asp-action="Edit" asp-route-id="@usuario.UsuarioId" class="btn-link"
+                           data-open-tab data-tab="UsuariosEditar-@usuario.UsuarioId"
+                           data-url='@Url.Action("Edit", "Usuarios", new { id = usuario.UsuarioId })'>Editar</a>
                         @if (User.IsInRole("Administrador") || string.Equals(User.Identity?.Name, usuario.Email, StringComparison.OrdinalIgnoreCase))
                         {
-                            <a asp-action="Delete" asp-route-id="@usuario.UsuarioId" class="btn-link text-danger">Excluir</a>
+                            <a asp-action="Delete" asp-route-id="@usuario.UsuarioId" class="btn-link text-danger"
+                               data-open-tab data-tab="UsuariosExcluir-@usuario.UsuarioId"
+                               data-url='@Url.Action("Delete", "Usuarios", new { id = usuario.UsuarioId })'>Excluir</a>
                         }
                     </td>
                 </tr>
