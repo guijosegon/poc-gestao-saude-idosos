@@ -13,7 +13,7 @@
            data-open-tab data-tab="CamposEditar-@Model.CampoId"
            data-url='@Url.Action("Edit", "Campos", new { id = Model.CampoId })'>Editar</a>
         <a asp-action="Index" class="btn-secondary"
-           data-open-tab data-tab="Campos" data-url='@Url.Action("Index", "Campos")'>Voltar</a>
+           data-open-tab data-close-current-tab data-tab="Campos" data-url='@Url.Action("Index", "Campos")'>Voltar</a>
     </div>
 </section>
 

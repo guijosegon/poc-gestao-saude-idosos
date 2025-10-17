@@ -105,7 +105,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             _graficoAppService.Update(grafico);
 
             TempData["Sucesso"] = "Gráfico atualizado com sucesso.";
-            return RedirectToAction(nameof(Details), new { id });
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)

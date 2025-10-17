@@ -146,7 +146,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             await _formularioAppService.AtualizarCamposAsync(formulario, model.CamposSelecionados);
 
             TempData["Sucesso"] = "Alterações registradas com sucesso.";
-            return RedirectToAction(nameof(Details), new { id });
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)

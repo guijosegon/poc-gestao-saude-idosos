@@ -9,7 +9,7 @@
         <p class="page-subtitle">Cadastre um idoso para iniciar o acompanhamento preventivo.</p>
     </div>
     <a asp-action="Index" class="btn-link"
-       data-open-tab data-tab="Pacientes" data-url='@Url.Action("Index", "Pacientes")'>Voltar</a>
+       data-open-tab data-close-current-tab data-tab="Pacientes" data-url='@Url.Action("Index", "Pacientes")'>Voltar</a>
 </section>
 
 <form asp-action="Create" method="post" class="form-card" novalidate>
@@ -40,6 +40,6 @@
     <div class="form-actions">
         <button type="submit" class="btn-primary">Salvar</button>
         <a asp-action="Index" class="btn-secondary"
-           data-open-tab data-tab="Pacientes" data-url='@Url.Action("Index", "Pacientes")'>Cancelar</a>
+           data-open-tab data-close-current-tab data-tab="Pacientes" data-url='@Url.Action("Index", "Pacientes")'>Cancelar</a>
     </div>
 </form>

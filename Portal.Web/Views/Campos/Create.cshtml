@@ -9,7 +9,7 @@
         <p class="page-subtitle">Defina um componente reutilizável para enriquecer seus formulários clínicos.</p>
     </div>
     <a asp-action="Index" class="btn-link"
-       data-open-tab data-tab="Campos" data-url='@Url.Action("Index", "Campos")'>Voltar</a>
+       data-open-tab data-close-current-tab data-tab="Campos" data-url='@Url.Action("Index", "Campos")'>Voltar</a>
 </section>
 
 <form asp-action="Create" method="post" class="form-card" novalidate>
@@ -52,6 +52,6 @@
     <div class="form-actions">
         <button type="submit" class="btn-primary">Salvar</button>
         <a asp-action="Index" class="btn-secondary"
-           data-open-tab data-tab="Campos" data-url='@Url.Action("Index", "Campos")'>Cancelar</a>
+           data-open-tab data-close-current-tab data-tab="Campos" data-url='@Url.Action("Index", "Campos")'>Cancelar</a>
     </div>
 </form>

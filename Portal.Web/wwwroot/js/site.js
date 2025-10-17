@@ -1,3 +1,21 @@
+function obterNomeAbaAtual(elemento) {
+    if (!elemento) {
+        return null;
+    }
+
+    const conteudo = elemento.closest(".conteudo");
+    if (!conteudo || !conteudo.id) {
+        return null;
+    }
+
+    const prefixo = "conteudo-";
+    if (!conteudo.id.startsWith(prefixo)) {
+        return null;
+    }
+
+    return conteudo.id.substring(prefixo.length);
+}
+
 function abrirAba(nome, url) {
     if (!nome) {
         return;
@@ -309,9 +327,19 @@ function configurarAtalhosDeAbas() {
         const nome = alvo.getAttribute("data-tab");
         const url = alvo.getAttribute("data-url") || alvo.getAttribute("href");
 
-        if (nome && url) {
-            event.preventDefault();
-            abrirAba(nome, url);
+        if (!nome || !url) {
+            return;
         }
+
+        event.preventDefault();
+
+        if (alvo.hasAttribute("data-close-current-tab")) {
+            const abaAtual = obterNomeAbaAtual(alvo);
+            if (abaAtual) {
+                fecharAba(abaAtual);
+            }
+        }
+
+        abrirAba(nome, url);
     });
 }

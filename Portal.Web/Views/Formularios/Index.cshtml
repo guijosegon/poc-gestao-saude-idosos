@@ -48,3 +48,31 @@ else
     }
     </div>
 }
+
+@section Scripts {
+    <script>
+        (function () {
+            const scriptElement = document.currentScript;
+            const container = scriptElement ? scriptElement.closest(".conteudo") : null;
+            const destino = "Formularios";
+            const urlDestino = `@Url.Action("Index", "Formularios")`;
+
+            if (!container || !container.id) {
+                return;
+            }
+
+            const prefixo = "conteudo-";
+            if (!container.id.startsWith(prefixo)) {
+                return;
+            }
+
+            const abaAtual = container.id.substring(prefixo.length);
+            if (abaAtual === destino) {
+                return;
+            }
+
+            fecharAba(abaAtual);
+            abrirAba(destino, urlDestino);
+        })();
+    </script>
+}

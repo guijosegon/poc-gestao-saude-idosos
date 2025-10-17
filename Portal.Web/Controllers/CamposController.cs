@@ -159,7 +159,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             _campoAppService.Update(campo);
 
             TempData["Sucesso"] = "Campo atualizado com sucesso.";
-            return RedirectToAction(nameof(Details), new { id });
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
