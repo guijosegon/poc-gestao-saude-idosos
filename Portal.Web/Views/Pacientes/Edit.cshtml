@@ -13,7 +13,10 @@
        data-url='@Url.Action("Details", "Pacientes", new { id = Model.PacienteId })'>Ver detalhes</a>
 </section>
 
-<form asp-action="Edit" method="post" class="form-card" novalidate>
+<form asp-action="Edit" method="post" class="form-card" novalidate
+      data-success-tab="Pacientes"
+      data-success-url='@Url.Action("Index", "Pacientes")'
+      data-close-on-success="true">
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.PacienteId)
     <div class="form-grid">

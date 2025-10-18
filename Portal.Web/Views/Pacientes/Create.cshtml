@@ -12,7 +12,10 @@
        data-open-tab data-close-current-tab data-tab="Pacientes" data-url='@Url.Action("Index", "Pacientes")'>Voltar</a>
 </section>
 
-<form asp-action="Create" method="post" class="form-card" novalidate>
+<form asp-action="Create" method="post" class="form-card" novalidate
+      data-success-tab="Pacientes"
+      data-success-url='@Url.Action("Index", "Pacientes")'
+      data-close-on-success="true">
     @Html.AntiForgeryToken()
     <div class="form-grid">
         <div class="form-group">

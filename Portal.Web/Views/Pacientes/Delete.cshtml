@@ -16,7 +16,10 @@
     Tem certeza que deseja remover <strong>@Model.Nome</strong>? A exclusão é definitiva.
 </div>
 
-<form asp-action="Delete" method="post">
+<form asp-action="Delete" method="post"
+      data-success-tab="Pacientes"
+      data-success-url='@Url.Action("Index", "Pacientes")'
+      data-close-on-success="true">
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.PacienteId)
     <button type="submit" class="btn-danger">Excluir paciente</button>
