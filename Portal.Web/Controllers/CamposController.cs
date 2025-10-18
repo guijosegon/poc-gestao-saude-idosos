@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
@@ -102,7 +103,19 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 Opcoes = ConverterOpcoes(model.Opcoes)
             };
 
-            await _campoAppService.CreateAsync(campo);
+            try
+            {
+                await _campoAppService.CreateAsync(campo);
+            }
+            catch (Exception ex)
+            {
+                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
+                    ? "Não foi possível cadastrar o campo. Tente novamente."
+                    : ex.Message;
+
+                ViewData["Erro"] = mensagemErro;
+                return View(model);
+            }
 
             TempData["Sucesso"] = "Campo cadastrado com sucesso.";
             return RedirectToAction(nameof(Index));
@@ -156,7 +169,19 @@ namespace GestaoSaudeIdosos.Web.Controllers
             campo.Ativo = model.Ativo;
             campo.Opcoes = ConverterOpcoes(model.Opcoes);
 
-            _campoAppService.Update(campo);
+            try
+            {
+                _campoAppService.Update(campo);
+            }
+            catch (Exception ex)
+            {
+                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
+                    ? "Não foi possível atualizar o campo. Tente novamente."
+                    : ex.Message;
+
+                ViewData["Erro"] = mensagemErro;
+                return View(model);
+            }
 
             TempData["Sucesso"] = "Campo atualizado com sucesso.";
             return RedirectToAction(nameof(Index));

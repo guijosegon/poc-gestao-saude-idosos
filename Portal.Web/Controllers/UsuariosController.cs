@@ -94,7 +94,19 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 Ativo = model.Ativo
             };
 
-            await _usuarioAppService.CreateAsync(usuario);
+            try
+            {
+                await _usuarioAppService.CreateAsync(usuario);
+            }
+            catch (Exception ex)
+            {
+                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
+                    ? "Não foi possível criar o usuário. Tente novamente."
+                    : ex.Message;
+
+                ViewData["Erro"] = mensagemErro;
+                return View(model);
+            }
 
             TempData["Sucesso"] = "Usuário criado com sucesso.";
             return RedirectToAction(nameof(Index));
@@ -195,7 +207,19 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (isAdmin && model.PermiteAlterarPerfil && Enum.TryParse(model.Perfil, out Enums.PerfilUsuario perfil))
                 usuario.Perfil = perfil;
 
-            _usuarioAppService.Update(usuario);
+            try
+            {
+                _usuarioAppService.Update(usuario);
+            }
+            catch (Exception ex)
+            {
+                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
+                    ? "Não foi possível atualizar o usuário. Tente novamente."
+                    : ex.Message;
+
+                ViewData["Erro"] = mensagemErro;
+                return View(model);
+            }
 
             TempData["Sucesso"] = "Alterações salvas com sucesso.";
             return RedirectToAction(nameof(Index));

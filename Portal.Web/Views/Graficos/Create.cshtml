@@ -14,8 +14,6 @@
 
 <form asp-action="Create" method="post" class="form-card" novalidate>
     @Html.AntiForgeryToken()
-    @Html.ValidationSummary(false, "", new { @class = "form-summary text-danger" })
-
     <div class="form-grid">
         <div class="form-group">
             @Html.LabelFor(m => m.Descricao)

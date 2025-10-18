@@ -4,6 +4,7 @@ using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -64,7 +65,19 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 Descricao = model.Descricao.Trim()
             };
 
-            await _graficoAppService.CreateAsync(grafico);
+            try
+            {
+                await _graficoAppService.CreateAsync(grafico);
+            }
+            catch (Exception ex)
+            {
+                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
+                    ? "Não foi possível cadastrar o gráfico. Tente novamente."
+                    : ex.Message;
+
+                ViewData["Erro"] = mensagemErro;
+                return View(model);
+            }
 
             TempData["Sucesso"] = "Gráfico cadastrado com sucesso.";
             return RedirectToAction(nameof(Index));
@@ -102,7 +115,19 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return NotFound();
 
             grafico.Descricao = model.Descricao.Trim();
-            _graficoAppService.Update(grafico);
+            try
+            {
+                _graficoAppService.Update(grafico);
+            }
+            catch (Exception ex)
+            {
+                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
+                    ? "Não foi possível atualizar o gráfico. Tente novamente."
+                    : ex.Message;
+
+                ViewData["Erro"] = mensagemErro;
+                return View(model);
+            }
 
             TempData["Sucesso"] = "Gráfico atualizado com sucesso.";
             return RedirectToAction(nameof(Index));
