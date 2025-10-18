@@ -1,4 +1,4 @@
-# Gestão e Monitoramento da Saúde de Idosos (Em desenvolvimento)
+# Gestão e Monitoramento da Saúde de Idosos
 
 Prova de Conceito de um **sistema web** para gestão e monitoramento da saúde mental e física de idosos em asilos ou abrigos, com foco na antecipação e prevenção de doenças neurológicas e físicas. 
 
