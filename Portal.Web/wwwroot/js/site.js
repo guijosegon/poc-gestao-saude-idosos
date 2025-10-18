@@ -135,16 +135,7 @@ function carregarConteudoEmAba(container, url, nome) {
         .then(html => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, "text/html");
-            const main = doc.querySelector("main.container") || doc.body;
-
-            container.innerHTML = main.innerHTML;
-            container.querySelectorAll("script").forEach(script => script.remove());
-            container.dataset.loaded = "true";
-            container.classList.remove("loading");
-
-            executarScriptsDoConteudo(doc, container);
-            ativarTooltips();
-            aplicarValidacao(container);
+            atualizarConteudoDaAba(container, doc);
         })
         .catch(() => {
             container.classList.remove("loading");
@@ -174,6 +165,40 @@ function executarScriptsDoConteudo(documento, container) {
         novoScript.textContent = script.textContent;
         container.appendChild(novoScript);
     });
+}
+
+function atualizarAlertasGlobais(documento) {
+    if (!documento) {
+        return;
+    }
+
+    const alertasAtuais = document.querySelector(".global-alerts");
+    const novosAlertas = documento.querySelector(".global-alerts");
+
+    if (!alertasAtuais) {
+        return;
+    }
+
+    alertasAtuais.innerHTML = novosAlertas ? novosAlertas.innerHTML : "";
+}
+
+function atualizarConteudoDaAba(conteudo, documento) {
+    if (!conteudo || !documento) {
+        return;
+    }
+
+    const alvoPrincipal = documento.querySelector("main.container") || documento.body;
+    const fragmento = alvoPrincipal.cloneNode(true);
+    fragmento.querySelectorAll("script").forEach(script => script.remove());
+
+    conteudo.innerHTML = fragmento.innerHTML;
+    conteudo.dataset.loaded = "true";
+    conteudo.classList.remove("loading");
+
+    atualizarAlertasGlobais(documento);
+    executarScriptsDoConteudo(documento, conteudo);
+    ativarTooltips();
+    aplicarValidacao(conteudo);
 }
 
 let menuIsOpen = false;
@@ -315,6 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupMenuModalInteractions();
     configurarAtalhosDeAbas();
     aplicarValidacao(document);
+    configurarEnvioDeFormularios();
 });
 
 function configurarAtalhosDeAbas() {
@@ -341,5 +367,103 @@ function configurarAtalhosDeAbas() {
         }
 
         abrirAba(nome, url);
+    });
+}
+
+function configurarEnvioDeFormularios() {
+    document.addEventListener("submit", async (event) => {
+        const form = event.target;
+        if (!(form instanceof HTMLFormElement)) {
+            return;
+        }
+
+        if (!form.closest("#conteudos")) {
+            return;
+        }
+
+        event.preventDefault();
+
+        const containerAtual = form.closest(".conteudo");
+        if (!containerAtual) {
+            return;
+        }
+
+        containerAtual.classList.add("loading");
+        containerAtual.innerHTML = "<div class=\"loading-state\">Salvando...</div>";
+
+        const action = form.getAttribute("action") || window.location.href;
+        const method = (form.getAttribute("method") || "GET").toUpperCase();
+        const dadosFormulario = new FormData(form);
+        const nomeAbaAtual = obterNomeAbaAtual(form);
+
+        try {
+            const response = await fetch(action, {
+                method,
+                body: dadosFormulario,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                credentials: "same-origin"
+            });
+
+            if (!response.ok) {
+                throw new Error("Erro ao enviar formulário");
+            }
+
+            const texto = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(texto, "text/html");
+            const foiRedirecionado = response.redirected;
+
+            let destino = containerAtual;
+            let abaDestino = nomeAbaAtual;
+            let urlDestino;
+
+            if (foiRedirecionado) {
+                const urlFinal = new URL(response.url, window.location.origin);
+                const abaDesejada = form.dataset.successTab || nomeAbaAtual;
+                urlDestino = form.dataset.successUrl || (urlFinal.pathname + urlFinal.search);
+
+                if (abaDesejada) {
+                    abaDestino = abaDesejada;
+
+                    if (abaDesejada !== nomeAbaAtual) {
+                        let conteudoDestino = document.getElementById(`conteudo-${abaDesejada}`);
+                        if (!conteudoDestino) {
+                            abrirAba(abaDesejada);
+                            conteudoDestino = document.getElementById(`conteudo-${abaDesejada}`);
+                        }
+
+                        if (conteudoDestino) {
+                            destino = conteudoDestino;
+                        }
+                    }
+                }
+            } else {
+                const urlAtual = new URL(action, window.location.origin);
+                urlDestino = urlAtual.pathname + urlAtual.search;
+            }
+
+            atualizarConteudoDaAba(destino, doc);
+
+            if (destino && urlDestino) {
+                destino.dataset.url = urlDestino;
+            }
+
+            if (destino !== containerAtual) {
+                containerAtual.classList.remove("loading");
+            }
+
+            if (foiRedirecionado && abaDestino) {
+                ativarConteudo(abaDestino);
+
+                if (form.dataset.closeOnSuccess === "true" && nomeAbaAtual && nomeAbaAtual !== abaDestino) {
+                    fecharAba(nomeAbaAtual);
+                }
+            }
+        } catch (error) {
+            containerAtual.classList.remove("loading");
+            containerAtual.innerHTML = "<div class=\"error-state\">Não foi possível enviar o formulário. Tente novamente.</div>";
+        }
     });
 }

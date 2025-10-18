@@ -19,7 +19,10 @@
     </p>
 </div>
 
-<form asp-action="Delete" method="post">
+<form asp-action="Delete" method="post"
+      data-success-tab="Formulários"
+      data-success-url='@Url.Action("Index", "Formularios")'
+      data-close-on-success="true">
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.FormularioId)
     <button type="submit" class="btn-danger">Excluir agora</button>
