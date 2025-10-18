@@ -381,25 +381,53 @@ function configurarEnvioDeFormularios() {
             return;
         }
 
-        event.preventDefault();
+        if (event.defaultPrevented) {
+            return;
+        }
 
         const containerAtual = form.closest(".conteudo");
         if (!containerAtual) {
             return;
         }
 
-        containerAtual.classList.add("loading");
-        containerAtual.innerHTML = "<div class=\"loading-state\">Salvando...</div>";
-
         const action = form.getAttribute("action") || window.location.href;
         const method = (form.getAttribute("method") || "GET").toUpperCase();
         const dadosFormulario = new FormData(form);
-        const nomeAbaAtual = obterNomeAbaAtual(form);
+        const nomeAbaAtual = obterNomeAbaAtual(containerAtual) || obterNomeAbaAtual(form);
+
+        let urlRequisicao = action;
+        let corpoRequisicao = dadosFormulario;
+
+        if (method === "GET" || method === "HEAD") {
+            const parametros = new URLSearchParams();
+            dadosFormulario.forEach((valor, chave) => {
+                if (valor instanceof File) {
+                    if (valor.name) {
+                        parametros.append(chave, valor.name);
+                    }
+                } else if (valor !== undefined && valor !== null) {
+                    parametros.append(chave, valor.toString());
+                }
+            });
+
+            const queryString = parametros.toString();
+            if (queryString) {
+                const separador = urlRequisicao.includes("?") ? "&" : "?";
+                urlRequisicao = `${urlRequisicao}${separador}${queryString}`;
+            }
+
+            corpoRequisicao = undefined;
+        }
+
+        event.preventDefault();
+
+        containerAtual.classList.add("loading");
+        containerAtual.innerHTML = "<div class=\"loading-state\">Salvando...</div>";
 
         try {
-            const response = await fetch(action, {
+            const response = await fetch(urlRequisicao, {
                 method,
-                body: dadosFormulario,
+                body: corpoRequisicao,
                 headers: {
                     "X-Requested-With": "XMLHttpRequest"
                 },
