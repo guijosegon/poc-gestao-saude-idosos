@@ -98,8 +98,20 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 UsuarioId = await ObterUsuarioAtualAsync()
             };
 
-            await _formularioAppService.CreateAsync(formulario);
-            await _formularioAppService.AtualizarCamposAsync(formulario, model.CamposSelecionados);
+            try
+            {
+                await _formularioAppService.CreateAsync(formulario);
+                await _formularioAppService.AtualizarCamposAsync(formulario, model.CamposSelecionados);
+            }
+            catch (Exception ex)
+            {
+                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
+                    ? "Não foi possível cadastrar o formulário. Tente novamente."
+                    : ex.Message;
+
+                ViewData["Erro"] = mensagemErro;
+                return View(model);
+            }
 
             TempData["Sucesso"] = "Formulário configurado com sucesso.";
             return RedirectToAction(nameof(Index));
@@ -142,8 +154,20 @@ namespace GestaoSaudeIdosos.Web.Controllers
             formulario.Descricao = model.Descricao.Trim();
             formulario.Ativo = model.Ativo;
 
-            _formularioAppService.Update(formulario);
-            await _formularioAppService.AtualizarCamposAsync(formulario, model.CamposSelecionados);
+            try
+            {
+                _formularioAppService.Update(formulario);
+                await _formularioAppService.AtualizarCamposAsync(formulario, model.CamposSelecionados);
+            }
+            catch (Exception ex)
+            {
+                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
+                    ? "Não foi possível atualizar o formulário. Tente novamente."
+                    : ex.Message;
+
+                ViewData["Erro"] = mensagemErro;
+                return View(model);
+            }
 
             TempData["Sucesso"] = "Alterações registradas com sucesso.";
             return RedirectToAction(nameof(Index));

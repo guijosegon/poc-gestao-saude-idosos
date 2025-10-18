@@ -17,7 +17,6 @@
 <form asp-action="Edit" method="post" class="form-card" novalidate>
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.FormularioId)
-    @Html.ValidationSummary(false, "", new { @class = "form-summary text-danger" })
 
     <div class="form-grid">
         <div class="form-group">

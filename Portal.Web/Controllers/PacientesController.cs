@@ -104,7 +104,19 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 ResponsavelId = model.ResponsavelId
             };
 
-            await _pacienteAppService.CreateAsync(paciente);
+            try
+            {
+                await _pacienteAppService.CreateAsync(paciente);
+            }
+            catch (Exception ex)
+            {
+                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
+                    ? "Não foi possível cadastrar o paciente. Tente novamente."
+                    : ex.Message;
+
+                ViewData["Erro"] = mensagemErro;
+                return View(model);
+            }
 
             TempData["Sucesso"] = "Paciente cadastrado com sucesso.";
             return RedirectToAction(nameof(Index));
@@ -162,7 +174,19 @@ namespace GestaoSaudeIdosos.Web.Controllers
             paciente.Idade = CalcularIdade(model.DataNascimento.Value);
             paciente.ResponsavelId = model.ResponsavelId;
 
-            _pacienteAppService.Update(paciente);
+            try
+            {
+                _pacienteAppService.Update(paciente);
+            }
+            catch (Exception ex)
+            {
+                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
+                    ? "Não foi possível atualizar os dados do paciente. Tente novamente."
+                    : ex.Message;
+
+                ViewData["Erro"] = mensagemErro;
+                return View(model);
+            }
 
             TempData["Sucesso"] = "Dados do paciente atualizados com sucesso.";
             return RedirectToAction(nameof(Index));
