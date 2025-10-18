@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
-    [AllowAnonymous]
+    [Authorize]
     public class LoginController : Controller
     {
         private readonly IUsuarioAppService _service;
@@ -20,6 +20,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Index(string? returnUrl = null)
         {
             var model = new LoginViewModel
@@ -31,6 +32,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(LoginViewModel model)
         {
@@ -97,11 +99,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignOutAsync();
             Response.Cookies.Delete(".AspNetCore.Cookies");
 
