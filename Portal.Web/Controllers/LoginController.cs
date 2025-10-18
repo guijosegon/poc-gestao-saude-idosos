@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
-    [Authorize]
     public class LoginController : Controller
     {
         private readonly IUsuarioAppService _service;
@@ -20,7 +19,6 @@ namespace GestaoSaudeIdosos.Web.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult Index(string? returnUrl = null)
         {
             var model = new LoginViewModel
@@ -32,7 +30,6 @@ namespace GestaoSaudeIdosos.Web.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(LoginViewModel model)
         {

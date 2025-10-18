@@ -99,9 +99,9 @@ main.container {
 }
 
 .logout-button {
-    background: rgba(255, 255, 255, 0.12);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: #f5f7fa;
+    color: forestgreen;
+    border: 0.2px solid rgba(255, 255, 255, 0.45);
     padding: 0.45rem 1.15rem;
     border-radius: 999px;
     font-weight: 600;
@@ -111,12 +111,13 @@ main.container {
     letter-spacing: 0.02em;
     transition: background 0.2s ease, transform 0.12s ease, box-shadow 0.2s ease;
     cursor: pointer;
-    box-shadow: 0 12px 28px rgba(3, 51, 25, 0.18);
+    box-shadow: 0 12px 28px rgba(3, 51, 25, 0.13);
 }
 
 .logout-button:hover,
 .logout-button:focus-visible {
-    background: rgba(255, 255, 255, 0.22);
+    background: #d14343;
+    color: black;
     transform: translateY(-1px);
     box-shadow: 0 16px 36px rgba(3, 51, 25, 0.26);
 }
@@ -126,17 +127,11 @@ main.container {
     outline-offset: 2px;
 }
 
-.logout-icon {
-    font-size: 1rem;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-}
-
 .user-name {
     background: rgba(255, 255, 255, 0.15);
     padding: 0.35rem 0.85rem;
     border-radius: 999px;
+    border: 0.2px solid rgba(255, 255, 255, 0.45);
 }
 
 .menu-toggle {
