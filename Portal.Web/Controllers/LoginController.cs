@@ -102,7 +102,10 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction(nameof(Index));
+            await HttpContext.SignOutAsync();
+            Response.Cookies.Delete(".AspNetCore.Cookies");
+
+            return RedirectToAction(nameof(Index), "Login");
         }
     }
 }
