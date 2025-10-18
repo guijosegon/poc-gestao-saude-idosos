@@ -22,7 +22,7 @@
         {
             <div class="alert danger" role="alert">@erro</div>
         }
-        @if (ViewData["Erro"] is string erroAtual && !string.IsNullOrWhiteSpace(erroAtual))
+        @if (ViewData["Erro"] is string erroAtual)
         {
             <div class="alert danger" role="alert">@erroAtual</div>
         }

@@ -16,7 +16,6 @@
 <form asp-action="Edit" method="post" class="form-card" novalidate>
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.CampoId)
-
     <div class="form-grid">
         <div class="form-group">
             @Html.LabelFor(m => m.Tipo)

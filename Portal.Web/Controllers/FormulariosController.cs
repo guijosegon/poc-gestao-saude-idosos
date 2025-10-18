@@ -106,7 +106,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             catch (Exception ex)
             {
                 var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
-                    ? "Não foi possível cadastrar o formulário. Tente novamente."
+                    ? "Não foi possível configurar o formulário. Tente novamente."
                     : ex.Message;
 
                 ViewData["Erro"] = mensagemErro;

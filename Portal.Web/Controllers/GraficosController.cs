@@ -115,7 +115,6 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return NotFound();
 
             grafico.Descricao = model.Descricao.Trim();
-
             try
             {
                 _graficoAppService.Update(grafico);
