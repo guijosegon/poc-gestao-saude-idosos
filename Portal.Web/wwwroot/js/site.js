@@ -425,16 +425,28 @@ function configurarEnvioDeFormularios() {
         containerAtual.innerHTML = "<div class=\"loading-state\">Salvando...</div>";
 
         try {
+            const headers = {
+                "X-Requested-With": "XMLHttpRequest"
+            };
+
+            const antiForgeryField = form.querySelector('input[name="__RequestVerificationToken"]');
+            if (antiForgeryField && antiForgeryField.value) {
+                headers["RequestVerificationToken"] = antiForgeryField.value;
+            }
+
             const response = await fetch(urlRequisicao, {
                 method,
                 body: corpoRequisicao,
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest"
-                },
+                headers,
                 credentials: "same-origin"
             });
 
             if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+                    window.location.href = response.url || window.location.href;
+                    return;
+                }
+
                 throw new Error("Erro ao enviar formulário");
             }
 
