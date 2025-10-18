@@ -9,7 +9,7 @@
         <p class="page-subtitle">Atualize a descrição e regras do campo para manter o padrão assistencial.</p>
     </div>
     <a asp-action="Details" asp-route-id="@Model.CampoId" class="btn-link"
-       data-open-tab data-tab="CamposDetalhes-@Model.CampoId"
+       data-open-tab data-tab="Campo - @Model.CampoId"
        data-url='@Url.Action("Details", "Campos", new { id = Model.CampoId })'>Ver detalhes</a>
 </section>
 

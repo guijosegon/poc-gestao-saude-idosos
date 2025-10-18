@@ -26,7 +26,7 @@
                 <small>Selecione uma área para continuar</small>
             </div>
             <div class="menu-grid">
-                <button type="button" class="menu-item" data-open-tab data-tab="Usuarios" data-url='@Url.Action("Index", "Usuarios")'>
+                <button type="button" class="menu-item" data-open-tab data-tab="Usuários" data-url='@Url.Action("Index", "Usuarios")'>
                     <span class="menu-icon">👥</span>
                     <div class="menu-text">
                         <strong>Usuários</strong>
@@ -47,14 +47,14 @@
                         <small>Configure perguntas reutilizáveis</small>
                     </div>
                 </button>
-                <button type="button" class="menu-item" data-open-tab data-tab="Formularios" data-url='@Url.Action("Index", "Formularios")'>
+                <button type="button" class="menu-item" data-open-tab data-tab="Formulários" data-url='@Url.Action("Index", "Formularios")'>
                     <span class="menu-icon">📝</span>
                     <div class="menu-text">
                         <strong>Formulários</strong>
                         <small>Monte instrumentos de avaliação</small>
                     </div>
                 </button>
-                <button type="button" class="menu-item" data-open-tab data-tab="Graficos" data-url='@Url.Action("Index", "Graficos")'>
+                <button type="button" class="menu-item" data-open-tab data-tab="Gráficos" data-url='@Url.Action("Index", "Graficos")'>
                     <span class="menu-icon">📊</span>
                     <div class="menu-text">
                         <strong>Gráficos</strong>
@@ -107,7 +107,7 @@
                     </div>
 
                     <div class="quick-actions">
-                        <a class="quick-card" asp-controller="Pacientes" asp-action="Create" data-open-tab data-tab="PacientesNovo" data-url='@Url.Action("Create", "Pacientes")'>
+                        <a class="quick-card" asp-controller="Pacientes" asp-action="Create" data-open-tab data-tab="Novo paciente" data-url='@Url.Action("Create", "Pacientes")'>
                             <span>Adicionar paciente</span>
                             <small>Cadastre idosos e vincule responsáveis</small>
                         </a>
@@ -129,7 +129,7 @@
                         <section class="panel">
                             <div class="panel-header">
                                 <h3>Formulários recentes</h3>
-                                <a asp-controller="Pacientes" asp-action="Create" class="btn-link" data-open-tab data-tab="PacientesNovo" data-url='@Url.Action("Create", "Pacientes")'>Aplicar formulário</a>
+                                <a asp-controller="Pacientes" asp-action="Create" class="btn-link" data-open-tab data-tab="Novo paciente" data-url='@Url.Action("Create", "Pacientes")'>Aplicar formulário</a>
                             </div>
 
                             @if (!Model.FormulariosRecentes.Any())
@@ -186,9 +186,9 @@
                         <h3>Usuários recentes</h3>
                         @if (User.IsInRole("Administrador"))
                         {
-                            <a asp-controller="Usuarios" asp-action="Create" class="btn-link" data-open-tab data-tab="UsuariosNovo" data-url='@Url.Action("Create", "Usuarios")'>Novo usuário</a>
+                            <a asp-controller="Usuarios" asp-action="Create" class="btn-link" data-open-tab data-tab="Novo usuário" data-url='@Url.Action("Create", "Usuarios")'>Novo usuário</a>
                         }
-                        <a asp-controller="Usuarios" asp-action="Index" class="btn-link" data-open-tab data-tab="Usuarios" data-url='@Url.Action("Index", "Usuarios")'>Ver lista completa</a>
+                        <a asp-controller="Usuarios" asp-action="Index" class="btn-link" data-open-tab data-tab="Usuários" data-url='@Url.Action("Index", "Usuarios")'>Ver lista completa</a>
                     </div>
 
                     @if (!Model.UsuariosRecentes.Any())
@@ -230,7 +230,7 @@
                 <div class="conteudo" id="conteudo-Pacientes">
                     <div class="panel-header">
                         <h3>Pacientes cadastrados</h3>
-                        <a asp-controller="Pacientes" asp-action="Create" class="btn-link" data-open-tab data-tab="PacientesNovo" data-url='@Url.Action("Create", "Pacientes")'>Novo paciente</a>
+                        <a asp-controller="Pacientes" asp-action="Create" class="btn-link" data-open-tab data-tab="Novo paciente" data-url='@Url.Action("Create", "Pacientes")'>Novo paciente</a>
                         <a asp-controller="Pacientes" asp-action="Index" class="btn-link" data-open-tab data-tab="Pacientes" data-url='@Url.Action("Index", "Pacientes")'>Ver lista</a>
                     </div>
 

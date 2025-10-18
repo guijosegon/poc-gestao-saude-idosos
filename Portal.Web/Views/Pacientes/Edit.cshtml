@@ -9,7 +9,7 @@
         <p class="page-subtitle">Atualize dados cadastrais e responsável pelo acompanhamento.</p>
     </div>
     <a asp-action="Details" asp-route-id="@Model.PacienteId" class="btn-link"
-       data-open-tab data-tab="PacientesDetalhes-@Model.PacienteId"
+       data-open-tab data-tab="Paciente - @Model.Nome"
        data-url='@Url.Action("Details", "Pacientes", new { id = Model.PacienteId })'>Ver detalhes</a>
 </section>
 

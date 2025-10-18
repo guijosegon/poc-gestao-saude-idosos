@@ -10,10 +10,10 @@
     </div>
     <div class="page-actions">
         <a asp-action="Edit" asp-route-id="@Model.FormularioId" class="btn-primary"
-           data-open-tab data-tab="FormulariosEditar-@Model.FormularioId"
+           data-open-tab data-tab="Formulário - @Model.Descricao"
            data-url='@Url.Action("Edit", "Formularios", new { id = Model.FormularioId })'>Editar</a>
         <a asp-action="Index" class="btn-secondary"
-           data-open-tab data-close-current-tab data-tab="Formularios" data-url='@Url.Action("Index", "Formularios")'>Voltar</a>
+           data-open-tab data-close-current-tab data-tab="Formulários" data-url='@Url.Action("Index", "Formularios")'>Voltar</a>
     </div>
 </section>
 

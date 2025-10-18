@@ -8,14 +8,14 @@
         <h1>Galeria de gráficos</h1>
         <p class="page-subtitle">Monte visualizações com dados dos formulários para apoiar decisões clínicas.</p>
     </div>
-    <a asp-action="Create" class="btn-primary" data-open-tab data-tab="GraficosNovo" data-url='@Url.Action("Create", "Graficos")'>Novo gráfico</a>
+    <a asp-action="Create" class="btn-primary" data-open-tab data-tab="Novo gráfico" data-url='@Url.Action("Create", "Graficos")'>Novo gráfico</a>
 </section>
 
 @if (!Model.Any())
 {
     <div class="empty-state">
         <p>Nenhum gráfico configurado ainda.</p>
-        <a asp-action="Create" class="btn-link" data-open-tab data-tab="GraficosNovo" data-url='@Url.Action("Create", "Graficos")'>Criar visualização</a>
+        <a asp-action="Create" class="btn-link" data-open-tab data-tab="Novo gráfico" data-url='@Url.Action("Create", "Graficos")'>Criar visualização</a>
     </div>
 }
 else

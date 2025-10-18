@@ -9,7 +9,7 @@
         <p class="page-subtitle">Remova o instrumento da biblioteca desta prova de conceito.</p>
     </div>
     <a asp-action="Index" class="btn-link"
-       data-open-tab data-close-current-tab data-tab="Formularios" data-url='@Url.Action("Index", "Formularios")'>Cancelar</a>
+       data-open-tab data-close-current-tab data-tab="Formulários" data-url='@Url.Action("Index", "Formularios")'>Cancelar</a>
 </section>
 
 <div class="alert danger">
@@ -24,5 +24,5 @@
     @Html.HiddenFor(m => m.FormularioId)
     <button type="submit" class="btn-danger">Excluir agora</button>
     <a asp-action="Index" class="btn-secondary"
-       data-open-tab data-close-current-tab data-tab="Formularios" data-url='@Url.Action("Index", "Formularios")'>Manter formulário</a>
+       data-open-tab data-close-current-tab data-tab="Formulários" data-url='@Url.Action("Index", "Formularios")'>Manter formulário</a>
 </form>

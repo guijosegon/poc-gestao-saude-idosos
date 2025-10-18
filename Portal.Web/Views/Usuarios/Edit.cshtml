@@ -9,7 +9,7 @@
         <p class="page-subtitle">Gerencie permissões e redefina a senha do colaborador.</p>
     </div>
     <a asp-action="Details" asp-route-id="@Model.UsuarioId" class="btn-link"
-       data-open-tab data-tab="UsuariosDetalhes-@Model.UsuarioId"
+       data-open-tab data-tab="Usuário - @Model.Nome"
        data-url='@Url.Action("Details", "Usuarios", new { id = Model.UsuarioId })'>Ver detalhes</a>
 </section>
 
@@ -82,6 +82,6 @@
     <div class="form-actions">
         <button type="submit" class="btn-primary">Salvar alterações</button>
         <a asp-action="Index" class="btn-secondary"
-           data-open-tab data-close-current-tab data-tab="Usuarios" data-url='@Url.Action("Index", "Usuarios")'>Cancelar</a>
+           data-open-tab data-close-current-tab data-tab="Usuários" data-url='@Url.Action("Index", "Usuarios")'>Cancelar</a>
     </div>
 </form>

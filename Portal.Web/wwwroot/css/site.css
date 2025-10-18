@@ -23,6 +23,7 @@ html, body {
     background: var(--light);
     color: var(--text);
     font-size: 15px;
+    cursor: default;
 }
 
 main.container {
