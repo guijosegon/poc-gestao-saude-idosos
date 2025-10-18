@@ -13,7 +13,7 @@
                 <span class="user-name">@Model.UsuarioNome</span>
                 <form asp-controller="Login" asp-action="Logout" method="post" class="logout-form">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn-link logout-button" aria-label="Encerrar sessão">Sair</button>
+                    <button type="submit" class="logout-button" aria-label="Encerrar sessão">Sair</button>
                 </form>
             </div>
         </div>

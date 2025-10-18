@@ -110,6 +110,8 @@ main.container {
     gap: 0.35rem;
     box-shadow: 0 10px 24px rgba(1, 120, 54, 0.25);
     transition: transform 0.1s ease, box-shadow 0.15s ease, background 0.2s ease;
+    border: 1px solid var(--primary);
+    cursor: pointer;
 }
 
 .logout-button:hover,
