@@ -4,6 +4,9 @@ Prova de Conceito de um **sistema web** para gestão e monitoramento da saúde m
 
 ![Tela Inicial](https://raw.githubusercontent.com/guijosegon/project-assets/master/GestaoIdosos/login.png) 
 
+![Tela Inicial](https://raw.githubusercontent.com/guijosegon/project-assets/master/GestaoIdosos/inicio.png) 
+
+
 Esta solução adota .NET 8 com Razor Pages para a interface web, uma API RESTful em ASP.NET Core e padrões de arquitetura em camadas (Presentation → Application → Domain → Infrastructure), suportando PostgreSQL.
 
 ---
