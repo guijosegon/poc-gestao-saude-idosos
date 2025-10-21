@@ -370,6 +370,47 @@ function configurarAtalhosDeAbas() {
     });
 }
 
+function obterTokenAntifalsificacao(form) {
+    if (form) {
+        const campoFormulario = form.querySelector('input[name="__RequestVerificationToken"]');
+        if (campoFormulario && campoFormulario.value) {
+            return campoFormulario.value;
+        }
+    }
+
+    const campoGlobal = document.querySelector('input[name="__RequestVerificationToken"]');
+    if (campoGlobal && campoGlobal.value) {
+        return campoGlobal.value;
+    }
+
+    const metaToken = document.querySelector('meta[name="request-verification-token"]');
+    if (metaToken && metaToken.content) {
+        return metaToken.content;
+    }
+
+    return null;
+}
+
+function atualizarTokenAntifalsificacao(documento) {
+    if (!documento) {
+        return;
+    }
+
+    const metaOrigem = documento.querySelector('meta[name="request-verification-token"]');
+    if (!metaOrigem || !metaOrigem.content) {
+        return;
+    }
+
+    let metaAtual = document.querySelector('meta[name="request-verification-token"]');
+    if (!metaAtual) {
+        metaAtual = document.createElement('meta');
+        metaAtual.setAttribute('name', 'request-verification-token');
+        document.head.appendChild(metaAtual);
+    }
+
+    metaAtual.setAttribute('content', metaOrigem.content);
+}
+
 function configurarEnvioDeFormularios() {
     document.addEventListener("submit", async (event) => {
         const form = event.target;
@@ -429,9 +470,13 @@ function configurarEnvioDeFormularios() {
                 "X-Requested-With": "XMLHttpRequest"
             };
 
-            const antiForgeryField = form.querySelector('input[name="__RequestVerificationToken"]');
-            if (antiForgeryField && antiForgeryField.value) {
-                headers["RequestVerificationToken"] = antiForgeryField.value;
+            const antiForgeryToken = obterTokenAntifalsificacao(form);
+            if (antiForgeryToken) {
+                headers["RequestVerificationToken"] = antiForgeryToken;
+
+                if (!dadosFormulario.has("__RequestVerificationToken") && method !== "GET" && method !== "HEAD") {
+                    dadosFormulario.append("__RequestVerificationToken", antiForgeryToken);
+                }
             }
 
             const response = await fetch(urlRequisicao, {
@@ -489,6 +534,8 @@ function configurarEnvioDeFormularios() {
             if (destino && urlDestino) {
                 destino.dataset.url = urlDestino;
             }
+
+            atualizarTokenAntifalsificacao(doc);
 
             if (destino !== containerAtual) {
                 containerAtual.classList.remove("loading");
