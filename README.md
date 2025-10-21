@@ -4,7 +4,7 @@ Prova de Conceito de um **sistema web** para gestão e monitoramento da saúde m
 
 ![Tela Inicial](https://raw.githubusercontent.com/guijosegon/project-assets/master/GestaoIdosos/login.png) 
 
-Esta solução adota .NET 8 com Razor Pages para a interface web, uma API RESTful em ASP.NET Core e padrões de arquitetura em camadas (Presentation → Application → Domain → Infrastructure), suportando SQL Server e PostgreSQL.
+Esta solução adota .NET 8 com Razor Pages para a interface web, uma API RESTful em ASP.NET Core e padrões de arquitetura em camadas (Presentation → Application → Domain → Infrastructure), suportando PostgreSQL.
 
 ---
 
@@ -45,7 +45,7 @@ gestao-saude-idosos/            ← raiz do mono-repo
 - **Front-end**: Razor Pages (Views + Rótulos)  
 - **API**: ASP.NET Core Web API  
 - **ORM**: Entity Framework Core  
-- **Bancos de dados**: SQL Server e PostgreSQL (Render)  
+- **Bancos de dados**: PostgreSQL  
 - **Autenticação**: Cookie Auth (web) e JWT Bearer (API)  
 - **Visualização de dados**: Chart.js (Canvas) & Google Charts
 
@@ -54,7 +54,7 @@ gestao-saude-idosos/            ← raiz do mono-repo
 ## 🛠️ Pré-requisitos
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download)  
-- SQL Server local (ou acesso a PostgreSQL no Render)  
+- PostgreSQL  
 - [DBeaver] ou similar para inspecionar o banco PostgreSQL  
 
 ---
@@ -62,14 +62,6 @@ gestao-saude-idosos/            ← raiz do mono-repo
 ## ⚙️ Configuração da base
 
 1. **Cadastrar as _ConnectionStrings_** em cada `appsettings.json`:
-
-   ```jsonc
-   "ConnectionStrings": {
-     "DefaultConnection": "Server=localhost;Database=PortalIdososDb;Trusted_Connection=True;MultipleActiveResultSets=true"
-   }
-   ```
-
-   Para PostgreSQL (Render):
 
    ```jsonc
    "ConnectionStrings": {
