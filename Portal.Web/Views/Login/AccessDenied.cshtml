@@ -1,0 +1,18 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Acesso negado";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/login.css" />
+}
+
+<div class="login-container">
+    <div class="login-overlay" aria-hidden="true"></div>
+
+    <div class="login-form" role="alert" aria-labelledby="access-denied-title">
+        <h2 id="access-denied-title">Acesso negado</h2>
+        <p>Você não possui permissão para acessar este recurso.</p>
+        <a class="btn-submit" asp-controller="Login" asp-action="Index">Voltar para a tela de login</a>
+    </div>
+</div>

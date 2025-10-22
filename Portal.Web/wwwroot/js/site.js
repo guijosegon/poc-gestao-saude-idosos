@@ -431,7 +431,8 @@ function configurarEnvioDeFormularios() {
             return;
         }
 
-        const action = form.getAttribute("action") || window.location.href;
+        const actionAtributo = (form.getAttribute("action") || "").trim();
+        const action = actionAtributo ? new URL(actionAtributo, window.location.href).toString() : window.location.href;
         const method = (form.getAttribute("method") || "GET").toUpperCase();
         const dadosFormulario = new FormData(form);
         const nomeAbaAtual = obterNomeAbaAtual(containerAtual) || obterNomeAbaAtual(form);
@@ -467,7 +468,8 @@ function configurarEnvioDeFormularios() {
 
         try {
             const headers = {
-                "X-Requested-With": "XMLHttpRequest"
+                "X-Requested-With": "XMLHttpRequest",
+                "Accept": "text/html"
             };
 
             const antiForgeryToken = obterTokenAntifalsificacao(form);
