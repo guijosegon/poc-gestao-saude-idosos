@@ -19,6 +19,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Index(string? returnUrl = null)
         {
             var model = new LoginViewModel
@@ -30,6 +31,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(LoginViewModel model)
         {
@@ -100,9 +102,16 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            Response.Cookies.Delete(".AspNetCore.Cookies");
+            Response.Cookies.Delete("PGI.Auth");
 
             return RedirectToAction(nameof(Index), "Login");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }
