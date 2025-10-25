@@ -1,14 +1,14 @@
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Domain.Entities;
+using GestaoSaudeIdosos.Web.Mappers;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
+using System.Linq;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -27,33 +27,23 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var campos = await _campoAppService
-                .AsQueryable(a => a.Usuario)
+                .AsQueryable(a => a.Usuario, a => a.FormularioCampos)
+                .Select(CampoViewModelMapper.ToListItem)
                 .ToListAsync();
 
-            var formularios = await _formularioAppService
-                .AsQueryable(a => a.Campos, a => a.Pacientes)
-                .ToListAsync();
+            foreach (var campo in campos)
+            {
+                var tipo = Enum.Parse<Enums.TipoCampo>(campo.Tipo, true);
+                campo.Tipo = CampoViewModelMapper.ObterDescricaoTipo(tipo);
+            }
 
-            var model = campos
-                .Select(campo => new CampoListItemViewModel
-                {
-                    CampoId = campo.CampoId,
-                    Descricao = campo.Descricao,
-                    Tipo = ObterDescricaoTipo(campo.Tipo),
-                    Responsavel = campo.Usuario?.Nome,
-                    DataCadastro = campo.DataCadastro,
-                    Ativo = campo.Ativo,
-                    FormulariosVinculados = formularios.Count(f => f.Campos.Any(fc => fc.CampoId == campo.CampoId))
-                })
-                .ToList();
-
-            return View(model);
+            return View(campos);
         }
 
         public async Task<IActionResult> Details(int id)
         {
             var campo = await _campoAppService
-                .AsQueryable(a => a.Usuario)
+                .AsQueryable(a => a.Usuario, a => a.FormularioCampos)
                 .FirstOrDefaultAsync(f => f.CampoId == id);
 
             if (campo is null)
@@ -63,25 +53,18 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 .AsQueryable(a => a.Campos, a => a.Pacientes)
                 .ToListAsync();
 
-            var detalhes = new CampoDetalheViewModel
-            {
-                CampoId = campo.CampoId,
-                Descricao = campo.Descricao,
-                Tipo = ObterDescricaoTipo(campo.Tipo),
-                TextoAjuda = campo.TextoAjuda,
-                Opcoes = campo.Opcoes,
-                Ativo = campo.Ativo,
-                CriadoPor = campo.Usuario?.Nome,
-                DataCadastro = campo.DataCadastro,
-                FormulariosUtilizacao = formularios.Where(w => w.Campos.Any(a => a.CampoId == campo.CampoId)).Select(s => s.Descricao).ToList()
-            };
+            var detalhes = campo.ToDetail(formularios);
 
             return View(detalhes);
         }
 
         public IActionResult Create()
         {
-            var model = CriarFormularioCampo();
+            var model = new CampoFormViewModel
+            {
+                TiposCampo = CampoViewModelMapper.ObterTiposCampo()
+            };
+
             return View(model);
         }
 
@@ -89,19 +72,12 @@ namespace GestaoSaudeIdosos.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CampoFormViewModel model)
         {
-            model.TiposCampo = ObterTiposCampo();
+            model.TiposCampo = CampoViewModelMapper.ObterTiposCampo();
 
             if (!ModelState.IsValid)
                 return View(model);
 
-            var campo = new Campo
-            {
-                Descricao = model.Descricao.Trim(),
-                Tipo = Enum.Parse<Enums.TipoCampo>(model.Tipo),
-                TextoAjuda = model.TextoAjuda?.Trim(),
-                Ativo = model.Ativo,
-                Opcoes = ConverterOpcoes(model.Opcoes)
-            };
+            var campo = model.ToEntity();
 
             try
             {
@@ -130,16 +106,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (campo is null)
                 return NotFound();
 
-            var model = new CampoFormViewModel
-            {
-                CampoId = campo.CampoId,
-                Descricao = campo.Descricao,
-                Tipo = campo.Tipo.ToString(),
-                TextoAjuda = campo.TextoAjuda,
-                Opcoes = campo.Opcoes is null ? null : string.Join(Environment.NewLine, campo.Opcoes),
-                Ativo = campo.Ativo,
-                TiposCampo = ObterTiposCampo()
-            };
+            var model = campo.ToFormViewModel(CampoViewModelMapper.ObterTiposCampo());
 
             return View(model);
         }
@@ -148,7 +115,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CampoFormViewModel model)
         {
-            model.TiposCampo = ObterTiposCampo();
+            model.TiposCampo = CampoViewModelMapper.ObterTiposCampo();
 
             if (model.CampoId is null || model.CampoId != id)
                 ModelState.AddModelError(string.Empty, "Não foi possível localizar o campo informado.");
@@ -163,11 +130,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (campo is null)
                 return NotFound();
 
-            campo.Descricao = model.Descricao.Trim();
-            campo.Tipo = Enum.Parse<Enums.TipoCampo>(model.Tipo);
-            campo.TextoAjuda = model.TextoAjuda?.Trim();
-            campo.Ativo = model.Ativo;
-            campo.Opcoes = ConverterOpcoes(model.Opcoes);
+            model.ApplyToEntity(campo);
 
             try
             {
@@ -200,21 +163,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 .AsQueryable(f => f.Campos, f => f.Pacientes)
                 .ToListAsync();
 
-            var model = new CampoDetalheViewModel
-            {
-                CampoId = campo.CampoId,
-                Descricao = campo.Descricao,
-                Tipo = ObterDescricaoTipo(campo.Tipo),
-                TextoAjuda = campo.TextoAjuda,
-                Opcoes = campo.Opcoes,
-                Ativo = campo.Ativo,
-                CriadoPor = campo.Usuario?.Nome,
-                DataCadastro = campo.DataCadastro,
-                FormulariosUtilizacao = formularios
-                    .Where(f => f.Campos.Any(fc => fc.CampoId == campo.CampoId))
-                    .Select(f => f.Descricao)
-                    .ToList()
-            };
+            var model = campo.ToDetail(formularios);
 
             return View(model);
         }
@@ -236,41 +185,5 @@ namespace GestaoSaudeIdosos.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private static CampoFormViewModel CriarFormularioCampo() => new CampoFormViewModel
-        {
-            TiposCampo = ObterTiposCampo()
-        };
-
-        private static IEnumerable<SelectListItem> ObterTiposCampo()
-        {
-            return Enum.GetValues(typeof(Enums.TipoCampo))
-                .Cast<Enums.TipoCampo>()
-                .Select(tipo => new SelectListItem
-                {
-                    Value = tipo.ToString(),
-                    Text = ObterDescricaoTipo(tipo)
-                })
-                .ToList();
-        }
-
-        private static string ObterDescricaoTipo(Enums.TipoCampo tipo)
-        {
-            var member = typeof(Enums.TipoCampo).GetMember(tipo.ToString()).FirstOrDefault();
-            var display = member?.GetCustomAttribute<DisplayAttribute>();
-            return display?.Name ?? tipo.ToString();
-        }
-
-        private static List<string> ConverterOpcoes(string? opcoes)
-        {
-            if (string.IsNullOrWhiteSpace(opcoes))
-                return new List<string>();
-
-            return opcoes
-                .Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(o => o.Trim())
-                .Where(o => !string.IsNullOrEmpty(o))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();
-        }
     }
 }

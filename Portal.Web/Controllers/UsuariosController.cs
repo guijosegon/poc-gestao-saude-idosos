@@ -1,11 +1,14 @@
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Domain.Entities;
+using GestaoSaudeIdosos.Web.Mappers;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -21,41 +24,25 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var usuarios = await _usuarioAppService.AsQueryable().ToListAsync();
-
-            var model = usuarios
+            var model = await _usuarioAppService
+                .AsQueryable()
                 .OrderByDescending(u => u.DataCadastro)
-                .Select(u => new UsuarioListItemViewModel
-                {
-                    UsuarioId = u.UsuarioId,
-                    Nome = u.Nome,
-                    Email = u.Email,
-                    Perfil = u.Perfil,
-                    Ativo = u.Ativo,
-                    DataCadastro = u.DataCadastro
-                })
-                .ToList();
+                .Select(UsuarioViewModelMapper.ToListItem)
+                .ToListAsync();
 
             return View(model);
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            var usuario = await _usuarioAppService.AsQueryable().FirstOrDefaultAsync(u => u.UsuarioId == id);
+            var detalhe = await _usuarioAppService
+                .AsQueryable()
+                .Where(u => u.UsuarioId == id)
+                .Select(UsuarioViewModelMapper.ToDetail)
+                .FirstOrDefaultAsync();
 
-            if (usuario is null)
+            if (detalhe is null)
                 return NotFound();
-
-            var detalhe = new UsuarioDetalheViewModel
-            {
-                UsuarioId = usuario.UsuarioId,
-                Nome = usuario.Nome,
-                Email = usuario.Email,
-                Perfil = usuario.Perfil.ToString(),
-                Ativo = usuario.Ativo,
-                CriadoEm = usuario.DataCadastro,
-                AcoesRecentes = Array.Empty<string>()
-            };
 
             return View(detalhe);
         }
@@ -85,14 +72,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return View(model);
             }
 
-            var usuario = new Usuario
-            {
-                Nome = model.Nome.Trim(),
-                Email = model.Email.Trim(),
-                Senha = model.Senha,
-                Perfil = model.Perfil,
-                Ativo = model.Ativo
-            };
+            var usuario = model.ToEntity();
 
             try
             {
@@ -114,20 +94,16 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var usuario = await _usuarioAppService.AsQueryable().FirstOrDefaultAsync(u => u.UsuarioId == id);
+            var model = await _usuarioAppService
+                .AsQueryable()
+                .Where(u => u.UsuarioId == id)
+                .Select(UsuarioViewModelMapper.ToEditForm)
+                .FirstOrDefaultAsync();
 
-            if (usuario is null)
+            if (model is null)
                 return NotFound();
 
-            var model = new UsuarioEdicaoViewModel
-            {
-                UsuarioId = usuario.UsuarioId,
-                Nome = usuario.Nome,
-                Email = usuario.Email,
-                Perfil = usuario.Perfil.ToString(),
-                Ativo = usuario.Ativo,
-                PerfisDisponiveis = ObterPerfis()
-            };
+            model.PerfisDisponiveis = ObterPerfis();
 
             var isAdmin = User.IsInRole(Enums.PerfilUsuario.Administrador.ToString());
             var isSelf = string.Equals(User.Identity?.Name, model.Email, StringComparison.OrdinalIgnoreCase);
@@ -178,9 +154,11 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (usuario is null)
                 return NotFound();
 
-            if (!string.Equals(usuario.Email, model.Email, StringComparison.OrdinalIgnoreCase))
+            var novoEmail = model.Email.Trim();
+
+            if (!string.Equals(usuario.Email, novoEmail, StringComparison.OrdinalIgnoreCase))
             {
-                var existente = _usuarioAppService.AsQueryable().FirstOrDefault(f => f.Email.Equals(usuario.Email ?? string.Empty));
+                var existente = _usuarioAppService.AsQueryable().FirstOrDefault(f => f.Email == novoEmail);
 
                 if (existente is not null && existente.UsuarioId != usuario.UsuarioId)
                 {
@@ -200,12 +178,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 usuario.Senha = model.NovaSenha;
             }
 
-            usuario.Nome = model.Nome.Trim();
-            usuario.Email = model.Email.Trim();
-            usuario.Ativo = model.Ativo;
-
-            if (isAdmin && model.PermiteAlterarPerfil && Enum.TryParse(model.Perfil, out Enums.PerfilUsuario perfil))
-                usuario.Perfil = perfil;
+            model.ApplyToEntity(usuario, isAdmin && model.PermiteAlterarPerfil);
 
             try
             {
@@ -238,16 +211,11 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!isAdmin && !isSelf)
                 return Forbid();
 
-            var model = new UsuarioDetalheViewModel
-            {
-                UsuarioId = usuario.UsuarioId,
-                Nome = usuario.Nome,
-                Email = usuario.Email,
-                Perfil = usuario.Perfil.ToString(),
-                Ativo = usuario.Ativo,
-                CriadoEm = usuario.DataCadastro,
-                AcoesRecentes = Array.Empty<string>()
-            };
+            var model = await _usuarioAppService
+                .AsQueryable()
+                .Where(u => u.UsuarioId == id)
+                .Select(UsuarioViewModelMapper.ToDetail)
+                .FirstOrDefaultAsync();
 
             return View(model);
         }

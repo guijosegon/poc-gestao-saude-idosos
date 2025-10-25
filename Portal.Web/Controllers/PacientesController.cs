@@ -1,5 +1,7 @@
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Domain.Entities;
+using GestaoSaudeIdosos.Domain.Extensions;
+using GestaoSaudeIdosos.Web.Mappers;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,22 +27,11 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var pacientes = await _pacienteAppService
+            var model = await _pacienteAppService
                 .AsQueryable(p => p.Responsavel)
                 .OrderByDescending(p => p.DataCadastro)
+                .Select(PacienteViewModelMapper.ToListItem)
                 .ToListAsync();
-
-            var model = pacientes
-                .Select(p => new PacienteListItemViewModel
-                {
-                    PacienteId = p.PacienteId,
-                    Nome = p.Nome,
-                    DataNascimento = p.DataNascimento,
-                    Idade = p.Idade,
-                    Responsavel = p.Responsavel?.Nome,
-                    DataCadastro = p.DataCadastro
-                })
-                .ToList();
 
             return View(model);
         }
@@ -54,17 +45,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (paciente is null)
                 return NotFound();
 
-            var detalhe = new PacienteDetalheViewModel
-            {
-                PacienteId = paciente.PacienteId,
-                Nome = paciente.Nome,
-                Idade = paciente.Idade,
-                DataNascimento = paciente.DataNascimento,
-                Responsavel = paciente.Responsavel?.Nome ?? string.Empty,
-                UltimaAtualizacao = paciente.DataCadastro,
-                FormulariosRecentes = Array.Empty<PacienteFormularioResultadoViewModel>(),
-                //GraficosPersonalizados = Array.Empty<PacienteGraficoResumoViewModel>()
-            };
+            var detalhe = paciente.ToDetalhe();
 
             return View(detalhe);
         }
@@ -96,13 +77,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return View(model);
             }
 
-            var paciente = new Paciente
-            {
-                Nome = model.Nome.Trim(),
-                DataNascimento = model.DataNascimento.Value,
-                Idade = CalcularIdade(model.DataNascimento.Value),
-                ResponsavelId = model.ResponsavelId
-            };
+            var paciente = model.ToEntity();
 
             try
             {
@@ -124,22 +99,18 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var paciente = await _pacienteAppService
-                .AsQueryable(p => p.Responsavel)
-                .FirstOrDefaultAsync(p => p.PacienteId == id);
-            if (paciente is null)
-                return NotFound();
-
             var responsaveis = await ObterResponsaveisAsync();
 
-            var model = new PacienteFormViewModel
-            {
-                PacienteId = paciente.PacienteId,
-                Nome = paciente.Nome,
-                DataNascimento = paciente.DataNascimento,
-                ResponsavelId = paciente.ResponsavelId,
-                Responsaveis = responsaveis
-            };
+            var model = await _pacienteAppService
+                .AsQueryable(p => p.Responsavel)
+                .Where(p => p.PacienteId == id)
+                .Select(PacienteViewModelMapper.ToForm)
+                .FirstOrDefaultAsync();
+
+            if (model is null)
+                return NotFound();
+
+            model.Responsaveis = responsaveis;
 
             return View(model);
         }
@@ -169,10 +140,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return View(model);
             }
 
-            paciente.Nome = model.Nome.Trim();
-            paciente.DataNascimento = model.DataNascimento.Value;
-            paciente.Idade = CalcularIdade(model.DataNascimento.Value);
-            paciente.ResponsavelId = model.ResponsavelId;
+            model.ApplyToEntity(paciente);
 
             try
             {
@@ -200,17 +168,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (paciente is null)
                 return NotFound();
 
-            var model = new PacienteDetalheViewModel
-            {
-                PacienteId = paciente.PacienteId,
-                Nome = paciente.Nome,
-                Idade = paciente.Idade,
-                DataNascimento = paciente.DataNascimento,
-                Responsavel = paciente.Responsavel?.Nome ?? string.Empty,
-                UltimaAtualizacao = paciente.DataCadastro,
-                FormulariosRecentes = Array.Empty<PacienteFormularioResultadoViewModel>(),
-                //GraficosPersonalizados = Array.Empty<PacienteGraficoResumoViewModel>()
-            };
+            var model = paciente.ToDetalhe();
 
             return View(model);
         }
@@ -229,17 +187,6 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
             TempData["Sucesso"] = "Paciente removido com sucesso.";
             return RedirectToAction(nameof(Index));
-        }
-
-        private static int CalcularIdade(DateTime dataNascimento)
-        {
-            var hoje = DateTime.Today;
-            var idade = hoje.Year - dataNascimento.Year;
-
-            if (dataNascimento.Date > hoje.AddYears(-idade))
-                idade--;
-
-            return idade;
         }
 
         private async Task<IEnumerable<SelectListItem>> ObterResponsaveisAsync()

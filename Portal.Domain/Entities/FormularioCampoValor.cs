@@ -1,4 +1,7 @@
-﻿namespace GestaoSaudeIdosos.Domain.Entities
+﻿using GestaoSaudeIdosos.Domain.Extensions;
+using System;
+
+namespace GestaoSaudeIdosos.Domain.Entities
 {
     public class FormularioCampoValor
     {
@@ -11,8 +14,18 @@
         public int FormularioCampoValorId { get; set; }
         public string Chave { get; set; }
         public string Valor { get; set; }
-        public DateTime DataCadastro { get; set; }
-        public DateTime? DataPreenchimento { get; set; }
+        private DateTime _dataCadastro;
+        public DateTime DataCadastro
+        {
+            get => _dataCadastro;
+            set => _dataCadastro = value.EnsureUtc();
+        }
+        private DateTime? _dataPreenchimento;
+        public DateTime? DataPreenchimento
+        {
+            get => _dataPreenchimento;
+            set => _dataPreenchimento = value.EnsureUtc();
+        }
 
         public int FormularioCampoId { get; set; }
         public FormularioCampo FormularioCampo { get; set; }

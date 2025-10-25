@@ -1,4 +1,6 @@
 ﻿using GestaoSaudeIdosos.Domain.Common.Helpers;
+using GestaoSaudeIdosos.Domain.Extensions;
+using System;
 
 namespace GestaoSaudeIdosos.Domain.Entities
 {
@@ -17,7 +19,12 @@ namespace GestaoSaudeIdosos.Domain.Entities
         public string Email { get; set; }
         public string Senha { get; set; }
         public bool Ativo { get; set; }
-        public DateTime DataCadastro { get; set; }
+        private DateTime _dataCadastro;
+        public DateTime DataCadastro
+        {
+            get => _dataCadastro;
+            set => _dataCadastro = value.EnsureUtc();
+        }
         public Enums.PerfilUsuario Perfil { get; set; }
     }
 }
