@@ -1,4 +1,8 @@
-﻿namespace GestaoSaudeIdosos.Domain.Entities
+﻿using GestaoSaudeIdosos.Domain.Extensions;
+using System;
+using System.Collections.Generic;
+
+namespace GestaoSaudeIdosos.Domain.Entities
 {
     public class Formulario
     {
@@ -12,7 +16,12 @@
         public int FormularioId { get; set; }
         public string Chave { get; set; }
         public string Descricao { get; set; }
-        public DateTime DataCadastro { get; set; }
+        private DateTime _dataCadastro;
+        public DateTime DataCadastro
+        {
+            get => _dataCadastro;
+            set => _dataCadastro = value.EnsureUtc();
+        }
         public bool Ativo { get; set; }
 
         public int? UsuarioId { get; set; }

@@ -1,5 +1,6 @@
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Domain.Entities;
+using GestaoSaudeIdosos.Web.Mappers;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,19 +32,11 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var formularios = await _formularioAppService.AsQueryable().ToListAsync();
-
-            var model = formularios
-                .Select(f => new FormularioListItemViewModel
-                {
-                    FormularioId = f.FormularioId,
-                    Descricao = f.Descricao,
-                    QuantidadeCampos = f.Campos?.Count ?? 0,
-                    QuantidadePacientes = f.Pacientes?.Count ?? 0,
-                    Ativo = f.Ativo,
-                    DataCadastro = f.DataCadastro
-                })
-                .ToList();
+            var model = await _formularioAppService
+                .AsQueryable(f => f.Campos, f => f.Pacientes)
+                .OrderByDescending(f => f.DataCadastro)
+                .Select(FormularioViewModelMapper.ToListItem)
+                .ToListAsync();
 
             return View(model);
         }
@@ -54,24 +47,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (formulario is null)
                 return NotFound();
 
-            var detalhes = new FormularioDetalheViewModel
-            {
-                FormularioId = formulario.FormularioId,
-                Descricao = formulario.Descricao,
-                Ativo = formulario.Ativo,
-                Responsavel = formulario.Usuario?.Nome,
-                DataCadastro = formulario.DataCadastro,
-                Campos = formulario.Campos?
-                    .OrderBy(c => c.Ordem)
-                    .Select(c => new FormularioCampoResumoViewModel
-                    {
-                        NomeCampo = c.Campo?.Descricao ?? string.Empty,
-                        Tipo = c.Campo is null ? string.Empty : c.Campo.Tipo.ToString(),
-                        Obrigatorio = c.Obrigatorio,
-                        Ordem = c.Ordem
-                    })
-                    .ToList() ?? Enumerable.Empty<FormularioCampoResumoViewModel>()
-            };
+            var detalhes = formulario.ToDetailModel();
 
             return View(detalhes);
         }
@@ -91,12 +67,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var formulario = new Formulario
-            {
-                Descricao = model.Descricao.Trim(),
-                Ativo = model.Ativo,
-                UsuarioId = await ObterUsuarioAtualAsync()
-            };
+            var usuarioId = await ObterUsuarioAtualAsync();
+            var formulario = model.ToEntity(usuarioId);
 
             try
             {
@@ -123,14 +95,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (formulario is null)
                 return NotFound();
 
-            var model = new FormularioFormViewModel
-            {
-                FormularioId = formulario.FormularioId,
-                Descricao = formulario.Descricao,
-                Ativo = formulario.Ativo,
-                CamposSelecionados = formulario.Campos?.Select(c => c.CampoId).ToList() ?? new List<int>(),
-                CamposDisponiveis = await ObterCamposAsync()
-            };
+            var camposDisponiveis = await ObterCamposAsync();
+
+            var model = formulario.ToFormViewModel(camposDisponiveis);
 
             return View(model);
         }
@@ -151,8 +118,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (formulario is null)
                 return NotFound();
 
-            formulario.Descricao = model.Descricao.Trim();
-            formulario.Ativo = model.Ativo;
+            model.ApplyToEntity(formulario);
 
             try
             {
@@ -179,24 +145,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (formulario is null)
                 return NotFound();
 
-            var model = new FormularioDetalheViewModel
-            {
-                FormularioId = formulario.FormularioId,
-                Descricao = formulario.Descricao,
-                Ativo = formulario.Ativo,
-                Responsavel = formulario.Usuario?.Nome,
-                DataCadastro = formulario.DataCadastro,
-                Campos = formulario.Campos?
-                    .OrderBy(c => c.Ordem)
-                    .Select(c => new FormularioCampoResumoViewModel
-                    {
-                        NomeCampo = c.Campo?.Descricao ?? string.Empty,
-                        Tipo = c.Campo is null ? string.Empty : c.Campo.Tipo.ToString(),
-                        Obrigatorio = c.Obrigatorio,
-                        Ordem = c.Ordem
-                    })
-                    .ToList() ?? Enumerable.Empty<FormularioCampoResumoViewModel>()
-            };
+            var model = formulario.ToDetailModel();
 
             return View(model);
         }

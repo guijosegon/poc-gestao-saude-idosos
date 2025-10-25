@@ -1,5 +1,6 @@
 using GestaoSaudeIdosos.API.DTOs;
 using GestaoSaudeIdosos.Domain.Entities;
+using GestaoSaudeIdosos.Domain.Extensions;
 
 namespace GestaoSaudeIdosos.API.Mappers
 {
@@ -11,9 +12,9 @@ namespace GestaoSaudeIdosos.API.Mappers
             {
                 PacienteId = dto.PacienteId ?? 0,
                 Nome = dto.Nome,
-                DataNascimento = dto.DataNascimento ?? DateTime.UtcNow,
+                DataNascimento = (dto.DataNascimento ?? DateTime.UtcNow).EnsureUtc(),
                 ResponsavelId = dto.ResponsavelId,
-                Idade = CalcularIdade(dto.DataNascimento)
+                Idade = CalcularIdade(dto.DataNascimento.EnsureUtc())
             };
         }
 
@@ -22,8 +23,9 @@ namespace GestaoSaudeIdosos.API.Mappers
             entity.Nome = dto.Nome;
             if (dto.DataNascimento.HasValue)
             {
-                entity.DataNascimento = dto.DataNascimento.Value;
-                entity.Idade = CalcularIdade(dto.DataNascimento);
+                var dataNascimento = dto.DataNascimento.Value.EnsureUtc();
+                entity.DataNascimento = dataNascimento;
+                entity.Idade = CalcularIdade(dataNascimento);
             }
 
             entity.ResponsavelId = dto.ResponsavelId;
