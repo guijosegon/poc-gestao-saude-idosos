@@ -86,6 +86,14 @@ function ativarConteudo(nome) {
         document.querySelectorAll(".aba").forEach(div => div.classList.remove("active"));
         aba.classList.add("active");
     }
+
+    if (nome === "Portal") {
+        const portalContainer = document.getElementById("conteudo-Portal");
+        if (portalContainer && portalContainer.dataset.refreshOnActivate === "true") {
+            delete portalContainer.dataset.refreshOnActivate;
+            atualizarResumoPortal();
+        }
+    }
 }
 
 function fecharAba(nome) {
@@ -228,6 +236,20 @@ async function atualizarResumoPortal() {
             delete portalContainer.dataset.url;
         }
     }
+}
+
+function agendarAtualizacaoPortal() {
+    const portalContainer = document.getElementById("conteudo-Portal");
+    if (!portalContainer) {
+        return Promise.resolve();
+    }
+
+    if (portalContainer.classList.contains("active")) {
+        return atualizarResumoPortal();
+    }
+
+    portalContainer.dataset.refreshOnActivate = "true";
+    return Promise.resolve();
 }
 
 function executarScriptsDoConteudo(documento, container) {
@@ -719,7 +741,7 @@ function configurarEnvioDeFormularios() {
                 }
             }
 
-            await atualizarResumoPortal();
+            await agendarAtualizacaoPortal();
         } catch (error) {
             containerAtual.classList.remove("loading");
             containerAtual.innerHTML = "<div class=\"error-state\">Não foi possível enviar o formulário. Tente novamente.</div>";
