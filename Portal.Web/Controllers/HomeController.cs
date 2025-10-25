@@ -3,6 +3,8 @@ using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -24,6 +26,19 @@ namespace GestaoSaudeIdosos.Web.Controllers
         }
 
         public async Task<IActionResult> Index()
+        {
+            var model = await CriarDashboardAsync();
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PortalResumo()
+        {
+            var model = await CriarDashboardAsync();
+            return PartialView("_PortalResumo", model);
+        }
+
+        private async Task<DashboardViewModel> CriarDashboardAsync()
         {
             var usuarios = await _usuarioAppService.AsQueryable().ToListAsync();
             var pacientes = await _pacienteAppService.AsQueryable().ToListAsync();
@@ -76,7 +91,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
             var alertasAtivos = relatorios.Count(r => !string.Equals(r.NivelRisco, "Baixo", StringComparison.OrdinalIgnoreCase));
 
-            var model = new DashboardViewModel
+            return new DashboardViewModel
             {
                 UsuarioNome = User.Identity?.Name ?? "Usuário",
                 TotalUsuarios = usuarios.Count,
@@ -88,8 +103,6 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 FormulariosRecentes = formulariosRecentes,
                 Relatorios = relatorios
             };
-
-            return View(model);
         }
 
         private static RelatorioPacienteViewModel MontarRelatorioPaciente(PacienteListItemViewModel paciente)

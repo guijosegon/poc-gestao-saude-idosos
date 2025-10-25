@@ -175,6 +175,61 @@ function carregarConteudoEmAba(container, url, nome) {
         });
 }
 
+async function atualizarResumoPortal() {
+    const portalContainer = document.getElementById("conteudo-Portal");
+    if (!portalContainer) {
+        return;
+    }
+
+    const url = portalContainer.dataset.refreshUrl || portalContainer.dataset.url;
+    if (!url) {
+        return;
+    }
+
+    const conteudoAnterior = portalContainer.innerHTML;
+    const urlAnterior = portalContainer.dataset.url;
+    const estadoAnterior = portalContainer.dataset.loaded;
+
+    portalContainer.dataset.url = url;
+    portalContainer.dataset.loaded = "false";
+    portalContainer.classList.add("loading");
+    portalContainer.innerHTML = "<div class=\"loading-state\">Atualizando Portal...</div>";
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                "Accept": "text/html"
+            },
+            credentials: "same-origin"
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao atualizar Portal");
+        }
+
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        atualizarConteudoDaAba(portalContainer, doc, null);
+    } catch (error) {
+        portalContainer.classList.remove("loading");
+        portalContainer.innerHTML = conteudoAnterior;
+        if (estadoAnterior) {
+            portalContainer.dataset.loaded = estadoAnterior;
+        } else {
+            delete portalContainer.dataset.loaded;
+        }
+
+        if (urlAnterior) {
+            portalContainer.dataset.url = urlAnterior;
+        } else {
+            delete portalContainer.dataset.url;
+        }
+    }
+}
+
 function executarScriptsDoConteudo(documento, container) {
     if (!documento) {
         return;
@@ -663,6 +718,8 @@ function configurarEnvioDeFormularios() {
                     fecharAba(nomeAbaAtual);
                 }
             }
+
+            await atualizarResumoPortal();
         } catch (error) {
             containerAtual.classList.remove("loading");
             containerAtual.innerHTML = "<div class=\"error-state\">Não foi possível enviar o formulário. Tente novamente.</div>";
