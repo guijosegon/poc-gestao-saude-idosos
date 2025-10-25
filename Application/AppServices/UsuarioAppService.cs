@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Application.Security;
+using GestaoSaudeIdosos.Domain.Common.Validation;
 using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Domain.Interfaces.Services;
 
@@ -25,6 +26,7 @@ namespace GestaoSaudeIdosos.Application.AppServices
             if (entity is null)
                 throw new ArgumentNullException(nameof(entity));
 
+            EnsurePasswordMeetsPolicy(entity.Senha);
             entity.Senha = _passwordHasher.Hash(entity.Senha);
             await base.CreateAsync(entity);
         }
@@ -35,7 +37,10 @@ namespace GestaoSaudeIdosos.Application.AppServices
                 throw new ArgumentNullException(nameof(entity));
 
             if (!_passwordHasher.IsHashed(entity.Senha))
+            {
+                EnsurePasswordMeetsPolicy(entity.Senha);
                 entity.Senha = _passwordHasher.Hash(entity.Senha);
+            }
 
             base.Update(entity);
         }
@@ -60,6 +65,12 @@ namespace GestaoSaudeIdosos.Application.AppServices
             }
 
             return matches;
+        }
+
+        private static void EnsurePasswordMeetsPolicy(string senha)
+        {
+            if (!PasswordPolicy.IsValid(senha))
+                throw new ArgumentException(PasswordPolicy.BuildRequirementDescription(), nameof(Usuario.Senha));
         }
     }
 }

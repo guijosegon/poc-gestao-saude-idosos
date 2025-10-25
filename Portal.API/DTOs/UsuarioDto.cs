@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using GestaoSaudeIdosos.Domain.Common.Helpers;
+using GestaoSaudeIdosos.Domain.Common.Validation;
 
 namespace GestaoSaudeIdosos.API.DTOs
 {
@@ -16,7 +17,7 @@ namespace GestaoSaudeIdosos.API.DTOs
         public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Senha é obrigatória")]
-        [MinLength(6, ErrorMessage = "A senha deve ter pelo menos 6 caracteres")]
+        [PasswordComplexity]
         public string Senha { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Perfil é obrigatório")]

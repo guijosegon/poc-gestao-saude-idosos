@@ -1,3 +1,4 @@
+using System;
 using GestaoSaudeIdosos.API.DTOs;
 using GestaoSaudeIdosos.API.Mappers;
 using GestaoSaudeIdosos.Application.Interfaces;
@@ -55,7 +56,16 @@ namespace GestaoSaudeIdosos.API.Controllers
                 return Conflict("E-mail já cadastrado para outro usuário.");
 
             var entidade = dto.ToEntity();
-            await _usuarioAppService.CreateAsync(entidade);
+
+            try
+            {
+                await _usuarioAppService.CreateAsync(entidade);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
             var criadoDto = entidade.ToDto();
 
             return CreatedAtAction(nameof(GetById), new { id = entidade.UsuarioId }, criadoDto);
@@ -78,7 +88,15 @@ namespace GestaoSaudeIdosos.API.Controllers
                 return Conflict("E-mail já utilizado por outro usuário.");
 
             existente.UpdateEntity(dto);
-            _usuarioAppService.Update(existente);
+
+            try
+            {
+                _usuarioAppService.Update(existente);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
             return NoContent();
         }

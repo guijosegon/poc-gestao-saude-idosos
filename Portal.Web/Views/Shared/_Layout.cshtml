@@ -1,8 +1,25 @@
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
     var antiForgeryTokens = Antiforgery.GetAndStoreTokens(Context);
-    var mensagemSucesso = ViewData["TempDataSucesso"] as string ?? TempData["Sucesso"] as string;
-    var mensagemErro = ViewData["TempDataErro"] as string ?? TempData["Erro"] as string;
+
+    string? ObterMensagem(string viewDataKey, string tempDataKey)
+    {
+        if (ViewData[viewDataKey] is string mensagemView && !string.IsNullOrWhiteSpace(mensagemView))
+        {
+            return mensagemView;
+        }
+
+        if (TempData.TryGetValue(tempDataKey, out var valorTemp) && valorTemp is string mensagemTemp && !string.IsNullOrWhiteSpace(mensagemTemp))
+        {
+            return mensagemTemp;
+        }
+
+        return null;
+    }
+
+    var mensagemSucesso = ObterMensagem("TempDataSucesso", "Sucesso");
+    var mensagemErro = ObterMensagem("TempDataErro", "Erro");
+    var erroAtual = ViewData["Erro"] as string;
 }
 
 <!DOCTYPE html>
@@ -31,7 +48,7 @@
         {
             <div class="alert danger" role="alert">@mensagemErro</div>
         }
-        @if (ViewData["Erro"] is string erroAtual)
+        @if (!string.IsNullOrWhiteSpace(erroAtual))
         {
             <div class="alert danger" role="alert">@erroAtual</div>
         }
