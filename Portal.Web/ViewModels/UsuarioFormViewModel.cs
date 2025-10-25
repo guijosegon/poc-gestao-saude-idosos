@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using GestaoSaudeIdosos.Domain.Common.Helpers;
+using GestaoSaudeIdosos.Domain.Common.Validation;
 
 namespace GestaoSaudeIdosos.Web.ViewModels
 {
@@ -17,7 +18,7 @@ namespace GestaoSaudeIdosos.Web.ViewModels
 
         [Required(ErrorMessage = "A senha é obrigatória.")]
         [DataType(DataType.Password)]
-        [MinLength(6, ErrorMessage = "A senha deve ter pelo menos 6 caracteres.")]
+        [PasswordComplexity]
         public string Senha { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Confirme a senha.")]

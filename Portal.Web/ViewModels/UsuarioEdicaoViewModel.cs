@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using GestaoSaudeIdosos.Domain.Common.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestaoSaudeIdosos.Web.ViewModels
 {
@@ -26,7 +27,7 @@ namespace GestaoSaudeIdosos.Web.ViewModels
 
         [Display(Name = "Nova senha")]
         [DataType(DataType.Password)]
-        [MinLength(6, ErrorMessage = "Use pelo menos 6 caracteres.")]
+        [PasswordComplexity]
         public string? NovaSenha { get; set; }
 
         [Display(Name = "Confirmar nova senha")]
