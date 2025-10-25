@@ -34,7 +34,7 @@ else
                 <span>Criado em @formulario.DataCadastro.ToString("dd/MM/yyyy")</span>
                 <div class="card-actions">
                     <a asp-action="Details" asp-route-id="@formulario.FormularioId" class="btn-link"
-                           data-open-tab data-tab="FormuláriosFormularioId"
+                           data-open-tab data-tab="Formulários"
                        data-url='@Url.Action("Details", "Formularios", new { id = formulario.FormularioId })'>Detalhes</a>
                     <a asp-action="Edit" asp-route-id="@formulario.FormularioId" class="btn-link"
                            data-open-tab data-tab="Formulários"

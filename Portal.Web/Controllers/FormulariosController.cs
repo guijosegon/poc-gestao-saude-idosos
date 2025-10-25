@@ -1,15 +1,10 @@
 using GestaoSaudeIdosos.Application.Interfaces;
-using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Web.Mappers;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -77,11 +72,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
             catch (Exception ex)
             {
-                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
-                    ? "Não foi possível configurar o formulário. Tente novamente."
-                    : ex.Message;
-
-                ViewData["Erro"] = mensagemErro;
+                ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message) ? "Não foi possível configurar o formulário. Tente novamente." : ex.Message;
                 return View(model);
             }
 
@@ -127,11 +118,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
             catch (Exception ex)
             {
-                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
-                    ? "Não foi possível atualizar o formulário. Tente novamente."
-                    : ex.Message;
-
-                ViewData["Erro"] = mensagemErro;
+                ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message) ? "Não foi possível atualizar o formulário. Tente novamente." : ex.Message;
                 return View(model);
             }
 

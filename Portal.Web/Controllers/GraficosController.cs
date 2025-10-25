@@ -4,7 +4,6 @@ using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -71,11 +70,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
             catch (Exception ex)
             {
-                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
-                    ? "Não foi possível cadastrar o gráfico. Tente novamente."
-                    : ex.Message;
-
-                ViewData["Erro"] = mensagemErro;
+                ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message) ? "Não foi possível cadastrar o gráfico. Tente novamente." : ex.Message;
                 return View(model);
             }
 
@@ -121,11 +116,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
             catch (Exception ex)
             {
-                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
-                    ? "Não foi possível atualizar o gráfico. Tente novamente."
-                    : ex.Message;
-
-                ViewData["Erro"] = mensagemErro;
+                ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message) ? "Não foi possível atualizar o gráfico. Tente novamente." : ex.Message;
                 return View(model);
             }
 

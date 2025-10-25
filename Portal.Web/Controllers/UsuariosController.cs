@@ -1,14 +1,11 @@
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Domain.Common.Helpers;
-using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Web.Mappers;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -80,11 +77,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
             catch (Exception ex)
             {
-                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
-                    ? "Não foi possível criar o usuário. Tente novamente."
-                    : ex.Message;
-
-                ViewData["Erro"] = mensagemErro;
+                ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message) ? "Não foi possível criar o usuário. Tente novamente." : ex.Message;
                 return View(model);
             }
 
@@ -186,11 +179,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
             catch (Exception ex)
             {
-                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
-                    ? "Não foi possível atualizar o usuário. Tente novamente."
-                    : ex.Message;
-
-                ViewData["Erro"] = mensagemErro;
+                ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message) ? "Não foi possível atualizar o usuário. Tente novamente." : ex.Message;
                 return View(model);
             }
 

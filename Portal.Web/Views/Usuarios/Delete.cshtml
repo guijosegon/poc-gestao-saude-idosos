@@ -9,14 +9,14 @@
         <p class="page-subtitle">Somente administradores (ou o próprio profissional) podem executar esta ação.</p>
     </div>
     <a asp-action="Index" class="btn-link"
-       data-open-tab data-close-current-tab data-tab="Usuarios" data-url='@Url.Action("Index", "Usuarios")'>Cancelar</a>
+       data-open-tab data-close-current-tab data-tab="Usuários" data-url='@Url.Action("Index", "Usuarios")'>Cancelar</a>
 </section>
 
 <div class="alert danger">
     Tem certeza que deseja excluir o usuário <strong>@Model.Nome</strong>? Após confirmar ele perderá o acesso ao portal.
 </div>
 
-<form asp-action="Delete" asp-controller="Usuarios" method="post"
+<form asp-action="Delete" asp-controller="Usuários" method="post"
       data-success-tab="Usuários"
       data-success-url='@Url.Action("Index", "Usuarios")'
       data-close-on-success="true">

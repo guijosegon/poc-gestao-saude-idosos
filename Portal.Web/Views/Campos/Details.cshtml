@@ -10,7 +10,7 @@
     </div>
     <div class="page-actions">
         <a asp-action="Edit" asp-route-id="@Model.CampoId" class="btn-primary"
-           data-open-tab data-tab="Campos - @Model.CampoId"
+           data-open-tab data-tab="Campos"
            data-url='@Url.Action("Edit", "Campos", new { id = Model.CampoId })'>Editar</a>
         <a asp-action="Index" class="btn-secondary"
            data-open-tab data-close-current-tab data-tab="Campos" data-url='@Url.Action("Index", "Campos")'>Voltar</a>

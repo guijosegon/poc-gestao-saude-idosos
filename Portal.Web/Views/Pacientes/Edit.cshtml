@@ -9,11 +9,11 @@
         <p class="page-subtitle">Atualize dados cadastrais e responsável pelo acompanhamento.</p>
     </div>
     <a asp-action="Details" asp-route-id="@Model.PacienteId" class="btn-link"
-       data-open-tab data-tab="Paciente - @Model.Nome"
+       data-open-tab data-tab="Pacientes"
        data-url='@Url.Action("Details", "Pacientes", new { id = Model.PacienteId })'>Ver detalhes</a>
 </section>
 
-<form asp-action="Edit" method="post" class="form-card" novalidate
+<form action="@Url.Action("Edit", "Pacientes")" method="post" class="form-card" novalidate
       data-success-tab="Pacientes"
       data-success-url='@Url.Action("Index", "Pacientes")'
       data-close-on-success="true">

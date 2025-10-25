@@ -1,7 +1,6 @@
 using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Domain.Extensions;
 using GestaoSaudeIdosos.Web.ViewModels;
-using System;
 using System.Linq.Expressions;
 
 namespace GestaoSaudeIdosos.Web.Mappers

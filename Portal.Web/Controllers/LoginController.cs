@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using GestaoSaudeIdosos.Application.Interfaces;
-using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

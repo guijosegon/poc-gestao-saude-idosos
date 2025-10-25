@@ -9,11 +9,11 @@
         <p class="page-subtitle">Ajuste dados de origem, campos analisados e configurações visuais.</p>
     </div>
     <a asp-action="Details" asp-route-id="@Model.GraficoId" class="btn-link"
-       data-open-tab data-tab="Gráficos - @Model.Descricao"
+       data-open-tab data-tab="Gráficos"
        data-url='@Url.Action("Details", "Graficos", new { id = Model.GraficoId })'>Ver detalhes</a>
 </section>
 
-<form asp-action="Edit" method="post" class="form-card" novalidate
+<form action="@Url.Action("Create", "Graficos")" method="post" class="form-card" novalidate
       data-success-tab="Gráficos"
       data-success-url='@Url.Action("Index", "Graficos")'
       data-close-on-success="true">

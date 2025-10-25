@@ -1,15 +1,10 @@
 using GestaoSaudeIdosos.Application.Interfaces;
-using GestaoSaudeIdosos.Domain.Entities;
-using GestaoSaudeIdosos.Domain.Extensions;
 using GestaoSaudeIdosos.Web.Mappers;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -85,11 +80,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
             catch (Exception ex)
             {
-                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
-                    ? "Não foi possível cadastrar o paciente. Tente novamente."
-                    : ex.Message;
-
-                ViewData["Erro"] = mensagemErro;
+                ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message) ? "Não foi possível cadastrar o paciente. Tente novamente." : ex.Message;
                 return View(model);
             }
 
@@ -148,11 +139,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
             catch (Exception ex)
             {
-                var mensagemErro = string.IsNullOrWhiteSpace(ex.Message)
-                    ? "Não foi possível atualizar os dados do paciente. Tente novamente."
-                    : ex.Message;
-
-                ViewData["Erro"] = mensagemErro;
+                ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message) ? "Não foi possível atualizar os dados do paciente. Tente novamente." : ex.Message;
                 return View(model);
             }
 

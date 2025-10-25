@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace GestaoSaudeIdosos.Web.ViewModels
@@ -17,6 +16,7 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public string Tipo { get; set; } = string.Empty;
 
         [Display(Name = "Texto de apoio")]
+        [Required(ErrorMessage = "Informe o apoio do campo.")]
         [MaxLength(500, ErrorMessage = "Utilize no máximo 500 caracteres.")]
         public string? TextoAjuda { get; set; }
 

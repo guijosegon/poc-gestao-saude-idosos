@@ -9,11 +9,11 @@
         <p class="page-subtitle">Gerencie permissões e redefina a senha do colaborador.</p>
     </div>
     <a asp-action="Details" asp-route-id="@Model.UsuarioId" class="btn-link"
-       data-open-tab data-tab="Usuário - @Model.Nome"
+       data-open-tab data-tab="Usuários"
        data-url='@Url.Action("Details", "Usuarios", new { id = Model.UsuarioId })'>Ver detalhes</a>
 </section>
 
-<form asp-action="Edit" asp-controller="Usuarios" method="post" class="form-card" novalidate
+<form action="@Url.Action("Edit", "Usuarios")" method="post" class="form-card" novalidate
       data-success-tab="Usuários"
       data-success-url='@Url.Action("Index", "Usuarios")'
       data-close-on-success="true">

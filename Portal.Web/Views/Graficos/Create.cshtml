@@ -12,7 +12,7 @@
        data-open-tab data-close-current-tab data-tab="Gráficos" data-url='@Url.Action("Index", "Graficos")'>Voltar</a>
 </section>
 
-<form asp-action="Create" method="post" class="form-card" novalidate
+<form action="@Url.Action("Create", "Graficos")" method="post" class="form-card" novalidate
       data-success-tab="Gráficos"
       data-success-url='@Url.Action("Index", "Graficos")'
       data-close-on-success="true">
