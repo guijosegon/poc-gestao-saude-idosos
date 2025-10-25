@@ -1,6 +1,7 @@
 using GestaoSaudeIdosos.Application;
 using GestaoSaudeIdosos.Domain;
 using GestaoSaudeIdosos.Infra;
+using GestaoSaudeIdosos.Web.Filters;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -12,6 +13,8 @@ builder.Services.AddInfraServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddDomainServices();
 
+builder.Services.AddScoped<TempDataAlertFilter>();
+
 builder.Services.AddControllersWithViews(options =>
 {
     var policy = new AuthorizationPolicyBuilder()
@@ -20,6 +23,7 @@ builder.Services.AddControllersWithViews(options =>
 
     options.Filters.Add(new AuthorizeFilter(policy));
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+    options.Filters.Add<TempDataAlertFilter>();
 });
 
 builder.Services.AddAntiforgery(options =>

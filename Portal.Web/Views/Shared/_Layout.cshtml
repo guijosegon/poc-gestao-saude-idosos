@@ -1,6 +1,8 @@
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
     var antiForgeryTokens = Antiforgery.GetAndStoreTokens(Context);
+    var mensagemSucesso = ViewData["TempDataSucesso"] as string ?? TempData["Sucesso"] as string;
+    var mensagemErro = ViewData["TempDataErro"] as string ?? TempData["Erro"] as string;
 }
 
 <!DOCTYPE html>
@@ -21,13 +23,13 @@
 </head>
 <body>
     <div class="global-alerts">
-        @if (TempData["Sucesso"] is string sucesso)
+        @if (!string.IsNullOrWhiteSpace(mensagemSucesso))
         {
-            <div class="alert success" role="alert">@sucesso</div>
+            <div class="alert success" role="alert">@mensagemSucesso</div>
         }
-        @if (TempData["Erro"] is string erro)
+        @if (!string.IsNullOrWhiteSpace(mensagemErro))
         {
-            <div class="alert danger" role="alert">@erro</div>
+            <div class="alert danger" role="alert">@mensagemErro</div>
         }
         @if (ViewData["Erro"] is string erroAtual)
         {

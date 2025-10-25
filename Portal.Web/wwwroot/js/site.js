@@ -107,6 +107,24 @@ function fecharAba(nome) {
     }
 }
 
+function obterMensagensTempData(headers) {
+    if (!headers || typeof headers.get !== "function") {
+        return null;
+    }
+
+    const sucesso = headers.get("X-TempData-Sucesso");
+    const erro = headers.get("X-TempData-Erro");
+
+    if (!sucesso && !erro) {
+        return null;
+    }
+
+    return {
+        sucesso: sucesso || null,
+        erro: erro || null
+    };
+}
+
 function carregarConteudoEmAba(container, url, nome) {
     if (!container || !url) {
         return;
@@ -126,16 +144,18 @@ function carregarConteudoEmAba(container, url, nome) {
             "X-Requested-With": "XMLHttpRequest"
         }
     })
-        .then(response => {
+        .then(async response => {
             if (!response.ok) {
                 throw new Error("Erro ao carregar aba");
             }
-            return response.text();
+            const html = await response.text();
+            const mensagensTempData = obterMensagensTempData(response.headers);
+            return { html, mensagensTempData };
         })
-        .then(html => {
+        .then(({ html, mensagensTempData }) => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, "text/html");
-            atualizarConteudoDaAba(container, doc);
+            atualizarConteudoDaAba(container, doc, mensagensTempData);
         })
         .catch(() => {
             container.classList.remove("loading");
@@ -167,22 +187,45 @@ function executarScriptsDoConteudo(documento, container) {
     });
 }
 
-function atualizarAlertasGlobais(documento) {
-    if (!documento) {
-        return;
-    }
-
+function atualizarAlertasGlobais(documento, mensagensTempData) {
     const alertasAtuais = document.querySelector(".global-alerts");
-    const novosAlertas = documento.querySelector(".global-alerts");
+    const novosAlertas = documento ? documento.querySelector(".global-alerts") : null;
 
     if (!alertasAtuais) {
         return;
     }
 
-    alertasAtuais.innerHTML = novosAlertas ? novosAlertas.innerHTML : "";
+    if (novosAlertas && novosAlertas.innerHTML.trim().length > 0) {
+        alertasAtuais.innerHTML = novosAlertas.innerHTML;
+        return;
+    }
+
+    alertasAtuais.innerHTML = "";
+
+    if (!mensagensTempData) {
+        return;
+    }
+
+    const { sucesso, erro } = mensagensTempData;
+
+    if (sucesso) {
+        const alertaSucesso = document.createElement("div");
+        alertaSucesso.className = "alert success";
+        alertaSucesso.setAttribute("role", "alert");
+        alertaSucesso.textContent = sucesso;
+        alertasAtuais.appendChild(alertaSucesso);
+    }
+
+    if (erro) {
+        const alertaErro = document.createElement("div");
+        alertaErro.className = "alert danger";
+        alertaErro.setAttribute("role", "alert");
+        alertaErro.textContent = erro;
+        alertasAtuais.appendChild(alertaErro);
+    }
 }
 
-function atualizarConteudoDaAba(conteudo, documento) {
+function atualizarConteudoDaAba(conteudo, documento, mensagensTempData) {
     if (!conteudo || !documento) {
         return;
     }
@@ -195,7 +238,7 @@ function atualizarConteudoDaAba(conteudo, documento) {
     conteudo.dataset.loaded = "true";
     conteudo.classList.remove("loading");
 
-    atualizarAlertasGlobais(documento);
+    atualizarAlertasGlobais(documento, mensagensTempData);
     executarScriptsDoConteudo(documento, conteudo);
     ativarTooltips();
     aplicarValidacao(conteudo);
@@ -505,6 +548,7 @@ function configurarEnvioDeFormularios() {
             }
 
             const texto = await response.text();
+            const mensagensTempData = obterMensagensTempData(response.headers);
             const parser = new DOMParser();
             const doc = parser.parseFromString(texto, "text/html");
             const foiRedirecionado = response.redirected;
@@ -538,7 +582,7 @@ function configurarEnvioDeFormularios() {
                 urlDestino = urlAtual.pathname + urlAtual.search;
             }
 
-            atualizarConteudoDaAba(destino, doc);
+            atualizarConteudoDaAba(destino, doc, mensagensTempData);
 
             if (destino && urlDestino) {
                 destino.dataset.url = urlDestino;
