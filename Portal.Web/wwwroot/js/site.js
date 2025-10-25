@@ -199,6 +199,51 @@ function executarScriptsDoConteudo(documento, container) {
     });
 }
 
+function removerAlerta(alerta) {
+    if (!alerta || alerta.dataset.alertDismissed === "true") {
+        return;
+    }
+
+    alerta.dataset.alertDismissed = "true";
+    alerta.classList.add("dismissed");
+
+    setTimeout(() => {
+        alerta.remove();
+    }, 180);
+}
+
+function configurarAlertasGlobais(contexto) {
+    let container = null;
+
+    if (contexto instanceof HTMLElement) {
+        container = contexto.classList.contains("global-alerts")
+            ? contexto
+            : contexto.querySelector(".global-alerts");
+    } else if (contexto && typeof contexto.querySelector === "function") {
+        container = contexto.querySelector(".global-alerts");
+    }
+
+    if (!container) {
+        container = document.querySelector(".global-alerts");
+    }
+
+    if (!container) {
+        return;
+    }
+
+    container.querySelectorAll(".alert").forEach(alerta => {
+        if (alerta.dataset.alertConfigured === "true") {
+            return;
+        }
+
+        alerta.dataset.alertConfigured = "true";
+
+        setTimeout(() => removerAlerta(alerta), 5000);
+
+        alerta.addEventListener("click", () => removerAlerta(alerta));
+    });
+}
+
 function atualizarAlertasGlobais(documento, mensagensTempData) {
     const alertasAtuais = document.querySelector(".global-alerts");
     const novosAlertas = documento ? documento.querySelector(".global-alerts") : null;
@@ -209,12 +254,14 @@ function atualizarAlertasGlobais(documento, mensagensTempData) {
 
     if (novosAlertas && novosAlertas.innerHTML.trim().length > 0) {
         alertasAtuais.innerHTML = novosAlertas.innerHTML;
+        configurarAlertasGlobais(alertasAtuais);
         return;
     }
 
     alertasAtuais.innerHTML = "";
 
     if (!mensagensTempData) {
+        configurarAlertasGlobais(alertasAtuais);
         return;
     }
 
@@ -235,6 +282,8 @@ function atualizarAlertasGlobais(documento, mensagensTempData) {
         alertaErro.textContent = erro;
         alertasAtuais.appendChild(alertaErro);
     }
+
+    configurarAlertasGlobais(alertasAtuais);
 }
 
 function atualizarConteudoDaAba(conteudo, documento, mensagensTempData) {
@@ -396,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
     configurarAtalhosDeAbas();
     aplicarValidacao(document);
     configurarEnvioDeFormularios();
+    configurarAlertasGlobais();
 });
 
 function configurarAtalhosDeAbas() {

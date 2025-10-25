@@ -47,6 +47,13 @@ main.container {
     color: #fff;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     animation: fadeIn 200ms ease-out;
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.alert.dismissed {
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
 }
 
 .alert.success {
