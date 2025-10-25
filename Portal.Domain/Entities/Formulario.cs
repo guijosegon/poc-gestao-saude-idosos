@@ -5,7 +5,7 @@
         public Formulario()
         {
             Chave = Guid.NewGuid().ToString();
-            DataCadastro = DateTime.Now;
+            DataCadastro = DateTime.UtcNow;
             Ativo = true;
         }
 

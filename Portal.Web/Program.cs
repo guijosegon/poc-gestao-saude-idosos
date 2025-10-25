@@ -1,11 +1,10 @@
-using System;
 using GestaoSaudeIdosos.Application;
 using GestaoSaudeIdosos.Domain;
 using GestaoSaudeIdosos.Infra;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +19,7 @@ builder.Services.AddControllersWithViews(options =>
         .Build();
 
     options.Filters.Add(new AuthorizeFilter(policy));
+    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
 });
 
 builder.Services.AddAntiforgery(options =>

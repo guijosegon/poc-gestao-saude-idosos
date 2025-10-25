@@ -12,10 +12,9 @@
     <div class="login-overlay" aria-hidden="true"></div>
 
     <div class="login-form" role="form" aria-labelledby="login-title">
-        <form asp-action="Index" method="post" novalidate>
+        <form asp-controller="Login" asp-action="Index" method="POST" novalidate>
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(m => m.ReturnUrl)
-            <h2 id="login-title">Bem-vindo ao PGI</h2>
+            <h2 id="login-title">Bem-vindo</h2>
 
             @Html.ValidationSummary(true, "", new { @class = "form-summary text-danger" })
 

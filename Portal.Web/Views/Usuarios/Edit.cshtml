@@ -13,7 +13,7 @@
        data-url='@Url.Action("Details", "Usuarios", new { id = Model.UsuarioId })'>Ver detalhes</a>
 </section>
 
-<form asp-action="Edit" method="post" class="form-card" novalidate
+<form asp-action="Edit" asp-controller="Usuarios" method="post" class="form-card" novalidate
       data-success-tab="Usuários"
       data-success-url='@Url.Action("Index", "Usuarios")'
       data-close-on-success="true">

@@ -8,7 +8,7 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public string Descricao { get; set; } = string.Empty;
         public string Tipo { get; set; } = string.Empty;
         public string? Responsavel { get; set; }
-        public DateTimeOffset DataCadastro { get; set; }
+        public DateTime DataCadastro { get; set; }
         public bool Ativo { get; set; }
         public int FormulariosVinculados { get; set; }
     }

@@ -7,7 +7,7 @@ namespace GestaoSaudeIdosos.Domain.Entities
         public Campo()
         {
             Chave = Guid.NewGuid().ToString();
-            DataCadastro = DateTimeOffset.Now;
+            DataCadastro = DateTime.UtcNow;
             Ativo = true;
         }
 
@@ -18,7 +18,7 @@ namespace GestaoSaudeIdosos.Domain.Entities
         public List<string> Opcoes { get; set; }
         public string TextoAjuda { get; set; }
         public bool Ativo { get; set; }
-        public DateTimeOffset DataCadastro { get; set; }
+        public DateTime DataCadastro { get; set; }
 
         public int? UsuarioId { get; set; }
         public Usuario? Usuario { get; set; }

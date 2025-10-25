@@ -5,7 +5,7 @@
         public FormularioCampoValor()
         {
             Chave = Guid.NewGuid().ToString();
-            DataCadastro = DateTime.Now;
+            DataCadastro = DateTime.UtcNow;
         } 
 
         public int FormularioCampoValorId { get; set; }

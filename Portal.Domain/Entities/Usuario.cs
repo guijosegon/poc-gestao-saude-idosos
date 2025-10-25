@@ -7,7 +7,7 @@ namespace GestaoSaudeIdosos.Domain.Entities
         public Usuario()
         {
             Chave = Guid.NewGuid().ToString();
-            DataCadastro = DateTime.Now;
+            DataCadastro = DateTime.UtcNow;
             Ativo = true;
         }
 

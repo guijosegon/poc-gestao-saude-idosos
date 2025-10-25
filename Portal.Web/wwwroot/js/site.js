@@ -432,8 +432,17 @@ function configurarEnvioDeFormularios() {
         }
 
         const actionAtributo = (form.getAttribute("action") || "").trim();
-        const action = actionAtributo ? new URL(actionAtributo, window.location.href).toString() : window.location.href;
-        const method = (form.getAttribute("method") || "GET").toUpperCase();
+        let action;
+
+        if (actionAtributo) {
+            action = new URL(actionAtributo, window.location.href).toString();
+        } else if (form.action && form.action.trim() !== "") {
+            action = form.action;
+        } else {
+            action = window.location.href;
+        }
+
+        const method = ((form.method || "GET").toString()).toUpperCase();
         const dadosFormulario = new FormData(form);
         const nomeAbaAtual = obterNomeAbaAtual(containerAtual) || obterNomeAbaAtual(form);
 
@@ -460,8 +469,6 @@ function configurarEnvioDeFormularios() {
 
             corpoRequisicao = undefined;
         }
-
-        event.preventDefault();
 
         containerAtual.classList.add("loading");
         containerAtual.innerHTML = "<div class=\"loading-state\">Salvando...</div>";
