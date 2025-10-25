@@ -69,6 +69,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         [HttpPost]
         [Authorize(Roles = nameof(Enums.PerfilUsuario.Administrador))]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UsuarioFormViewModel model)
         {
             ViewBag.Perfis = ObterPerfis();

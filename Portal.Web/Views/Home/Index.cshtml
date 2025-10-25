@@ -107,7 +107,7 @@
                     </div>
 
                     <div class="quick-actions">
-                        <a class="quick-card" asp-controller="Pacientes" asp-action="Create" data-open-tab data-tab="Novo paciente" data-url='@Url.Action("Create", "Pacientes")'>
+                        <a class="quick-card" asp-controller="Pacientes" asp-action="Create" data-open-tab data-tab="Pacientes" data-url='@Url.Action("Create", "Pacientes")'>
                             <span>Adicionar paciente</span>
                             <small>Cadastre idosos e vincule responsáveis</small>
                         </a>
@@ -115,11 +115,11 @@
                             <span>Configurar campos</span>
                             <small>Personalize perguntas reutilizáveis</small>
                         </a>
-                        <a class="quick-card" asp-controller="Formularios" asp-action="Index" data-open-tab data-tab="Formularios" data-url='@Url.Action("Index", "Formularios")'>
+                        <a class="quick-card" asp-controller="Formularios" asp-action="Index" data-open-tab data-tab="Formulários" data-url='@Url.Action("Index", "Formularios")'>
                             <span>Montar formulário</span>
                             <small>Combine campos para avaliações</small>
                         </a>
-                        <a class="quick-card" asp-controller="Graficos" asp-action="Index" data-open-tab data-tab="Graficos" data-url='@Url.Action("Index", "Graficos")'>
+                        <a class="quick-card" asp-controller="Graficos" asp-action="Index" data-open-tab data-tab="Gráficos" data-url='@Url.Action("Index", "Graficos")'>
                             <span>Explorar gráficos</span>
                             <small>Visualize indicadores dos pacientes</small>
                         </a>
@@ -129,7 +129,7 @@
                         <section class="panel">
                             <div class="panel-header">
                                 <h3>Formulários recentes</h3>
-                                <a asp-controller="Pacientes" asp-action="Create" class="btn-link" data-open-tab data-tab="Novo paciente" data-url='@Url.Action("Create", "Pacientes")'>Aplicar formulário</a>
+                                <a asp-controller="Pacientes" asp-action="Create" class="btn-link" data-open-tab data-tab="Pacientes" data-url='@Url.Action("Create", "Pacientes")'>Aplicar formulário</a>
                             </div>
 
                             @if (!Model.FormulariosRecentes.Any())
@@ -186,7 +186,7 @@
                         <h3>Usuários recentes</h3>
                         @if (User.IsInRole("Administrador"))
                         {
-                            <a asp-controller="Usuarios" asp-action="Create" class="btn-link" data-open-tab data-tab="Novo usuário" data-url='@Url.Action("Create", "Usuarios")'>Novo usuário</a>
+                            <a asp-controller="Usuarios" asp-action="Create" class="btn-link" data-open-tab data-tab="Usuários" data-url='@Url.Action("Create", "Usuarios")'>Novo usuário</a>
                         }
                         <a asp-controller="Usuarios" asp-action="Index" class="btn-link" data-open-tab data-tab="Usuários" data-url='@Url.Action("Index", "Usuarios")'>Ver lista completa</a>
                     </div>
@@ -230,7 +230,7 @@
                 <div class="conteudo" id="conteudo-Pacientes">
                     <div class="panel-header">
                         <h3>Pacientes cadastrados</h3>
-                        <a asp-controller="Pacientes" asp-action="Create" class="btn-link" data-open-tab data-tab="Novo paciente" data-url='@Url.Action("Create", "Pacientes")'>Novo paciente</a>
+                        <a asp-controller="Pacientes" asp-action="Create" class="btn-link" data-open-tab data-tab="Pacientes" data-url='@Url.Action("Create", "Pacientes")'>Novo paciente</a>
                         <a asp-controller="Pacientes" asp-action="Index" class="btn-link" data-open-tab data-tab="Pacientes" data-url='@Url.Action("Index", "Pacientes")'>Ver lista</a>
                     </div>
 

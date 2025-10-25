@@ -33,7 +33,7 @@ builder.Services
     {
         options.LoginPath = "/Login/Index";
         options.AccessDeniedPath = "/Login/AccessDenied";
-        options.Cookie.Name = "PGI.Auth";
+        options.Cookie.Name = "Portal.Auth";
         options.Cookie.HttpOnly = true;
         options.Cookie.SameSite = SameSiteMode.Lax;
         options.SlidingExpiration = true;

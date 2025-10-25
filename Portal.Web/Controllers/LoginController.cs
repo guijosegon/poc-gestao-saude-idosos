@@ -35,26 +35,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var normalizedEmail = model.Email?.Trim() ?? string.Empty;
-            var isAdmin = normalizedEmail.Contains("guilhermejosegon@gmail.com");
-            var usuario = new Usuario();
-
-            if (isAdmin)
-            {
-                usuario = new Usuario()
-                {
-                    UsuarioId = 1,
-                    Ativo = true,
-                    Email = model.Email,
-                    Senha = model.Senha,
-                    Nome = "Guilherme",
-                    Perfil = Domain.Common.Helpers.Enums.PerfilUsuario.Administrador
-                };
-            }
-            else
-            {
-                usuario = _service.AsQueryable().FirstOrDefault(f => f.Email == normalizedEmail);
-            }
+            var email = model.Email?.Trim() ?? string.Empty;
+            var usuario = _service.AsQueryable().FirstOrDefault(f => f.Email == email);
 
             if (usuario is null)
             {
@@ -68,7 +50,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return View(model);
             }
 
-            if (!isAdmin)// || !_service.VerifyPassword(usuario, model.Senha))
+            if (!_service.VerifyPassword(usuario, model.Senha))
             {
                 ModelState.AddModelError(nameof(model.Senha), "Senha inválida.");
                 return View(model);
@@ -94,7 +76,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            Response.Cookies.Delete("PGI.Auth");
+            Response.Cookies.Delete("Portal.Auth");
 
             return RedirectToAction(nameof(Index), "Login");
         }
