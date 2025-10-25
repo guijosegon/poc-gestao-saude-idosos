@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System;
 using System.Threading.Tasks;
 
 namespace GestaoSaudeIdosos.Web.Filters
@@ -37,7 +38,9 @@ namespace GestaoSaudeIdosos.Web.Filters
             }
 
             controller.ViewData[viewDataKey] = mensagem;
-            context.HttpContext.Response.Headers[headerName] = mensagem;
+
+            var headerValue = Uri.EscapeDataString(mensagem);
+            context.HttpContext.Response.Headers[headerName] = headerValue;
             controller.TempData.Remove(tempDataKey);
         }
     }

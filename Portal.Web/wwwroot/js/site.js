@@ -107,13 +107,25 @@ function fecharAba(nome) {
     }
 }
 
+function decodeHeaderValue(value) {
+    if (!value) {
+        return null;
+    }
+
+    try {
+        return decodeURIComponent(value);
+    } catch (error) {
+        return value;
+    }
+}
+
 function obterMensagensTempData(headers) {
     if (!headers || typeof headers.get !== "function") {
         return null;
     }
 
-    const sucesso = headers.get("X-TempData-Sucesso");
-    const erro = headers.get("X-TempData-Erro");
+    const sucesso = decodeHeaderValue(headers.get("X-TempData-Sucesso"));
+    const erro = decodeHeaderValue(headers.get("X-TempData-Erro"));
 
     if (!sucesso && !erro) {
         return null;
