@@ -11,7 +11,7 @@
     </div>
 </section>
 
-<form asp-action="Index" method="post" class="form-card" novalidate>
+<form action="@Url.Action("Index", "Dashboard")" method="post" class="form-card" novalidate>
     @Html.AntiForgeryToken()
 
     <div class="form-grid">

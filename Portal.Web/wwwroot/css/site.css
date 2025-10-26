@@ -351,6 +351,25 @@ main.container {
     margin-top: 0.5rem;
     box-shadow: 0 16px 40px rgba(15, 56, 33, 0.12);
     display: none;
+    cursor: default;
+}
+
+.conteudo a,
+.conteudo button,
+.conteudo [role="button"],
+.conteudo label,
+.conteudo [data-open-tab],
+.conteudo .btn-primary,
+.conteudo .btn-secondary,
+.conteudo .btn-link,
+.conteudo .btn-danger {
+    cursor: pointer;
+}
+
+.conteudo input,
+.conteudo textarea,
+.conteudo select {
+    cursor: text;
 }
 
 .conteudo.active {
@@ -531,6 +550,7 @@ main.container {
 
 .btn-primary,
 .btn-secondary,
+.btn-danger,
 .btn-link {
     display: inline-flex;
     align-items: center;
@@ -574,10 +594,7 @@ main.container {
     color: #fff;
     padding: 0.7rem 1.3rem;
     border: none;
-    border-radius: 12px;
     box-shadow: 0 10px 20px rgba(209, 67, 67, 0.25);
-    cursor: pointer;
-    transition: transform 0.1s ease, box-shadow 0.15s ease;
 }
 
 .btn-danger:hover {
