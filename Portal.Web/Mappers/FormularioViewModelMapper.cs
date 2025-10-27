@@ -22,7 +22,7 @@ namespace GestaoSaudeIdosos.Web.Mappers
             FormularioId = formulario.FormularioId,
             Descricao = formulario.Descricao,
             Ativo = formulario.Ativo,
-            Responsavel = formulario.Usuario != null ? formulario.Usuario.Nome : null,
+            Responsavel = formulario.Usuario != null ? formulario.Usuario.NomeCompleto : null,
             DataCadastro = formulario.DataCadastro,
             Campos = formulario.Campos != null
                 ? formulario.Campos
@@ -57,7 +57,7 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 FormularioId = formulario.FormularioId,
                 Descricao = formulario.Descricao,
                 Ativo = formulario.Ativo,
-                Responsavel = formulario.Usuario?.Nome,
+                Responsavel = formulario.Usuario?.NomeCompleto,
                 DataCadastro = formulario.DataCadastro,
                 Campos = formulario.Campos != null
                     ? formulario.Campos

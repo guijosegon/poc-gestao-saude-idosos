@@ -58,7 +58,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, usuario.UsuarioId.ToString()),
-                new Claim(ClaimTypes.Name, usuario.Nome),
+                new Claim(ClaimTypes.Name, usuario.NomeCompleto),
                 new Claim(ClaimTypes.Email, usuario.Email),
                 new Claim(ClaimTypes.Role, usuario.Perfil.ToString())
             };

@@ -19,9 +19,21 @@
     @Html.AntiForgeryToken()
     <div class="form-grid">
         <div class="form-group">
-            @Html.LabelFor(m => m.Nome)
-            @Html.TextBoxFor(m => m.Nome, new { @class = "form-control", placeholder = "Nome completo" })
-            @Html.ValidationMessageFor(m => m.Nome, "", new { @class = "field-validation-error" })
+            @Html.LabelFor(m => m.NomeCompleto)
+            @Html.TextBoxFor(m => m.NomeCompleto, new { @class = "form-control", placeholder = "Nome completo" })
+            @Html.ValidationMessageFor(m => m.NomeCompleto, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.CpfRg)
+            @Html.TextBoxFor(m => m.CpfRg, new { @class = "form-control", placeholder = "000.000.000-00" })
+            @Html.ValidationMessageFor(m => m.CpfRg, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ImagemPerfil)
+            @Html.TextBoxFor(m => m.ImagemPerfil, new { @class = "form-control", placeholder = "https://..." })
+            @Html.ValidationMessageFor(m => m.ImagemPerfil, "", new { @class = "field-validation-error" })
         </div>
 
         <div class="form-group">
@@ -37,6 +49,46 @@
         </div>
 
     </div>
+
+    <fieldset class="form-fieldset">
+        <legend>Perfil clínico</legend>
+        <div class="form-grid">
+            <div class="form-group">
+                @Html.LabelFor(m => m.CondicoesCronicasSelecionadas)
+                @Html.ListBoxFor(m => m.CondicoesCronicasSelecionadas, Model.CondicoesCronicasDisponiveis, new { @class = "form-control", multiple = "multiple" })
+                @Html.ValidationMessageFor(m => m.CondicoesCronicasSelecionadas, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.MobilidadeSelecionada)
+                @Html.ListBoxFor(m => m.MobilidadeSelecionada, Model.MobilidadeDisponivel, new { @class = "form-control", multiple = "multiple" })
+                @Html.ValidationMessageFor(m => m.MobilidadeSelecionada, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.DietasSelecionadas)
+                @Html.ListBoxFor(m => m.DietasSelecionadas, Model.DietasDisponiveis, new { @class = "form-control", multiple = "multiple" })
+                @Html.ValidationMessageFor(m => m.DietasSelecionadas, "", new { @class = "field-validation-error" })
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="form-fieldset">
+        <legend>Histórico</legend>
+        <div class="form-grid">
+            <div class="form-group">
+                @Html.LabelFor(m => m.HistoricoCirurgicoSelecionados)
+                @Html.ListBoxFor(m => m.HistoricoCirurgicoSelecionados, Model.HistoricoCirurgicoDisponiveis, new { @class = "form-control", multiple = "multiple" })
+                @Html.ValidationMessageFor(m => m.HistoricoCirurgicoSelecionados, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.RiscoQuedasSelecionados)
+                @Html.ListBoxFor(m => m.RiscoQuedasSelecionados, Model.RiscoQuedasDisponiveis, new { @class = "form-control", multiple = "multiple" })
+                @Html.ValidationMessageFor(m => m.RiscoQuedasSelecionados, "", new { @class = "field-validation-error" })
+            </div>
+        </div>
+    </fieldset>
 
     <div class="form-actions">
         <button type="submit" class="btn-primary">Salvar</button>

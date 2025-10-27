@@ -21,9 +21,14 @@
     @Html.HiddenFor(m => m.PacienteId)
     <div class="form-grid">
         <div class="form-group">
-            @Html.LabelFor(m => m.Nome)
-            @Html.TextBoxFor(m => m.Nome, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Nome, "", new { @class = "field-validation-error" })
+            <label>Código</label>
+            <p class="form-readonly">@Model.PacienteId</p>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.NomeCompleto)
+            @Html.TextBoxFor(m => m.NomeCompleto, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NomeCompleto, "", new { @class = "field-validation-error" })
         </div>
 
         <div class="form-group">
@@ -33,12 +38,64 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(m => m.CpfRg)
+            @Html.TextBoxFor(m => m.CpfRg, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.CpfRg, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ImagemPerfil)
+            @Html.TextBoxFor(m => m.ImagemPerfil, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.ImagemPerfil, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(m => m.ResponsavelId)
             @Html.DropDownListFor(m => m.ResponsavelId, Model.Responsaveis, "Selecione", new { @class = "form-control" })
             @Html.ValidationMessageFor(m => m.ResponsavelId, "", new { @class = "field-validation-error" })
         </div>
 
     </div>
+
+    <fieldset class="form-fieldset">
+        <legend>Perfil clínico</legend>
+        <div class="form-grid">
+            <div class="form-group">
+                @Html.LabelFor(m => m.CondicoesCronicasSelecionadas)
+                @Html.ListBoxFor(m => m.CondicoesCronicasSelecionadas, Model.CondicoesCronicasDisponiveis, new { @class = "form-control", multiple = "multiple" })
+                @Html.ValidationMessageFor(m => m.CondicoesCronicasSelecionadas, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.MobilidadeSelecionada)
+                @Html.ListBoxFor(m => m.MobilidadeSelecionada, Model.MobilidadeDisponivel, new { @class = "form-control", multiple = "multiple" })
+                @Html.ValidationMessageFor(m => m.MobilidadeSelecionada, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.DietasSelecionadas)
+                @Html.ListBoxFor(m => m.DietasSelecionadas, Model.DietasDisponiveis, new { @class = "form-control", multiple = "multiple" })
+                @Html.ValidationMessageFor(m => m.DietasSelecionadas, "", new { @class = "field-validation-error" })
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="form-fieldset">
+        <legend>Histórico</legend>
+        <div class="form-grid">
+            <div class="form-group">
+                @Html.LabelFor(m => m.HistoricoCirurgicoSelecionados)
+                @Html.ListBoxFor(m => m.HistoricoCirurgicoSelecionados, Model.HistoricoCirurgicoDisponiveis, new { @class = "form-control", multiple = "multiple" })
+                @Html.ValidationMessageFor(m => m.HistoricoCirurgicoSelecionados, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.RiscoQuedasSelecionados)
+                @Html.ListBoxFor(m => m.RiscoQuedasSelecionados, Model.RiscoQuedasDisponiveis, new { @class = "form-control", multiple = "multiple" })
+                @Html.ValidationMessageFor(m => m.RiscoQuedasSelecionados, "", new { @class = "field-validation-error" })
+            </div>
+        </div>
+    </fieldset>
 
     <div class="form-actions">
         <button type="submit" class="btn-primary">Salvar alterações</button>

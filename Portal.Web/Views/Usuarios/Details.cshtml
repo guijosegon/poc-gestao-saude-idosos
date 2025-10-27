@@ -4,9 +4,14 @@
 }
 
 <section class="page-header">
-    <div>
-        <h1>@Model.Nome</h1>
-        <p class="page-subtitle">@Model.Email • Perfil @Model.Perfil</p>
+    <div class="page-header__profile">
+        <img src="@(string.IsNullOrWhiteSpace(Model.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : Model.ImagemPerfil)"
+             alt="Foto de @Model.NomeCompleto"
+             class="avatar avatar-lg" />
+        <div>
+            <h1>@Model.NomeCompleto</h1>
+            <p class="page-subtitle">Código: @Model.UsuarioId • @Model.Email • Perfil @Model.Perfil</p>
+        </div>
     </div>
     <div class="page-actions">
         <a asp-action="Edit" asp-route-id="@Model.UsuarioId" class="btn-primary"
@@ -21,6 +26,10 @@
     <article class="detail-card">
         <h2>Informações de acesso</h2>
         <dl>
+            <div>
+                <dt>CPF/RG</dt>
+                <dd>@(string.IsNullOrWhiteSpace(Model.CpfRg) ? "—" : Model.CpfRg)</dd>
+            </div>
             <div>
                 <dt>Status</dt>
                 <dd>

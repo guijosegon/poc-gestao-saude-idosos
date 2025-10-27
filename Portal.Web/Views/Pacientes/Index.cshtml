@@ -24,7 +24,8 @@ else
         <table class="table">
             <thead>
                 <tr>
-                    <th>Nome</th>
+                    <th>Código</th>
+                    <th>Paciente</th>
                     <th>Idade</th>
                     <th>Responsável</th>
                     <th>Cadastro</th>
@@ -35,7 +36,17 @@ else
             @foreach (var paciente in Model)
             {
                 <tr>
-                    <td>@paciente.Nome</td>
+                    <td>@paciente.PacienteId</td>
+                    <td>
+                        <div class="table-avatar">
+                            <img src="@(string.IsNullOrWhiteSpace(paciente.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : paciente.ImagemPerfil)"
+                                 alt="Foto de @paciente.NomeCompleto"
+                                 class="avatar avatar-sm" />
+                            <div class="table-avatar__info">
+                                <strong>@paciente.NomeCompleto</strong>
+                            </div>
+                        </div>
+                    </td>
                     <td>@paciente.Idade anos</td>
                     <td>@(string.IsNullOrEmpty(paciente.Responsavel) ? "-" : paciente.Responsavel)</td>
                     <td>@paciente.DataCadastro.ToString("dd/MM/yyyy")</td>

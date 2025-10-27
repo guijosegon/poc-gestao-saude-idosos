@@ -30,7 +30,8 @@ else
         <table class="table">
             <thead>
                 <tr>
-                    <th>Nome</th>
+                    <th>Código</th>
+                    <th>Usuário</th>
                     <th>E-mail</th>
                     <th>Perfil</th>
                     <th>Status</th>
@@ -42,7 +43,17 @@ else
                 @foreach (var usuario in Model)
                 {
                     <tr>
-                        <td>@usuario.Nome</td>
+                        <td>@usuario.UsuarioId</td>
+                        <td>
+                            <div class="table-avatar">
+                                <img src="@(string.IsNullOrWhiteSpace(usuario.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : usuario.ImagemPerfil)"
+                                     alt="Foto de @usuario.NomeCompleto"
+                                     class="avatar avatar-sm" />
+                                <div class="table-avatar__info">
+                                    <strong>@usuario.NomeCompleto</strong>
+                                </div>
+                            </div>
+                        </td>
                         <td>@usuario.Email</td>
                         <td>@usuario.Perfil</td>
                         <td>

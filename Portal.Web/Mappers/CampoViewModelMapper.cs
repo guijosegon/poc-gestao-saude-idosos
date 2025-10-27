@@ -12,7 +12,7 @@ namespace GestaoSaudeIdosos.Web.Mappers
             CampoId = campo.CampoId,
             Descricao = campo.Descricao,
             Tipo = campo.Tipo.ToString(),
-            Responsavel = campo.Usuario != null ? campo.Usuario.Nome : null,
+            Responsavel = campo.Usuario != null ? campo.Usuario.NomeCompleto : null,
             DataCadastro = campo.DataCadastro,
             Ativo = campo.Ativo,
             FormulariosVinculados = campo.FormularioCampos != null ? campo.FormularioCampos.Count : 0
@@ -42,7 +42,7 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 TextoAjuda = campo.TextoAjuda,
                 Opcoes = campo.Opcoes,
                 Ativo = campo.Ativo,
-                CriadoPor = campo.Usuario?.Nome,
+                CriadoPor = campo.Usuario?.NomeCompleto,
                 DataCadastro = campo.DataCadastro,
                 FormulariosUtilizacao = formularios
                     .Where(f => f.Campos.Any(fc => fc.CampoId == campo.CampoId))

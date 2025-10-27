@@ -10,9 +10,18 @@ namespace GestaoSaudeIdosos.Web.ViewModels
     {
         public int? PacienteId { get; set; }
 
+        [Display(Name = "Nome completo")]
         [Required(ErrorMessage = "O nome do paciente é obrigatório.")]
         [StringLength(120, ErrorMessage = "O nome deve ter no máximo 120 caracteres.")]
-        public string Nome { get; set; } = string.Empty;
+        public string NomeCompleto { get; set; } = string.Empty;
+
+        [Display(Name = "CPF/RG")]
+        [StringLength(40, ErrorMessage = "O CPF/RG deve ter no máximo 40 caracteres.")]
+        public string? CpfRg { get; set; }
+
+        [Display(Name = "Foto (URL)")]
+        [StringLength(250, ErrorMessage = "A URL da imagem deve ter no máximo 250 caracteres.")]
+        public string? ImagemPerfil { get; set; }
 
         [Display(Name = "Data de nascimento")]
         [Required(ErrorMessage = "Informe a data de nascimento.")]
@@ -24,5 +33,25 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public int? ResponsavelId { get; set; }
 
         public IEnumerable<SelectListItem> Responsaveis { get; set; } = Enumerable.Empty<SelectListItem>();
+
+        [Display(Name = "Condições crônicas e comorbidades")]
+        public List<string> CondicoesCronicasSelecionadas { get; set; } = new();
+        public IEnumerable<SelectListItem> CondicoesCronicasDisponiveis { get; set; } = Enumerable.Empty<SelectListItem>();
+
+        [Display(Name = "Histórico cirúrgico")]
+        public List<string> HistoricoCirurgicoSelecionados { get; set; } = new();
+        public IEnumerable<SelectListItem> HistoricoCirurgicoDisponiveis { get; set; } = Enumerable.Empty<SelectListItem>();
+
+        [Display(Name = "Risco de quedas")]
+        public List<string> RiscoQuedasSelecionados { get; set; } = new();
+        public IEnumerable<SelectListItem> RiscoQuedasDisponiveis { get; set; } = Enumerable.Empty<SelectListItem>();
+
+        [Display(Name = "Mobilidade e auxílios")]
+        public List<string> MobilidadeSelecionada { get; set; } = new();
+        public IEnumerable<SelectListItem> MobilidadeDisponivel { get; set; } = Enumerable.Empty<SelectListItem>();
+
+        [Display(Name = "Dietas e restrições alimentares")]
+        public List<string> DietasSelecionadas { get; set; } = new();
+        public IEnumerable<SelectListItem> DietasDisponiveis { get; set; } = Enumerable.Empty<SelectListItem>();
     }
 }
