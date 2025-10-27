@@ -14,7 +14,14 @@ namespace GestaoSaudeIdosos.Domain.Entities
 
         public int PacienteId { get; set; }
         public string Chave { get; set; }
-        public string Nome { get; set; }
+        public string NomeCompleto { get; set; } = string.Empty;
+        public string? CpfRg { get; set; }
+        public string? ImagemPerfil { get; set; }
+        public string? CondicoesCronicas { get; set; }
+        public string? HistoricoCirurgico { get; set; }
+        public string? RiscoQuedas { get; set; }
+        public string? MobilidadeAuxilios { get; set; }
+        public string? DietasRestricoes { get; set; }
         private DateTime _dataNascimento;
         private DateTime _dataCadastro;
 

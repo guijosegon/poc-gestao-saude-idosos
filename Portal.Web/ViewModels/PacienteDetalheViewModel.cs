@@ -6,11 +6,18 @@ namespace GestaoSaudeIdosos.Web.ViewModels
     public class PacienteDetalheViewModel
     {
         public int PacienteId { get; set; }
-        public string Nome { get; set; } = string.Empty;
+        public string NomeCompleto { get; set; } = string.Empty;
+        public string? CpfRg { get; set; }
+        public string? ImagemPerfil { get; set; }
         public int Idade { get; set; }
         public DateTime DataNascimento { get; set; }
         public string Responsavel { get; set; } = string.Empty;
         public DateTime UltimaAtualizacao { get; set; }
+        public IEnumerable<string> CondicoesCronicas { get; set; } = Array.Empty<string>();
+        public IEnumerable<string> HistoricoCirurgico { get; set; } = Array.Empty<string>();
+        public IEnumerable<string> RiscoQuedas { get; set; } = Array.Empty<string>();
+        public IEnumerable<string> MobilidadeAuxilios { get; set; } = Array.Empty<string>();
+        public IEnumerable<string> DietasRestricoes { get; set; } = Array.Empty<string>();
         public IEnumerable<PacienteFormularioResultadoViewModel> FormulariosRecentes { get; set; } = Array.Empty<PacienteFormularioResultadoViewModel>();
     }
 

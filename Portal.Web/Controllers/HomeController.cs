@@ -50,8 +50,10 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 .Select(u => new UsuarioListItemViewModel
                 {
                     UsuarioId = u.UsuarioId,
-                    Nome = u.Nome,
+                    NomeCompleto = u.NomeCompleto,
                     Email = u.Email,
+                    CpfRg = u.CpfRg,
+                    ImagemPerfil = u.ImagemPerfil,
                     Perfil = u.Perfil,
                     Ativo = u.Ativo,
                     DataCadastro = u.DataCadastro
@@ -64,10 +66,11 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 .Select(p => new PacienteListItemViewModel
                 {
                     PacienteId = p.PacienteId,
-                    Nome = p.Nome,
+                    NomeCompleto = p.NomeCompleto,
                     DataNascimento = p.DataNascimento,
                     Idade = p.Idade,
-                    Responsavel = p.Responsavel?.Nome,
+                    Responsavel = p.Responsavel?.NomeCompleto,
+                    ImagemPerfil = p.ImagemPerfil,
                     DataCadastro = p.DataCadastro
                 })
                 .ToList();
@@ -123,7 +126,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
             return new RelatorioPacienteViewModel
             {
-                PacienteNome = paciente.Nome,
+                PacienteNome = paciente.NomeCompleto,
                 NivelRisco = risco,
                 Resumo = $"Paciente com {paciente.Idade} anos. Última atualização em {paciente.DataCadastro:dd/MM/yyyy}.",
                 Sugestao = sugestao,

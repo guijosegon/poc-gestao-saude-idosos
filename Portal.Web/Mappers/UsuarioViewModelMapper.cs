@@ -10,8 +10,10 @@ namespace GestaoSaudeIdosos.Web.Mappers
         public static Expression<Func<Usuario, UsuarioListItemViewModel>> ToListItem => usuario => new UsuarioListItemViewModel
         {
             UsuarioId = usuario.UsuarioId,
-            Nome = usuario.Nome,
+            NomeCompleto = usuario.NomeCompleto,
             Email = usuario.Email,
+            CpfRg = usuario.CpfRg,
+            ImagemPerfil = usuario.ImagemPerfil,
             Perfil = usuario.Perfil,
             Ativo = usuario.Ativo,
             DataCadastro = usuario.DataCadastro
@@ -20,8 +22,10 @@ namespace GestaoSaudeIdosos.Web.Mappers
         public static Expression<Func<Usuario, UsuarioDetalheViewModel>> ToDetail => usuario => new UsuarioDetalheViewModel
         {
             UsuarioId = usuario.UsuarioId,
-            Nome = usuario.Nome,
+            NomeCompleto = usuario.NomeCompleto,
             Email = usuario.Email,
+            CpfRg = usuario.CpfRg,
+            ImagemPerfil = usuario.ImagemPerfil,
             Perfil = usuario.Perfil.ToString(),
             Ativo = usuario.Ativo,
             CriadoEm = usuario.DataCadastro
@@ -30,8 +34,10 @@ namespace GestaoSaudeIdosos.Web.Mappers
         public static Expression<Func<Usuario, UsuarioEdicaoViewModel>> ToEditForm => usuario => new UsuarioEdicaoViewModel
         {
             UsuarioId = usuario.UsuarioId,
-            Nome = usuario.Nome,
+            NomeCompleto = usuario.NomeCompleto,
             Email = usuario.Email,
+            CpfRg = usuario.CpfRg,
+            ImagemPerfil = usuario.ImagemPerfil,
             Perfil = usuario.Perfil.ToString(),
             Ativo = usuario.Ativo
         };
@@ -41,9 +47,11 @@ namespace GestaoSaudeIdosos.Web.Mappers
             return new Usuario
             {
                 UsuarioId = model.UsuarioId ?? 0,
-                Nome = model.Nome.Trim(),
+                NomeCompleto = model.NomeCompleto.Trim(),
                 Email = model.Email.Trim(),
                 Senha = model.Senha,
+                CpfRg = string.IsNullOrWhiteSpace(model.CpfRg) ? null : model.CpfRg.Trim(),
+                ImagemPerfil = string.IsNullOrWhiteSpace(model.ImagemPerfil) ? null : model.ImagemPerfil.Trim(),
                 Perfil = model.Perfil,
                 Ativo = model.Ativo
             };
@@ -51,8 +59,10 @@ namespace GestaoSaudeIdosos.Web.Mappers
 
         public static void ApplyToEntity(this UsuarioEdicaoViewModel model, Usuario entity, bool alterarPerfil)
         {
-            entity.Nome = model.Nome.Trim();
+            entity.NomeCompleto = model.NomeCompleto.Trim();
             entity.Email = model.Email.Trim();
+            entity.CpfRg = string.IsNullOrWhiteSpace(model.CpfRg) ? null : model.CpfRg.Trim();
+            entity.ImagemPerfil = string.IsNullOrWhiteSpace(model.ImagemPerfil) ? null : model.ImagemPerfil.Trim();
             entity.Ativo = model.Ativo;
 
             if (alterarPerfil && !string.IsNullOrWhiteSpace(model.Perfil))

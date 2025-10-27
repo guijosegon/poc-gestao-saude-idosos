@@ -21,15 +21,32 @@
     @Html.HiddenFor(m => m.UsuarioId)
     <div class="form-grid">
         <div class="form-group">
-            @Html.LabelFor(m => m.Nome)
-            @Html.TextBoxFor(m => m.Nome, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Nome, "", new { @class = "field-validation-error" })
+            <label>Código</label>
+            <p class="form-readonly">@Model.UsuarioId</p>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.NomeCompleto)
+            @Html.TextBoxFor(m => m.NomeCompleto, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NomeCompleto, "", new { @class = "field-validation-error" })
         </div>
 
         <div class="form-group">
             @Html.LabelFor(m => m.Email)
             @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
             @Html.ValidationMessageFor(m => m.Email, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.CpfRg)
+            @Html.TextBoxFor(m => m.CpfRg, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.CpfRg, "", new { @class = "field-validation-error" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.ImagemPerfil)
+            @Html.TextBoxFor(m => m.ImagemPerfil, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.ImagemPerfil, "", new { @class = "field-validation-error" })
         </div>
 
         <div class="form-group">

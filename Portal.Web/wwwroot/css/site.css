@@ -902,6 +902,64 @@ main.container {
     font-size: 0.95rem;
 }
 
+.page-header__profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar {
+    display: block;
+    border-radius: 50%;
+    object-fit: cover;
+    background: rgba(31, 41, 51, 0.08);
+    border: 2px solid rgba(1, 146, 67, 0.18);
+}
+
+.avatar-sm {
+    width: 48px;
+    height: 48px;
+}
+
+.avatar-lg {
+    width: 96px;
+    height: 96px;
+}
+
+.table-avatar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.table-avatar__info {
+    display: flex;
+    flex-direction: column;
+}
+
+.table-avatar__info strong {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.form-fieldset {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    background: var(--card-bg);
+}
+
+.form-fieldset legend {
+    padding: 0 0.5rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+.form-fieldset .form-grid {
+    margin-top: 0.75rem;
+}
+
 @media (max-width: 960px) {
     .sidebar {
         position: absolute;

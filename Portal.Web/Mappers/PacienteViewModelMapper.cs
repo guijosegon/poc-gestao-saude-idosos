@@ -1,7 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Domain.Extensions;
+using GestaoSaudeIdosos.Web.Extensions;
 using GestaoSaudeIdosos.Web.ViewModels;
-using System.Linq.Expressions;
 
 namespace GestaoSaudeIdosos.Web.Mappers
 {
@@ -10,31 +15,50 @@ namespace GestaoSaudeIdosos.Web.Mappers
         public static Expression<Func<Paciente, PacienteListItemViewModel>> ToListItem => paciente => new PacienteListItemViewModel
         {
             PacienteId = paciente.PacienteId,
-            Nome = paciente.Nome,
+            NomeCompleto = paciente.NomeCompleto,
+            CpfRg = paciente.CpfRg,
+            ImagemPerfil = paciente.ImagemPerfil,
             DataNascimento = paciente.DataNascimento,
             Idade = paciente.Idade,
-            Responsavel = paciente.Responsavel != null ? paciente.Responsavel.Nome : null,
+            Responsavel = paciente.Responsavel != null ? paciente.Responsavel.NomeCompleto : null,
             DataCadastro = paciente.DataCadastro
         };
 
-        public static Expression<Func<Paciente, PacienteFormViewModel>> ToForm => paciente => new PacienteFormViewModel
+        public static PacienteFormViewModel ToFormViewModel(this Paciente paciente)
         {
-            PacienteId = paciente.PacienteId,
-            Nome = paciente.Nome,
-            DataNascimento = paciente.DataNascimento,
-            ResponsavelId = paciente.ResponsavelId
-        };
+            return new PacienteFormViewModel
+            {
+                PacienteId = paciente.PacienteId,
+                NomeCompleto = paciente.NomeCompleto,
+                CpfRg = paciente.CpfRg,
+                ImagemPerfil = paciente.ImagemPerfil,
+                DataNascimento = paciente.DataNascimento,
+                ResponsavelId = paciente.ResponsavelId,
+                CondicoesCronicasSelecionadas = ConverterParaLista(paciente.CondicoesCronicas),
+                HistoricoCirurgicoSelecionados = ConverterParaLista(paciente.HistoricoCirurgico),
+                RiscoQuedasSelecionados = ConverterParaLista(paciente.RiscoQuedas),
+                MobilidadeSelecionada = ConverterParaLista(paciente.MobilidadeAuxilios),
+                DietasSelecionadas = ConverterParaLista(paciente.DietasRestricoes)
+            };
+        }
 
         public static PacienteDetalheViewModel ToDetalhe(this Paciente paciente)
         {
             return new PacienteDetalheViewModel
             {
                 PacienteId = paciente.PacienteId,
-                Nome = paciente.Nome,
+                NomeCompleto = paciente.NomeCompleto,
+                CpfRg = paciente.CpfRg,
+                ImagemPerfil = paciente.ImagemPerfil,
                 Idade = paciente.Idade,
                 DataNascimento = paciente.DataNascimento,
-                Responsavel = paciente.Responsavel?.Nome ?? string.Empty,
+                Responsavel = paciente.Responsavel?.NomeCompleto ?? string.Empty,
                 UltimaAtualizacao = paciente.DataCadastro,
+                CondicoesCronicas = ConverterParaDisplay<Enums.CondicaoCronicaPaciente>(paciente.CondicoesCronicas),
+                HistoricoCirurgico = ConverterParaDisplay<Enums.HistoricoCirurgicoPaciente>(paciente.HistoricoCirurgico),
+                RiscoQuedas = ConverterParaDisplay<Enums.RiscoQuedaPaciente>(paciente.RiscoQuedas),
+                MobilidadeAuxilios = ConverterParaDisplay<Enums.MobilidadePaciente>(paciente.MobilidadeAuxilios),
+                DietasRestricoes = ConverterParaDisplay<Enums.DietaRestricaoPaciente>(paciente.DietasRestricoes),
                 FormulariosRecentes = Array.Empty<PacienteFormularioResultadoViewModel>()
             };
         }
@@ -49,10 +73,17 @@ namespace GestaoSaudeIdosos.Web.Mappers
             return new Paciente
             {
                 PacienteId = model.PacienteId ?? 0,
-                Nome = model.Nome.Trim(),
+                NomeCompleto = model.NomeCompleto.Trim(),
+                CpfRg = string.IsNullOrWhiteSpace(model.CpfRg) ? null : model.CpfRg.Trim(),
+                ImagemPerfil = string.IsNullOrWhiteSpace(model.ImagemPerfil) ? null : model.ImagemPerfil.Trim(),
                 DataNascimento = dataNascimento,
                 Idade = CalcularIdade(dataNascimento),
-                ResponsavelId = model.ResponsavelId
+                ResponsavelId = model.ResponsavelId,
+                CondicoesCronicas = ConverterParaString(model.CondicoesCronicasSelecionadas),
+                HistoricoCirurgico = ConverterParaString(model.HistoricoCirurgicoSelecionados),
+                RiscoQuedas = ConverterParaString(model.RiscoQuedasSelecionados),
+                MobilidadeAuxilios = ConverterParaString(model.MobilidadeSelecionada),
+                DietasRestricoes = ConverterParaString(model.DietasSelecionadas)
             };
         }
 
@@ -63,10 +94,17 @@ namespace GestaoSaudeIdosos.Web.Mappers
 
             var dataNascimento = model.DataNascimento.Value.EnsureUtc();
 
-            entity.Nome = model.Nome.Trim();
+            entity.NomeCompleto = model.NomeCompleto.Trim();
+            entity.CpfRg = string.IsNullOrWhiteSpace(model.CpfRg) ? null : model.CpfRg.Trim();
+            entity.ImagemPerfil = string.IsNullOrWhiteSpace(model.ImagemPerfil) ? null : model.ImagemPerfil.Trim();
             entity.DataNascimento = dataNascimento;
             entity.Idade = CalcularIdade(dataNascimento);
             entity.ResponsavelId = model.ResponsavelId;
+            entity.CondicoesCronicas = ConverterParaString(model.CondicoesCronicasSelecionadas);
+            entity.HistoricoCirurgico = ConverterParaString(model.HistoricoCirurgicoSelecionados);
+            entity.RiscoQuedas = ConverterParaString(model.RiscoQuedasSelecionados);
+            entity.MobilidadeAuxilios = ConverterParaString(model.MobilidadeSelecionada);
+            entity.DietasRestricoes = ConverterParaString(model.DietasSelecionadas);
         }
 
         private static int CalcularIdade(DateTime dataNascimento)
@@ -80,6 +118,43 @@ namespace GestaoSaudeIdosos.Web.Mappers
             }
 
             return Math.Max(idade, 0);
+        }
+
+        private static List<string> ConverterParaLista(string? valor)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+                return new List<string>();
+
+            return valor
+                .Split(';', StringSplitOptions.RemoveEmptyEntries)
+                .Select(v => v.Trim())
+                .Where(v => !string.IsNullOrEmpty(v))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        private static string? ConverterParaString(IEnumerable<string>? valores)
+        {
+            if (valores is null)
+                return null;
+
+            var itens = valores
+                .Select(v => v?.Trim())
+                .Where(v => !string.IsNullOrEmpty(v))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            return itens.Count == 0 ? null : string.Join(';', itens);
+        }
+
+        private static IEnumerable<string> ConverterParaDisplay<TEnum>(string? valor)
+            where TEnum : struct, Enum
+        {
+            return ConverterParaLista(valor)
+                .Select(item => Enum.TryParse<TEnum>(item, true, out var parsed)
+                    ? parsed.GetDisplayName()
+                    : item)
+                .ToList();
         }
     }
 }

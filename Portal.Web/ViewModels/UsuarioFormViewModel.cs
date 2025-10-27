@@ -8,9 +8,18 @@ namespace GestaoSaudeIdosos.Web.ViewModels
     {
         public int? UsuarioId { get; set; }
 
-        [Required(ErrorMessage = "O nome é obrigatório.")]
-        [StringLength(120, ErrorMessage = "O nome deve ter no máximo 120 caracteres.")]
-        public string Nome { get; set; } = string.Empty;
+        [Display(Name = "Nome completo")]
+        [Required(ErrorMessage = "O nome completo é obrigatório.")]
+        [StringLength(120, ErrorMessage = "O nome completo deve ter no máximo 120 caracteres.")]
+        public string NomeCompleto { get; set; } = string.Empty;
+
+        [Display(Name = "CPF/RG")]
+        [StringLength(40, ErrorMessage = "O CPF/RG deve ter no máximo 40 caracteres.")]
+        public string? CpfRg { get; set; }
+
+        [Display(Name = "Foto (URL)")]
+        [StringLength(250, ErrorMessage = "A URL da imagem deve ter no máximo 250 caracteres.")]
+        public string? ImagemPerfil { get; set; }
 
         [Required(ErrorMessage = "O e-mail é obrigatório.")]
         [EmailAddress(ErrorMessage = "E-mail inválido.")]

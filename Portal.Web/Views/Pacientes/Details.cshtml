@@ -4,9 +4,15 @@
 }
 
 <section class="page-header">
-    <div>
-        <h1>@Model.Nome</h1>
-        <p class="page-subtitle">@Model.Idade anos • acompanhamento por @(string.IsNullOrEmpty(Model.Responsavel) ? "—" : Model.Responsavel)</p>
+    <div class="page-header__profile">
+        <img src="@(string.IsNullOrWhiteSpace(Model.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : Model.ImagemPerfil)"
+             alt="Foto de @Model.NomeCompleto"
+             class="avatar avatar-lg" />
+        <div>
+            <h1>@Model.NomeCompleto</h1>
+            <p class="page-subtitle">Código: @Model.PacienteId • @Model.Idade anos • CPF/RG: @(string.IsNullOrWhiteSpace(Model.CpfRg) ? "—" : Model.CpfRg)</p>
+            <p class="page-subtitle">Acompanhamento por @(string.IsNullOrEmpty(Model.Responsavel) ? "—" : Model.Responsavel)</p>
+        </div>
     </div>
     <div class="page-actions">
         <a asp-action="Edit" asp-route-id="@Model.PacienteId" class="btn-primary"
@@ -22,8 +28,16 @@
         <h2>Dados gerais</h2>
         <dl>
             <div>
+                <dt>Código</dt>
+                <dd>@Model.PacienteId</dd>
+            </div>
+            <div>
                 <dt>Data de nascimento</dt>
                 <dd>@Model.DataNascimento.ToString("dd/MM/yyyy")</dd>
+            </div>
+            <div>
+                <dt>CPF/RG</dt>
+                <dd>@(string.IsNullOrWhiteSpace(Model.CpfRg) ? "—" : Model.CpfRg)</dd>
             </div>
             <div>
                 <dt>Responsável direto</dt>
@@ -32,6 +46,38 @@
             <div>
                 <dt>Última atualização</dt>
                 <dd>@Model.UltimaAtualizacao.ToString("dd/MM/yyyy")</dd>
+            </div>
+        </dl>
+    </article>
+
+    <article class="detail-card">
+        <h2>Perfil clínico</h2>
+        <dl>
+            <div>
+                <dt>Condições crônicas / comorbidades</dt>
+                <dd>@(Model.CondicoesCronicas.Any() ? string.Join(", ", Model.CondicoesCronicas) : "—")</dd>
+            </div>
+            <div>
+                <dt>Mobilidade e auxílios</dt>
+                <dd>@(Model.MobilidadeAuxilios.Any() ? string.Join(", ", Model.MobilidadeAuxilios) : "—")</dd>
+            </div>
+            <div>
+                <dt>Dietas e restrições</dt>
+                <dd>@(Model.DietasRestricoes.Any() ? string.Join(", ", Model.DietasRestricoes) : "—")</dd>
+            </div>
+        </dl>
+    </article>
+
+    <article class="detail-card">
+        <h2>Histórico clínico</h2>
+        <dl>
+            <div>
+                <dt>Histórico cirúrgico</dt>
+                <dd>@(Model.HistoricoCirurgico.Any() ? string.Join(", ", Model.HistoricoCirurgico) : "—")</dd>
+            </div>
+            <div>
+                <dt>Risco de quedas</dt>
+                <dd>@(Model.RiscoQuedas.Any() ? string.Join(", ", Model.RiscoQuedas) : "—")</dd>
             </div>
         </dl>
     </article>

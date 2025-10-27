@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Web.Mappers;
 using GestaoSaudeIdosos.Web.ViewModels;
@@ -5,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using GestaoSaudeIdosos.Domain.Common.Helpers;
+using GestaoSaudeIdosos.Web.Extensions;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -53,6 +58,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 Responsaveis = responsaveis
             };
 
+            PreencherOpcoesClinicas(model);
+
             return View(model);
         }
 
@@ -62,6 +69,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         {
             var responsaveis = await ObterResponsaveisAsync();
             model.Responsaveis = responsaveis;
+            PreencherOpcoesClinicas(model);
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -92,16 +100,16 @@ namespace GestaoSaudeIdosos.Web.Controllers
         {
             var responsaveis = await ObterResponsaveisAsync();
 
-            var model = await _pacienteAppService
+            var paciente = await _pacienteAppService
                 .AsQueryable(p => p.Responsavel)
-                .Where(p => p.PacienteId == id)
-                .Select(PacienteViewModelMapper.ToForm)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(p => p.PacienteId == id);
 
-            if (model is null)
+            if (paciente is null)
                 return NotFound();
 
+            var model = paciente.ToFormViewModel();
             model.Responsaveis = responsaveis;
+            PreencherOpcoesClinicas(model);
 
             return View(model);
         }
@@ -112,6 +120,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         {
             var responsaveis = await ObterResponsaveisAsync();
             model.Responsaveis = responsaveis;
+            PreencherOpcoesClinicas(model);
 
             if (model.PacienteId is null || model.PacienteId != id)
                 ModelState.AddModelError(string.Empty, "Não foi possível localizar o paciente informado.");
@@ -180,14 +189,45 @@ namespace GestaoSaudeIdosos.Web.Controllers
         {
             var usuarios = await _usuarioAppService
                 .AsQueryable()
-                .OrderBy(u => u.Nome)
+                .OrderBy(u => u.NomeCompleto)
                 .ToListAsync();
 
             return usuarios
                 .Select(u => new SelectListItem
                 {
                     Value = u.UsuarioId.ToString(),
-                    Text = u.Nome
+                    Text = u.NomeCompleto
+                })
+                .ToList();
+        }
+
+        private static void PreencherOpcoesClinicas(PacienteFormViewModel model)
+        {
+            model.CondicoesCronicasSelecionadas ??= new List<string>();
+            model.HistoricoCirurgicoSelecionados ??= new List<string>();
+            model.RiscoQuedasSelecionados ??= new List<string>();
+            model.MobilidadeSelecionada ??= new List<string>();
+            model.DietasSelecionadas ??= new List<string>();
+
+            model.CondicoesCronicasDisponiveis = CriarSelectList<Enums.CondicaoCronicaPaciente>(model.CondicoesCronicasSelecionadas);
+            model.HistoricoCirurgicoDisponiveis = CriarSelectList<Enums.HistoricoCirurgicoPaciente>(model.HistoricoCirurgicoSelecionados);
+            model.RiscoQuedasDisponiveis = CriarSelectList<Enums.RiscoQuedaPaciente>(model.RiscoQuedasSelecionados);
+            model.MobilidadeDisponivel = CriarSelectList<Enums.MobilidadePaciente>(model.MobilidadeSelecionada);
+            model.DietasDisponiveis = CriarSelectList<Enums.DietaRestricaoPaciente>(model.DietasSelecionadas);
+        }
+
+        private static IEnumerable<SelectListItem> CriarSelectList<TEnum>(IEnumerable<string> selecionados)
+            where TEnum : struct, Enum
+        {
+            var selecionadosSet = new HashSet<string>(selecionados ?? Enumerable.Empty<string>(), StringComparer.OrdinalIgnoreCase);
+
+            return Enum.GetValues(typeof(TEnum))
+                .Cast<TEnum>()
+                .Select(valor => new SelectListItem
+                {
+                    Value = valor.ToString(),
+                    Text = valor.GetDisplayName(),
+                    Selected = selecionadosSet.Contains(valor.ToString())
                 })
                 .ToList();
         }

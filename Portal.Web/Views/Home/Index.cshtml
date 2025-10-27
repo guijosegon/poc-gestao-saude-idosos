@@ -103,7 +103,8 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Nome</th>
+                                        <th>Código</th>
+                                        <th>Usuário</th>
                                         <th>E-mail</th>
                                         <th>Perfil</th>
                                         <th>Status</th>
@@ -113,7 +114,17 @@
                                 @foreach (var usuario in Model.UsuariosRecentes)
                                 {
                                     <tr>
-                                        <td>@usuario.Nome</td>
+                                        <td>@usuario.UsuarioId</td>
+                                        <td>
+                                            <div class="table-avatar">
+                                                <img src="@(string.IsNullOrWhiteSpace(usuario.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : usuario.ImagemPerfil)"
+                                                     alt="Foto de @usuario.NomeCompleto"
+                                                     class="avatar avatar-sm" />
+                                                <div class="table-avatar__info">
+                                                    <strong>@usuario.NomeCompleto</strong>
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td>@usuario.Email</td>
                                         <td>@usuario.Perfil</td>
                                         <td>
@@ -146,7 +157,8 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Nome</th>
+                                        <th>Código</th>
+                                        <th>Paciente</th>
                                         <th>Idade</th>
                                         <th>Responsável</th>
                                         <th>Última atualização</th>
@@ -156,7 +168,17 @@
                                 @foreach (var paciente in Model.PacientesRecentes)
                                 {
                                     <tr>
-                                        <td>@paciente.Nome</td>
+                                        <td>@paciente.PacienteId</td>
+                                        <td>
+                                            <div class="table-avatar">
+                                                <img src="@(string.IsNullOrWhiteSpace(paciente.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : paciente.ImagemPerfil)"
+                                                     alt="Foto de @paciente.NomeCompleto"
+                                                     class="avatar avatar-sm" />
+                                                <div class="table-avatar__info">
+                                                    <strong>@paciente.NomeCompleto</strong>
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td>@paciente.Idade anos</td>
                                         <td>@(string.IsNullOrEmpty(paciente.Responsavel) ? "-" : paciente.Responsavel)</td>
                                         <td>@paciente.DataCadastro.ToString("dd/MM/yyyy")</td>
