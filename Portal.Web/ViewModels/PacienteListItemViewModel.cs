@@ -12,5 +12,10 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public int Idade { get; set; }
         public string? Responsavel { get; set; }
         public DateTime DataCadastro { get; set; }
+        public string? CondicoesCronicas { get; set; }
+        public string? HistoricoCirurgico { get; set; }
+        public string? RiscoQuedas { get; set; }
+        public string? MobilidadeAuxilios { get; set; }
+        public string? DietasRestricoes { get; set; }
     }
 }

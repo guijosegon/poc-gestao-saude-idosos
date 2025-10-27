@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GestaoSaudeIdosos.Web.Controllers
@@ -71,7 +72,12 @@ namespace GestaoSaudeIdosos.Web.Controllers
                     Idade = p.Idade,
                     Responsavel = p.Responsavel?.NomeCompleto,
                     ImagemPerfil = p.ImagemPerfil,
-                    DataCadastro = p.DataCadastro
+                    DataCadastro = p.DataCadastro,
+                    CondicoesCronicas = p.CondicoesCronicas,
+                    HistoricoCirurgico = p.HistoricoCirurgico,
+                    RiscoQuedas = p.RiscoQuedas,
+                    MobilidadeAuxilios = p.MobilidadeAuxilios,
+                    DietasRestricoes = p.DietasRestricoes
                 })
                 .ToList();
 
@@ -110,28 +116,115 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         private static RelatorioPacienteViewModel MontarRelatorioPaciente(PacienteListItemViewModel paciente)
         {
-            var risco = "Baixo";
-            var sugestao = "Manter rotina de acompanhamento atual.";
+            const int riscoBaixo = 0;
+            const int riscoModerado = 1;
+            const int riscoAlto = 2;
 
-            if (paciente.Idade >= 85)
+            var nivelRisco = riscoBaixo;
+            var sugestoes = new List<string>();
+            var resumoPartes = new List<string>
             {
-                risco = "Alto";
-                sugestao = "Agendar avaliação neurológica e reforçar exercícios de estimulação cognitiva.";
-            }
-            else if (paciente.Idade >= 75)
+                $"Paciente com {paciente.Idade} anos."
+            };
+
+            if (!string.IsNullOrWhiteSpace(paciente.CondicoesCronicas))
             {
-                risco = "Moderado";
-                sugestao = "Reforçar atividades físicas leves e monitorar sinais de déficit cognitivo.";
+                resumoPartes.Add($"Condições crônicas: {paciente.CondicoesCronicas}.");
+
+                if (ContemTermo(paciente.CondicoesCronicas, "insufici", "cardi", "avc", "neoplas", "demenc"))
+                {
+                    nivelRisco = Math.Max(nivelRisco, riscoAlto);
+                    sugestoes.Add("Agendar avaliação especializada para manejo das condições crônicas relatadas.");
+                }
+                else if (ContemTermo(paciente.CondicoesCronicas, "hipertens", "diabet", "asma", "doença pulmonar", "osteopor"))
+                {
+                    nivelRisco = Math.Max(nivelRisco, riscoModerado);
+                    sugestoes.Add("Reforçar controle clínico e acompanhamento multiprofissional das condições crônicas.");
+                }
             }
+
+            if (!string.IsNullOrWhiteSpace(paciente.RiscoQuedas))
+            {
+                resumoPartes.Add($"Risco de quedas: {paciente.RiscoQuedas}.");
+
+                if (paciente.RiscoQuedas.IndexOf("alto", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    nivelRisco = Math.Max(nivelRisco, riscoAlto);
+                    sugestoes.Add("Intensificar fisioterapia e revisar plano de prevenção de quedas.");
+                }
+                else if (paciente.RiscoQuedas.IndexOf("moderado", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    nivelRisco = Math.Max(nivelRisco, riscoModerado);
+                    sugestoes.Add("Reforçar orientações ambientais e exercícios de equilíbrio.");
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(paciente.MobilidadeAuxilios))
+            {
+                resumoPartes.Add($"Mobilidade e auxílios: {paciente.MobilidadeAuxilios}.");
+
+                if (ContemTermo(paciente.MobilidadeAuxilios, "cadeira", "andador", "imobilidade"))
+                {
+                    nivelRisco = Math.Max(nivelRisco, riscoModerado);
+                }
+
+                sugestoes.Add("Verificar manutenção e adequação dos dispositivos de mobilidade utilizados.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(paciente.DietasRestricoes))
+            {
+                resumoPartes.Add($"Plano alimentar: {paciente.DietasRestricoes}.");
+                nivelRisco = Math.Max(nivelRisco, riscoModerado);
+                sugestoes.Add("Revisar plano alimentar com nutricionista para garantir adesão às restrições.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(paciente.HistoricoCirurgico))
+            {
+                resumoPartes.Add($"Histórico cirúrgico: {paciente.HistoricoCirurgico}.");
+                nivelRisco = Math.Max(nivelRisco, riscoModerado);
+                sugestoes.Add("Monitorar sinais de complicações relacionadas ao histórico cirúrgico informado.");
+            }
+
+            resumoPartes.Add($"Última atualização em {paciente.DataCadastro:dd/MM/yyyy}.");
+
+            if (!sugestoes.Any())
+            {
+                sugestoes.Add("Manter rotina de acompanhamento atual.");
+            }
+
+            var risco = nivelRisco switch
+            {
+                riscoAlto => "Alto",
+                riscoModerado => "Moderado",
+                _ => "Baixo"
+            };
 
             return new RelatorioPacienteViewModel
             {
                 PacienteNome = paciente.NomeCompleto,
                 NivelRisco = risco,
-                Resumo = $"Paciente com {paciente.Idade} anos. Última atualização em {paciente.DataCadastro:dd/MM/yyyy}.",
-                Sugestao = sugestao,
+                Resumo = string.Join(" ", resumoPartes),
+                Sugestao = string.Join(" ", sugestoes.Distinct()),
                 UltimaAtualizacao = paciente.DataCadastro
             };
+
+            static bool ContemTermo(string? texto, params string[] termos)
+            {
+                if (string.IsNullOrWhiteSpace(texto))
+                {
+                    return false;
+                }
+
+                foreach (var termo in termos)
+                {
+                    if (texto.IndexOf(termo, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
         }
     }
 }
