@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Web.Mappers;
+using GestaoSaudeIdosos.Web.Services;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,20 +19,68 @@ namespace GestaoSaudeIdosos.Web.Controllers
     {
         private readonly IPacienteAppService _pacienteAppService;
         private readonly IUsuarioAppService _usuarioAppService;
+        private readonly IImagemStorageService _imagemStorageService;
 
-        public PacientesController(IPacienteAppService pacienteAppService, IUsuarioAppService usuarioAppService)
+        public PacientesController(IPacienteAppService pacienteAppService, IUsuarioAppService usuarioAppService, IImagemStorageService imagemStorageService)
         {
             _pacienteAppService = pacienteAppService;
             _usuarioAppService = usuarioAppService;
+            _imagemStorageService = imagemStorageService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] PacienteFiltroViewModel filtro)
         {
-            var model = await _pacienteAppService
-                .AsQueryable(p => p.Responsavel)
+            filtro ??= new PacienteFiltroViewModel();
+
+            var query = _pacienteAppService.AsQueryable(p => p.Responsavel);
+
+            if (!string.IsNullOrWhiteSpace(filtro.Busca))
+            {
+                var busca = filtro.Busca.Trim();
+                query = query.Where(p => EF.Functions.ILike(p.NomeCompleto, $"%{busca}%")
+                    || EF.Functions.ILike(p.CpfRg ?? string.Empty, $"%{busca}%"));
+            }
+
+            if (filtro.ResponsavelId.HasValue)
+            {
+                var responsavelId = filtro.ResponsavelId.Value;
+                query = query.Where(p => p.ResponsavelId == responsavelId);
+            }
+
+            var itensPorPagina = filtro.ItensPorPagina;
+            var totalRegistros = await query.CountAsync();
+            var totalPaginas = totalRegistros == 0
+                ? 0
+                : (int)Math.Ceiling(totalRegistros / (double)itensPorPagina);
+
+            var paginaAtual = filtro.Pagina;
+            if (totalPaginas > 0 && paginaAtual > totalPaginas)
+                paginaAtual = totalPaginas;
+
+            var registros = await query
                 .OrderByDescending(p => p.DataCadastro)
+                .Skip((paginaAtual - 1) * itensPorPagina)
+                .Take(itensPorPagina)
                 .Select(PacienteViewModelMapper.ToListItem)
                 .ToListAsync();
+
+            filtro.Pagina = paginaAtual;
+
+            var responsaveis = await ObterResponsaveisAsync();
+
+            var model = new PacientesIndexViewModel
+            {
+                Filtro = filtro,
+                Paginacao = new PaginacaoViewModel
+                {
+                    PaginaAtual = paginaAtual,
+                    TotalPaginas = totalPaginas,
+                    TotalRegistros = totalRegistros,
+                    ItensPorPagina = itensPorPagina
+                },
+                Registros = registros,
+                Responsaveis = responsaveis
+            };
 
             return View(model);
         }
@@ -80,6 +129,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return View(model);
             }
 
+            model.ImagemPerfil = await _imagemStorageService.SalvarAsync(model.ImagemPerfilArquivo, "pacientes");
+
             var paciente = model.ToEntity();
 
             try
@@ -88,6 +139,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
             catch (Exception ex)
             {
+                _imagemStorageService.Remover(model.ImagemPerfil);
+
                 ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message) ? "Não foi possível cadastrar o paciente. Tente novamente." : ex.Message;
                 return View(model);
             }
@@ -140,6 +193,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return View(model);
             }
 
+            var imagemAtualizada = await _imagemStorageService.SalvarAsync(model.ImagemPerfilArquivo, "pacientes", paciente.ImagemPerfil);
+            model.ImagemPerfil = imagemAtualizada;
+
             model.ApplyToEntity(paciente);
 
             try
@@ -178,6 +234,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 .FirstOrDefaultAsync(p => p.PacienteId == id);
             if (paciente is null)
                 return NotFound();
+
+            _imagemStorageService.Remover(paciente.ImagemPerfil);
 
             _pacienteAppService.Delete(paciente);
 

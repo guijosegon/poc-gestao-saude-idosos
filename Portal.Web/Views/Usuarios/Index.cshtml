@@ -1,5 +1,5 @@
-@model IEnumerable<GestaoSaudeIdosos.Web.ViewModels.UsuarioListItemViewModel>
-@{
+@model GestaoSaudeIdosos.Web.ViewModels.UsuariosIndexViewModel
+@{ 
     ViewData["Title"] = "Usuários";
 }
 
@@ -14,10 +14,53 @@
     }
 </section>
 
-@if (!Model.Any())
+<form method="get" class="filters">
+    <div class="filters__row">
+        <div class="form-group">
+            <label for="Busca">Buscar</label>
+            <input type="text" id="Busca" name="Busca" value="@Model.Filtro.Busca" class="form-control" placeholder="Nome ou e-mail" />
+        </div>
+        <div class="form-group">
+            <label for="Perfil">Perfil</label>
+            <select id="Perfil" name="Perfil" class="form-control">
+                <option value="">Todos</option>
+                @foreach (var perfil in Model.Perfis)
+                {
+                    var selecionado = string.Equals(perfil.Value, Model.Filtro.Perfil?.ToString(), System.StringComparison.OrdinalIgnoreCase);
+                    <option value="@perfil.Value" @(selecionado ? "selected" : null)>@perfil.Text</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="Ativo">Status</label>
+            <select id="Ativo" name="Ativo" class="form-control">
+                <option value="">Todos</option>
+                <option value="true" @(Model.Filtro.Ativo == true ? "selected" : null)>Apenas ativos</option>
+                <option value="false" @(Model.Filtro.Ativo == false ? "selected" : null)>Apenas inativos</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="ItensPorPagina">Itens por página</label>
+            <select id="ItensPorPagina" name="ItensPorPagina" class="form-control">
+                @{ var tamanhos = new[] { 10, 25, 50 }; }
+                @foreach (var tamanho in tamanhos)
+                {
+                    <option value="@tamanho" @(Model.Filtro.ItensPorPagina == tamanho ? "selected" : null)>@tamanho</option>
+                }
+            </select>
+        </div>
+    </div>
+    <input type="hidden" name="Pagina" value="1" />
+    <div class="filters__actions">
+        <button type="submit" class="btn-primary">Filtrar</button>
+        <a asp-action="Index" class="btn-link">Limpar filtros</a>
+    </div>
+</form>
+
+@if (Model.Paginacao.TotalRegistros == 0)
 {
     <div class="empty-state">
-        <p>Nenhum usuário cadastrado até o momento.</p>
+        <p>Nenhum usuário encontrado com os filtros atuais.</p>
         @if (User.IsInRole("Administrador"))
         {
             <a asp-action="Create" class="btn-link" data-open-tab data-tab="Usuários" data-url='@Url.Action("Create", "Usuarios")'>Clique aqui para cadastrar o primeiro usuário.</a>
@@ -26,6 +69,11 @@
 }
 else
 {
+    var inicio = ((Model.Paginacao.PaginaAtual - 1) * Model.Paginacao.ItensPorPagina) + 1;
+    var fim = Math.Min(Model.Paginacao.PaginaAtual * Model.Paginacao.ItensPorPagina, Model.Paginacao.TotalRegistros);
+
+    <p class="table-summary">Exibindo @inicio - @fim de @Model.Paginacao.TotalRegistros registros.</p>
+
     <div class="table-responsive">
         <table class="table">
             <thead>
@@ -40,13 +88,17 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (var usuario in Model)
+                @foreach (var usuario in Model.Registros)
                 {
+                    var imagemPerfil = string.IsNullOrWhiteSpace(usuario.ImagemPerfil)
+                        ? Url.Content("~/images/avatar-generico.svg")
+                        : Url.Content(usuario.ImagemPerfil);
+
                     <tr>
                         <td>@usuario.UsuarioId</td>
                         <td>
                             <div class="table-avatar">
-                                <img src="@(string.IsNullOrWhiteSpace(usuario.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : usuario.ImagemPerfil)"
+                                <img src="@imagemPerfil"
                                      alt="Foto de @usuario.NomeCompleto"
                                      class="avatar avatar-sm" />
                                 <div class="table-avatar__info">
@@ -69,7 +121,7 @@ else
                             <a asp-action="Edit" asp-route-id="@usuario.UsuarioId" class="btn-link"
                                data-open-tab data-tab="Usuários"
                                data-url='@Url.Action("Edit", "Usuarios", new { id = usuario.UsuarioId })'>Editar</a>
-                            @if (User.IsInRole("Administrador") || string.Equals(User.Identity?.Name, usuario.Email, StringComparison.OrdinalIgnoreCase))
+                            @if (User.IsInRole("Administrador") || string.Equals(User.Identity?.Name, usuario.Email, System.StringComparison.OrdinalIgnoreCase))
                             {
                                 <a asp-action="Delete" asp-route-id="@usuario.UsuarioId" class="btn-link text-danger"
                                    data-open-tab data-tab="Usuários"
@@ -81,6 +133,49 @@ else
             </tbody>
         </table>
     </div>
+
+    if (Model.Paginacao.TotalPaginas > 1)
+    {
+        <nav class="pagination-nav" aria-label="Paginação de usuários">
+            <ul class="pagination">
+                <li class="page-item @(Model.Paginacao.PossuiPaginaAnterior ? string.Empty : "disabled")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-Pagina="@Model.Paginacao.PrimeiraPagina"
+                       asp-route-Busca="@Model.Filtro.Busca"
+                       asp-route-Perfil="@Model.Filtro.Perfil"
+                       asp-route-Ativo="@Model.Filtro.Ativo"
+                       asp-route-ItensPorPagina="@Model.Filtro.ItensPorPagina">Primeira</a>
+                </li>
+                <li class="page-item @(Model.Paginacao.PossuiPaginaAnterior ? string.Empty : "disabled")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-Pagina="@Model.Paginacao.PaginaAnterior"
+                       asp-route-Busca="@Model.Filtro.Busca"
+                       asp-route-Perfil="@Model.Filtro.Perfil"
+                       asp-route-Ativo="@Model.Filtro.Ativo"
+                       asp-route-ItensPorPagina="@Model.Filtro.ItensPorPagina">Anterior</a>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Página @Model.Paginacao.PaginaAtual de @Model.Paginacao.TotalPaginas</span>
+                </li>
+                <li class="page-item @(Model.Paginacao.PossuiProximaPagina ? string.Empty : "disabled")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-Pagina="@Model.Paginacao.ProximaPagina"
+                       asp-route-Busca="@Model.Filtro.Busca"
+                       asp-route-Perfil="@Model.Filtro.Perfil"
+                       asp-route-Ativo="@Model.Filtro.Ativo"
+                       asp-route-ItensPorPagina="@Model.Filtro.ItensPorPagina">Próxima</a>
+                </li>
+                <li class="page-item @(Model.Paginacao.PossuiProximaPagina ? string.Empty : "disabled")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-Pagina="@Model.Paginacao.UltimaPagina"
+                       asp-route-Busca="@Model.Filtro.Busca"
+                       asp-route-Perfil="@Model.Filtro.Perfil"
+                       asp-route-Ativo="@Model.Filtro.Ativo"
+                       asp-route-ItensPorPagina="@Model.Filtro.ItensPorPagina">Última</a>
+                </li>
+            </ul>
+        </nav>
+    }
 }
 
 

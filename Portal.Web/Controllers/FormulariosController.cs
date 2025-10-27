@@ -25,13 +25,55 @@ namespace GestaoSaudeIdosos.Web.Controllers
             _usuarioAppService = usuarioAppService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] FormularioFiltroViewModel filtro)
         {
-            var model = await _formularioAppService
-                .AsQueryable(f => f.Campos, f => f.Pacientes)
+            filtro ??= new FormularioFiltroViewModel();
+
+            var query = _formularioAppService.AsQueryable(f => f.Campos, f => f.Pacientes);
+
+            if (!string.IsNullOrWhiteSpace(filtro.Busca))
+            {
+                var busca = filtro.Busca.Trim();
+                query = query.Where(f => EF.Functions.ILike(f.Descricao, $"%{busca}%"));
+            }
+
+            if (filtro.Ativo.HasValue)
+            {
+                var ativo = filtro.Ativo.Value;
+                query = query.Where(f => f.Ativo == ativo);
+            }
+
+            var itensPorPagina = filtro.ItensPorPagina;
+            var totalRegistros = await query.CountAsync();
+            var totalPaginas = totalRegistros == 0
+                ? 0
+                : (int)Math.Ceiling(totalRegistros / (double)itensPorPagina);
+
+            var paginaAtual = filtro.Pagina;
+            if (totalPaginas > 0 && paginaAtual > totalPaginas)
+                paginaAtual = totalPaginas;
+
+            var registros = await query
                 .OrderByDescending(f => f.DataCadastro)
+                .Skip((paginaAtual - 1) * itensPorPagina)
+                .Take(itensPorPagina)
                 .Select(FormularioViewModelMapper.ToListItem)
                 .ToListAsync();
+
+            filtro.Pagina = paginaAtual;
+
+            var model = new FormulariosIndexViewModel
+            {
+                Filtro = filtro,
+                Paginacao = new PaginacaoViewModel
+                {
+                    PaginaAtual = paginaAtual,
+                    TotalPaginas = totalPaginas,
+                    TotalRegistros = totalRegistros,
+                    ItensPorPagina = itensPorPagina
+                },
+                Registros = registros
+            };
 
             return View(model);
         }

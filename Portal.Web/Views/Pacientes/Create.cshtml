@@ -12,7 +12,7 @@
        data-open-tab data-close-current-tab data-tab="Pacientes" data-url='@Url.Action("Index", "Pacientes")'>Voltar</a>
 </section>
 
-<form action="@Url.Action("Create", "Pacientes")" method="post" class="form-card" novalidate
+<form action="@Url.Action("Create", "Pacientes")" method="post" class="form-card" novalidate enctype="multipart/form-data"
       data-success-tab="Pacientes"
       data-success-url='@Url.Action("Index", "Pacientes")'
       data-close-on-success="true">
@@ -31,9 +31,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(m => m.ImagemPerfil)
-            @Html.TextBoxFor(m => m.ImagemPerfil, new { @class = "form-control", placeholder = "https://..." })
-            @Html.ValidationMessageFor(m => m.ImagemPerfil, "", new { @class = "field-validation-error" })
+            @Html.LabelFor(m => m.ImagemPerfilArquivo)
+            @Html.TextBoxFor(m => m.ImagemPerfilArquivo, new { type = "file", @class = "form-control", accept = "image/*" })
+            @Html.ValidationMessageFor(m => m.ImagemPerfilArquivo, "", new { @class = "field-validation-error" })
+            <small class="field-help">Adicione uma foto para facilitar a identificação do paciente.</small>
         </div>
 
         <div class="form-group">

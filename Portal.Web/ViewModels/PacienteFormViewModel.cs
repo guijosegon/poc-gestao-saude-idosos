@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestaoSaudeIdosos.Web.ViewModels
@@ -19,9 +20,10 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         [StringLength(40, ErrorMessage = "O CPF/RG deve ter no máximo 40 caracteres.")]
         public string? CpfRg { get; set; }
 
-        [Display(Name = "Foto (URL)")]
-        [StringLength(250, ErrorMessage = "A URL da imagem deve ter no máximo 250 caracteres.")]
         public string? ImagemPerfil { get; set; }
+
+        [Display(Name = "Foto do perfil")]
+        public IFormFile? ImagemPerfilArquivo { get; set; }
 
         [Display(Name = "Data de nascimento")]
         [Required(ErrorMessage = "Informe a data de nascimento.")]

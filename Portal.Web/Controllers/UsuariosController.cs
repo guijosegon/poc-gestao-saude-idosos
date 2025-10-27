@@ -1,6 +1,7 @@
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Web.Mappers;
+using GestaoSaudeIdosos.Web.Services;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,19 +14,71 @@ namespace GestaoSaudeIdosos.Web.Controllers
     public class UsuariosController : Controller
     {
         private readonly IUsuarioAppService _usuarioAppService;
+        private readonly IImagemStorageService _imagemStorageService;
 
-        public UsuariosController(IUsuarioAppService usuarioAppService)
+        public UsuariosController(IUsuarioAppService usuarioAppService, IImagemStorageService imagemStorageService)
         {
             _usuarioAppService = usuarioAppService;
+            _imagemStorageService = imagemStorageService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] UsuarioFiltroViewModel filtro)
         {
-            var model = await _usuarioAppService
-                .AsQueryable()
+            filtro ??= new UsuarioFiltroViewModel();
+
+            var query = _usuarioAppService.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filtro.Busca))
+            {
+                var busca = filtro.Busca.Trim();
+                query = query.Where(u => EF.Functions.ILike(u.NomeCompleto, $"%{busca}%")
+                    || EF.Functions.ILike(u.Email, $"%{busca}%"));
+            }
+
+            if (filtro.Perfil.HasValue)
+            {
+                var perfil = filtro.Perfil.Value;
+                query = query.Where(u => u.Perfil == perfil);
+            }
+
+            if (filtro.Ativo.HasValue)
+            {
+                var ativo = filtro.Ativo.Value;
+                query = query.Where(u => u.Ativo == ativo);
+            }
+
+            var itensPorPagina = filtro.ItensPorPagina;
+            var totalRegistros = await query.CountAsync();
+            var totalPaginas = totalRegistros == 0
+                ? 0
+                : (int)Math.Ceiling(totalRegistros / (double)itensPorPagina);
+
+            var paginaAtual = filtro.Pagina;
+            if (totalPaginas > 0 && paginaAtual > totalPaginas)
+                paginaAtual = totalPaginas;
+
+            var registros = await query
                 .OrderByDescending(u => u.DataCadastro)
+                .Skip((paginaAtual - 1) * itensPorPagina)
+                .Take(itensPorPagina)
                 .Select(UsuarioViewModelMapper.ToListItem)
                 .ToListAsync();
+
+            filtro.Pagina = paginaAtual;
+
+            var model = new UsuariosIndexViewModel
+            {
+                Filtro = filtro,
+                Paginacao = new PaginacaoViewModel
+                {
+                    PaginaAtual = paginaAtual,
+                    TotalPaginas = totalPaginas,
+                    TotalRegistros = totalRegistros,
+                    ItensPorPagina = itensPorPagina
+                },
+                Registros = registros,
+                Perfis = ObterPerfis()
+            };
 
             return View(model);
         }
@@ -69,6 +122,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return View(model);
             }
 
+            model.ImagemPerfil = await _imagemStorageService.SalvarAsync(model.ImagemPerfilArquivo, "usuarios");
+
             var usuario = model.ToEntity();
 
             try
@@ -77,6 +132,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
             catch (Exception ex)
             {
+                _imagemStorageService.Remover(model.ImagemPerfil);
+
                 ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message) ? "Não foi possível criar o usuário. Tente novamente." : ex.Message;
                 return View(model);
             }
@@ -171,6 +228,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 usuario.Senha = model.NovaSenha;
             }
 
+            var imagemAtualizada = await _imagemStorageService.SalvarAsync(model.NovaImagemPerfil, "usuarios", usuario.ImagemPerfil);
+            model.ImagemPerfil = imagemAtualizada;
+
             model.ApplyToEntity(usuario, isAdmin && model.PermiteAlterarPerfil);
 
             try
@@ -223,6 +283,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
             if (usuario is null)
                 return NotFound();
+
+            _imagemStorageService.Remover(usuario.ImagemPerfil);
 
             _usuarioAppService.Delete(usuario);
 

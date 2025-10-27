@@ -2,6 +2,7 @@ using GestaoSaudeIdosos.Application;
 using GestaoSaudeIdosos.Domain;
 using GestaoSaudeIdosos.Infra;
 using GestaoSaudeIdosos.Web.Filters;
+using GestaoSaudeIdosos.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -14,6 +15,7 @@ builder.Services.AddApplicationServices();
 builder.Services.AddDomainServices();
 
 builder.Services.AddScoped<TempDataAlertFilter>();
+builder.Services.AddScoped<IImagemStorageService, ImagemStorageService>();
 
 builder.Services.AddControllersWithViews(options =>
 {
