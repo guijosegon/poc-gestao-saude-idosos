@@ -1,5 +1,5 @@
-@model IEnumerable<GestaoSaudeIdosos.Web.ViewModels.FormularioListItemViewModel>
-@{
+@model GestaoSaudeIdosos.Web.ViewModels.FormulariosIndexViewModel
+@{ 
     ViewData["Title"] = "Formulários";
 }
 
@@ -11,17 +11,54 @@
     <a asp-action="Create" class="btn-primary" data-open-tab data-tab="Formulários" data-url='@Url.Action("Create", "Formularios")'>Novo formulário</a>
 </section>
 
-@if (!Model.Any())
+<form method="get" class="filters">
+    <div class="filters__row">
+        <div class="form-group">
+            <label for="Busca">Buscar</label>
+            <input type="text" id="Busca" name="Busca" value="@Model.Filtro.Busca" class="form-control" placeholder="Descrição do formulário" />
+        </div>
+        <div class="form-group">
+            <label for="Ativo">Status</label>
+            <select id="Ativo" name="Ativo" class="form-control">
+                <option value="">Todos</option>
+                <option value="true" @(Model.Filtro.Ativo == true ? "selected" : null)>Somente ativos</option>
+                <option value="false" @(Model.Filtro.Ativo == false ? "selected" : null)>Somente inativos</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="ItensPorPagina">Itens por página</label>
+            <select id="ItensPorPagina" name="ItensPorPagina" class="form-control">
+                @{ var tamanhos = new[] { 10, 25, 50 }; }
+                @foreach (var tamanho in tamanhos)
+                {
+                    <option value="@tamanho" @(Model.Filtro.ItensPorPagina == tamanho ? "selected" : null)>@tamanho</option>
+                }
+            </select>
+        </div>
+    </div>
+    <input type="hidden" name="Pagina" value="1" />
+    <div class="filters__actions">
+        <button type="submit" class="btn-primary">Filtrar</button>
+        <a asp-action="Index" class="btn-link">Limpar filtros</a>
+    </div>
+</form>
+
+@if (Model.Paginacao.TotalRegistros == 0)
 {
     <div class="empty-state">
-        <p>Nenhum formulário cadastrado até o momento.</p>
+        <p>Nenhum formulário encontrado com os filtros atuais.</p>
         <a asp-action="Create" class="btn-link" data-open-tab data-tab="Formulários" data-url='@Url.Action("Create", "Formularios")'>Criar primeiro formulário</a>
     </div>
 }
 else
 {
+    var inicio = ((Model.Paginacao.PaginaAtual - 1) * Model.Paginacao.ItensPorPagina) + 1;
+    var fim = Math.Min(Model.Paginacao.PaginaAtual * Model.Paginacao.ItensPorPagina, Model.Paginacao.TotalRegistros);
+
+    <p class="table-summary">Exibindo @inicio - @fim de @Model.Paginacao.TotalRegistros registros.</p>
+
     <div class="card-grid">
-    @foreach (var formulario in Model)
+    @foreach (var formulario in Model.Registros)
     {
         <article class="summary-card">
             <header>
@@ -47,6 +84,45 @@ else
         </article>
     }
     </div>
+
+    if (Model.Paginacao.TotalPaginas > 1)
+    {
+        <nav class="pagination-nav" aria-label="Paginação de formulários">
+            <ul class="pagination">
+                <li class="page-item @(Model.Paginacao.PossuiPaginaAnterior ? string.Empty : "disabled")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-Pagina="@Model.Paginacao.PrimeiraPagina"
+                       asp-route-Busca="@Model.Filtro.Busca"
+                       asp-route-Ativo="@Model.Filtro.Ativo"
+                       asp-route-ItensPorPagina="@Model.Filtro.ItensPorPagina">Primeira</a>
+                </li>
+                <li class="page-item @(Model.Paginacao.PossuiPaginaAnterior ? string.Empty : "disabled")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-Pagina="@Model.Paginacao.PaginaAnterior"
+                       asp-route-Busca="@Model.Filtro.Busca"
+                       asp-route-Ativo="@Model.Filtro.Ativo"
+                       asp-route-ItensPorPagina="@Model.Filtro.ItensPorPagina">Anterior</a>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Página @Model.Paginacao.PaginaAtual de @Model.Paginacao.TotalPaginas</span>
+                </li>
+                <li class="page-item @(Model.Paginacao.PossuiProximaPagina ? string.Empty : "disabled")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-Pagina="@Model.Paginacao.ProximaPagina"
+                       asp-route-Busca="@Model.Filtro.Busca"
+                       asp-route-Ativo="@Model.Filtro.Ativo"
+                       asp-route-ItensPorPagina="@Model.Filtro.ItensPorPagina">Próxima</a>
+                </li>
+                <li class="page-item @(Model.Paginacao.PossuiProximaPagina ? string.Empty : "disabled")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-Pagina="@Model.Paginacao.UltimaPagina"
+                       asp-route-Busca="@Model.Filtro.Busca"
+                       asp-route-Ativo="@Model.Filtro.Ativo"
+                       asp-route-ItensPorPagina="@Model.Filtro.ItensPorPagina">Última</a>
+                </li>
+            </ul>
+        </nav>
+    }
 }
 
 @section Scripts {

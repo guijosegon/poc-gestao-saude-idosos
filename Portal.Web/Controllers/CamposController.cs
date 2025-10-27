@@ -20,20 +20,70 @@ namespace GestaoSaudeIdosos.Web.Controllers
             _formularioAppService = formularioAppService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] CampoFiltroViewModel filtro)
         {
-            var campos = await _campoAppService
-                .AsQueryable(a => a.Usuario, a => a.FormularioCampos)
+            filtro ??= new CampoFiltroViewModel();
+
+            var query = _campoAppService.AsQueryable(a => a.Usuario, a => a.FormularioCampos);
+
+            if (!string.IsNullOrWhiteSpace(filtro.Busca))
+            {
+                var busca = filtro.Busca.Trim();
+                query = query.Where(c => EF.Functions.ILike(c.Descricao, $"%{busca}%"));
+            }
+
+            if (filtro.Tipo.HasValue)
+            {
+                var tipo = filtro.Tipo.Value;
+                query = query.Where(c => c.Tipo == tipo);
+            }
+
+            if (filtro.Ativo.HasValue)
+            {
+                var ativo = filtro.Ativo.Value;
+                query = query.Where(c => c.Ativo == ativo);
+            }
+
+            var itensPorPagina = filtro.ItensPorPagina;
+            var totalRegistros = await query.CountAsync();
+            var totalPaginas = totalRegistros == 0
+                ? 0
+                : (int)Math.Ceiling(totalRegistros / (double)itensPorPagina);
+
+            var paginaAtual = filtro.Pagina;
+            if (totalPaginas > 0 && paginaAtual > totalPaginas)
+                paginaAtual = totalPaginas;
+
+            var registros = await query
+                .OrderByDescending(c => c.DataCadastro)
+                .Skip((paginaAtual - 1) * itensPorPagina)
+                .Take(itensPorPagina)
                 .Select(CampoViewModelMapper.ToListItem)
                 .ToListAsync();
 
-            foreach (var campo in campos)
+            foreach (var campo in registros)
             {
                 var tipo = Enum.Parse<Enums.TipoCampo>(campo.Tipo, true);
                 campo.Tipo = CampoViewModelMapper.ObterDescricaoTipo(tipo);
             }
 
-            return View(campos);
+            filtro.Pagina = paginaAtual;
+
+            var model = new CamposIndexViewModel
+            {
+                Filtro = filtro,
+                Paginacao = new PaginacaoViewModel
+                {
+                    PaginaAtual = paginaAtual,
+                    TotalPaginas = totalPaginas,
+                    TotalRegistros = totalRegistros,
+                    ItensPorPagina = itensPorPagina
+                },
+                Registros = registros,
+                TiposCampo = CampoViewModelMapper.ObterTiposCampo()
+            };
+
+            return View(model);
         }
 
         public async Task<IActionResult> Details(int id)

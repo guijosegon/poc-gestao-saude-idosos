@@ -13,7 +13,7 @@
        data-url='@Url.Action("Details", "Usuarios", new { id = Model.UsuarioId })'>Ver detalhes</a>
 </section>
 
-<form action="@Url.Action("Edit", "Usuarios")" method="post" class="form-card" novalidate
+<form action="@Url.Action("Edit", "Usuarios")" method="post" class="form-card" novalidate enctype="multipart/form-data"
       data-success-tab="Usuários"
       data-success-url='@Url.Action("Index", "Usuarios")'
       data-close-on-success="true">
@@ -44,9 +44,23 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(m => m.ImagemPerfil)
-            @Html.TextBoxFor(m => m.ImagemPerfil, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.ImagemPerfil, "", new { @class = "field-validation-error" })
+            <label>Foto atual</label>
+            <div class="table-avatar">
+                <img src="@(string.IsNullOrWhiteSpace(Model.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : Url.Content(Model.ImagemPerfil))"
+                     alt="Foto de @Model.NomeCompleto"
+                     class="avatar avatar-sm" />
+                <div class="table-avatar__info">
+                    <strong>@Model.NomeCompleto</strong>
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.ImagemPerfil)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.NovaImagemPerfil)
+            @Html.TextBoxFor(m => m.NovaImagemPerfil, new { type = "file", @class = "form-control", accept = "image/*" })
+            @Html.ValidationMessageFor(m => m.NovaImagemPerfil, "", new { @class = "field-validation-error" })
+            <small class="field-help">Selecione uma nova imagem para atualizar a foto do perfil.</small>
         </div>
 
         <div class="form-group">
