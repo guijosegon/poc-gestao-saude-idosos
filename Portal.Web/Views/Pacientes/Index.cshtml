@@ -8,7 +8,7 @@
         <h1>Pacientes</h1>
         <p class="page-subtitle">Acompanhe os idosos cadastrados e suas últimas atualizações.</p>
     </div>
-    <a asp-action="Create" class="btn-primary" data-open-tab data-tab="Pacientes" data-url='@Url.Action("Create", "Pacientes")'>Novo paciente</a>
+    <a asp-action="Create" class="btn btn-primary" data-open-tab data-tab="Pacientes" data-url='@Url.Action("Create", "Pacientes")'>Novo paciente</a>
 </section>
 
 <form method="get" class="filters" action="@Url.Action("Index", "Pacientes")">
@@ -41,8 +41,8 @@
     </div>
     <input type="hidden" name="Pagina" value="1" />
     <div class="filters__actions">
-        <button type="submit" class="btn-primary">Filtrar</button>
-        <a asp-action="Index" class="btn-secondary filters__reset">Limpar filtros</a>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a asp-action="Index" class="btn btn-secondary filters__reset">Limpar filtros</a>
     </div>
 </form>
 

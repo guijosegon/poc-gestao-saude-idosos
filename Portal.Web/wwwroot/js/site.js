@@ -607,6 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarMultiSelects();
     aplicarValidacao(document);
     configurarEnvioDeFormularios();
+    configurarResetDeFiltros();
     configurarAlertasGlobais();
 });
 
@@ -831,5 +832,85 @@ function configurarEnvioDeFormularios() {
             containerAtual.classList.remove("loading");
             containerAtual.innerHTML = "<div class=\"error-state\">Não foi possível enviar o formulário. Tente novamente.</div>";
         }
+    });
+}
+
+function limparCamposDeFiltro(form) {
+    if (!(form instanceof HTMLFormElement)) {
+        return;
+    }
+
+    const campos = form.querySelectorAll('input, select, textarea');
+    campos.forEach((campo) => {
+        if (!(campo instanceof HTMLElement)) {
+            return;
+        }
+
+        if (campo.tagName === 'INPUT') {
+            const input = campo;
+            const tipo = (input.getAttribute('type') || '').toLowerCase();
+
+            if (tipo === 'hidden') {
+                if (input.name === 'Pagina') {
+                    input.value = '1';
+                }
+                return;
+            }
+
+            if (tipo === 'checkbox' || tipo === 'radio') {
+                input.checked = false;
+                return;
+            }
+
+            input.value = '';
+            return;
+        }
+
+        if (campo.tagName === 'SELECT') {
+            const select = campo;
+            select.selectedIndex = 0;
+            return;
+        }
+
+        if (campo.tagName === 'TEXTAREA') {
+            const textarea = campo;
+            textarea.value = '';
+        }
+    });
+}
+
+function configurarResetDeFiltros() {
+    document.addEventListener('click', (event) => {
+        const alvo = event.target instanceof Element ? event.target.closest('.filters__reset') : null;
+        if (!alvo) {
+            return;
+        }
+
+        event.preventDefault();
+
+        const form = alvo.closest('form');
+        if (form) {
+            limparCamposDeFiltro(form);
+        }
+
+        const acao = (alvo.getAttribute('href') || (form ? form.getAttribute('action') : null) || (form && form.action) || '').trim();
+        if (!acao) {
+            return;
+        }
+
+        const url = new URL(acao, window.location.origin);
+        url.search = '';
+
+        const container = alvo.closest('.conteudo');
+        const emAbas = container && container.closest('#conteudos');
+        if (container && emAbas) {
+            const nomeAba = obterNomeAbaAtual(alvo) || obterNomeAbaAtual(container) || 'lista';
+            container.classList.add('loading');
+            container.innerHTML = `<div class="loading-state">Carregando ${nomeAba}...</div>`;
+            carregarConteudoEmAba(container, url.toString(), nomeAba);
+            return;
+        }
+
+        window.location.href = url.pathname + url.search;
     });
 }

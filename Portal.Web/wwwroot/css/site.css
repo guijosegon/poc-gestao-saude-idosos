@@ -548,6 +548,7 @@ main.container {
     border-bottom: none;
 }
 
+.btn,
 .btn-primary,
 .btn-secondary,
 .btn-danger,
@@ -561,6 +562,23 @@ main.container {
     text-decoration: none;
     cursor: pointer;
     transition: transform 0.1s ease, box-shadow 0.15s ease;
+    font-family: inherit;
+    line-height: 1.1;
+}
+
+.btn {
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+button.btn,
+button.btn-primary,
+button.btn-secondary,
+button.btn-danger,
+button.btn-link {
+    border: none;
+    appearance: none;
 }
 
 .btn-primary {

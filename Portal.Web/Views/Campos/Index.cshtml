@@ -8,7 +8,7 @@
         <h1>Campos configuráveis</h1>
         <p class="page-subtitle">Personalize as perguntas que serão reutilizadas nos formulários clínicos.</p>
     </div>
-    <a asp-action="Create" class="btn-primary" data-open-tab data-tab="Campo" data-url='@Url.Action("Create", "Campos")'>Novo campo</a>
+    <a asp-action="Create" class="btn btn-primary" data-open-tab data-tab="Campo" data-url='@Url.Action("Create", "Campos")'>Novo campo</a>
 </section>
 
 <form method="get" class="filters" action="@Url.Action("Index", "Campos")">
@@ -49,8 +49,8 @@
     </div>
     <input type="hidden" name="Pagina" value="1" />
     <div class="filters__actions">
-        <button type="submit" class="btn-primary">Filtrar</button>
-        <a asp-action="Index" class="btn-secondary filters__reset">Limpar filtros</a>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a asp-action="Index" class="btn btn-secondary filters__reset">Limpar filtros</a>
     </div>
 </form>
 

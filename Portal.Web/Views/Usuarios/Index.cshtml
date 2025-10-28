@@ -10,7 +10,7 @@
     </div>
     @if (User.IsInRole("Administrador"))
     {
-        <a asp-action="Create" class="btn-primary" data-open-tab data-tab="Usuários" data-url='@Url.Action("Create", "Usuarios")'>Novo usuário</a>
+        <a asp-action="Create" class="btn btn-primary" data-open-tab data-tab="Usuários" data-url='@Url.Action("Create", "Usuarios")'>Novo usuário</a>
     }
 </section>
 
@@ -52,8 +52,8 @@
     </div>
     <input type="hidden" name="Pagina" value="1" />
     <div class="filters__actions">
-        <button type="submit" class="btn-primary">Filtrar</button>
-        <a asp-action="Index" class="btn-secondary filters__reset">Limpar filtros</a>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a asp-action="Index" class="btn btn-secondary filters__reset">Limpar filtros</a>
     </div>
 </form>
 
