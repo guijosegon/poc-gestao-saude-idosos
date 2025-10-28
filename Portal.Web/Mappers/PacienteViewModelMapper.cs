@@ -36,8 +36,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 ResponsavelId = paciente.ResponsavelId,
                 CondicoesCronicasSelecionadas = ConverterParaLista(paciente.CondicoesCronicas),
                 HistoricoCirurgicoSelecionados = ConverterParaLista(paciente.HistoricoCirurgico),
-                RiscoQuedasSelecionados = ConverterParaLista(paciente.RiscoQuedas),
-                MobilidadeSelecionada = ConverterParaLista(paciente.MobilidadeAuxilios),
+                RiscoQuedaSelecionado = ConverterParaPrimeiro(paciente.RiscoQuedas),
+                MobilidadeSelecionada = ConverterParaPrimeiro(paciente.MobilidadeAuxilios),
                 DietasSelecionadas = ConverterParaLista(paciente.DietasRestricoes)
             };
         }
@@ -81,8 +81,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 ResponsavelId = model.ResponsavelId,
                 CondicoesCronicas = ConverterParaString(model.CondicoesCronicasSelecionadas),
                 HistoricoCirurgico = ConverterParaString(model.HistoricoCirurgicoSelecionados),
-                RiscoQuedas = ConverterParaString(model.RiscoQuedasSelecionados),
-                MobilidadeAuxilios = ConverterParaString(model.MobilidadeSelecionada),
+                RiscoQuedas = ConverterValorUnico(model.RiscoQuedaSelecionado),
+                MobilidadeAuxilios = ConverterValorUnico(model.MobilidadeSelecionada),
                 DietasRestricoes = ConverterParaString(model.DietasSelecionadas)
             };
         }
@@ -102,8 +102,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
             entity.ResponsavelId = model.ResponsavelId;
             entity.CondicoesCronicas = ConverterParaString(model.CondicoesCronicasSelecionadas);
             entity.HistoricoCirurgico = ConverterParaString(model.HistoricoCirurgicoSelecionados);
-            entity.RiscoQuedas = ConverterParaString(model.RiscoQuedasSelecionados);
-            entity.MobilidadeAuxilios = ConverterParaString(model.MobilidadeSelecionada);
+            entity.RiscoQuedas = ConverterValorUnico(model.RiscoQuedaSelecionado);
+            entity.MobilidadeAuxilios = ConverterValorUnico(model.MobilidadeSelecionada);
             entity.DietasRestricoes = ConverterParaString(model.DietasSelecionadas);
         }
 
@@ -145,6 +145,22 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 .ToList();
 
             return itens.Count == 0 ? null : string.Join(';', itens);
+        }
+
+        private static string? ConverterValorUnico(string? valor)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+            {
+                return null;
+            }
+
+            return valor.Trim();
+        }
+
+        private static string? ConverterParaPrimeiro(string? valor)
+        {
+            var lista = ConverterParaLista(valor);
+            return lista.FirstOrDefault();
         }
 
         private static IEnumerable<string> ConverterParaDisplay<TEnum>(string? valor)

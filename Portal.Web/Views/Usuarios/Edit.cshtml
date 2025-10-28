@@ -19,95 +19,111 @@
       data-close-on-success="true">
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.UsuarioId)
-    <div class="form-grid">
-        <div class="form-group">
-            <label>Código</label>
-            <p class="form-readonly">@Model.UsuarioId</p>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(m => m.NomeCompleto)
-            @Html.TextBoxFor(m => m.NomeCompleto, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.NomeCompleto, "", new { @class = "field-validation-error" })
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(m => m.Email)
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
-            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "field-validation-error" })
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(m => m.CpfRg)
-            @Html.TextBoxFor(m => m.CpfRg, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.CpfRg, "", new { @class = "field-validation-error" })
-        </div>
-
-        <div class="form-group">
-            <label>Foto atual</label>
-            <div class="table-avatar">
-                <img src="@(string.IsNullOrWhiteSpace(Model.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : Url.Content(Model.ImagemPerfil))"
-                     alt="Foto de @Model.NomeCompleto"
-                     class="avatar avatar-sm" />
-                <div class="table-avatar__info">
-                    <strong>@Model.NomeCompleto</strong>
-                </div>
+    <div class="form-section">
+        <h2 class="form-section__title">Dados cadastrais</h2>
+        <p class="form-section__description">Atualize informações básicas e permissões do colaborador.</p>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Código</label>
+                <p class="form-readonly">@Model.UsuarioId</p>
             </div>
-            @Html.HiddenFor(m => m.ImagemPerfil)
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.NovaImagemPerfil)
-            @Html.TextBoxFor(m => m.NovaImagemPerfil, new { type = "file", @class = "form-control", accept = "image/*" })
-            @Html.ValidationMessageFor(m => m.NovaImagemPerfil, "", new { @class = "field-validation-error" })
-            <small class="field-help">Selecione uma nova imagem para atualizar a foto do perfil.</small>
-        </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NomeCompleto)
+                @Html.TextBoxFor(m => m.NomeCompleto, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.NomeCompleto, "", new { @class = "field-validation-error" })
+            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.Perfil)
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.CpfRg)
+                @Html.TextBoxFor(m => m.CpfRg, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.CpfRg, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Perfil)
+                @if (Model.PermiteAlterarPerfil)
+                {
+                    @Html.DropDownListFor(m => m.Perfil, Model.PerfisDisponiveis, new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.HiddenFor(m => m.Perfil)
+                    <p class="form-readonly">@Model.Perfil</p>
+                }
+                @Html.ValidationMessageFor(m => m.Perfil, "", new { @class = "field-validation-error" })
+            </div>
+
             @if (Model.PermiteAlterarPerfil)
             {
-                @Html.DropDownListFor(m => m.Perfil, Model.PerfisDisponiveis, new { @class = "form-control" })
+                <div class="form-group form-switch">
+                    <label class="switch-label">
+                        @Html.CheckBoxFor(m => m.Ativo)
+                        <span>Usuário ativo</span>
+                    </label>
+                </div>
             }
             else
             {
-                @Html.HiddenFor(m => m.Perfil)
-                <p class="form-readonly">@Model.Perfil</p>
+                @Html.HiddenFor(m => m.Ativo)
+                <p class="form-readonly">Status atual: @(Model.Ativo ? "Ativo" : "Inativo")</p>
             }
-            @Html.ValidationMessageFor(m => m.Perfil, "", new { @class = "field-validation-error" })
         </div>
+    </div>
 
-        @if (Model.PermiteAlterarPerfil)
-        {
-            <div class="form-group form-switch">
-                <label class="switch-label">
-                    @Html.CheckBoxFor(m => m.Ativo)
-                    <span>Usuário ativo</span>
-                </label>
+    <div class="form-section">
+        <h2 class="form-section__title">Foto de perfil</h2>
+        <p class="form-section__description">Visualize a imagem atual e envie uma nova quando necessário.</p>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Foto atual</label>
+                <div class="table-avatar">
+                    <img src="@(string.IsNullOrWhiteSpace(Model.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : Url.Content(Model.ImagemPerfil))"
+                         alt="Foto de @Model.NomeCompleto"
+                         class="avatar avatar-sm" />
+                    <div class="table-avatar__info">
+                        <strong>@Model.NomeCompleto</strong>
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.ImagemPerfil)
             </div>
-        }
-        else
-        {
-            @Html.HiddenFor(m => m.Ativo)
-            <p class="form-readonly">Status atual: @(Model.Ativo ? "Ativo" : "Inativo")</p>
-        }
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.SenhaAtual)
-            @Html.PasswordFor(m => m.SenhaAtual, new { @class = "form-control", placeholder = "Informe sua senha atual" })
-            <small class="field-help">Solicitado apenas para alterações de senha.</small>
+            <div class="form-group">
+                @Html.LabelFor(m => m.NovaImagemPerfil)
+                @Html.TextBoxFor(m => m.NovaImagemPerfil, new { type = "file", @class = "form-control", accept = "image/*" })
+                @Html.ValidationMessageFor(m => m.NovaImagemPerfil, "", new { @class = "field-validation-error" })
+                <small class="field-help">Selecione uma nova imagem para atualizar a foto do perfil.</small>
+            </div>
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.NovaSenha)
-            @Html.PasswordFor(m => m.NovaSenha, new { @class = "form-control", placeholder = "Nova senha" })
-            @Html.ValidationMessageFor(m => m.NovaSenha, "", new { @class = "field-validation-error" })
-        </div>
+    <div class="form-section">
+        <h2 class="form-section__title">Segurança</h2>
+        <p class="form-section__description">Redefina a senha do colaborador sempre que necessário.</p>
+        <div class="form-grid">
+            <div class="form-group">
+                @Html.LabelFor(m => m.SenhaAtual)
+                @Html.PasswordFor(m => m.SenhaAtual, new { @class = "form-control", placeholder = "Informe sua senha atual" })
+                <small class="field-help">Solicitado apenas para alterações de senha.</small>
+            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.ConfirmacaoSenha)
-            @Html.PasswordFor(m => m.ConfirmacaoSenha, new { @class = "form-control", placeholder = "Confirme a nova senha" })
-            @Html.ValidationMessageFor(m => m.ConfirmacaoSenha, "", new { @class = "field-validation-error" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.NovaSenha)
+                @Html.PasswordFor(m => m.NovaSenha, new { @class = "form-control", placeholder = "Nova senha" })
+                @Html.ValidationMessageFor(m => m.NovaSenha, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConfirmacaoSenha)
+                @Html.PasswordFor(m => m.ConfirmacaoSenha, new { @class = "form-control", placeholder = "Confirme a nova senha" })
+                @Html.ValidationMessageFor(m => m.ConfirmacaoSenha, "", new { @class = "field-validation-error" })
+            </div>
         </div>
     </div>
 

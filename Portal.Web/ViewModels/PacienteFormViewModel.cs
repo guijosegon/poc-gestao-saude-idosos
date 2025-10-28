@@ -45,11 +45,11 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public IEnumerable<SelectListItem> HistoricoCirurgicoDisponiveis { get; set; } = Enumerable.Empty<SelectListItem>();
 
         [Display(Name = "Risco de quedas")]
-        public List<string> RiscoQuedasSelecionados { get; set; } = new();
+        public string? RiscoQuedaSelecionado { get; set; }
         public IEnumerable<SelectListItem> RiscoQuedasDisponiveis { get; set; } = Enumerable.Empty<SelectListItem>();
 
         [Display(Name = "Mobilidade e auxílios")]
-        public List<string> MobilidadeSelecionada { get; set; } = new();
+        public string? MobilidadeSelecionada { get; set; }
         public IEnumerable<SelectListItem> MobilidadeDisponivel { get; set; } = Enumerable.Empty<SelectListItem>();
 
         [Display(Name = "Dietas e restrições alimentares")]

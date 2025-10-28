@@ -263,13 +263,11 @@ namespace GestaoSaudeIdosos.Web.Controllers
         {
             model.CondicoesCronicasSelecionadas ??= new List<string>();
             model.HistoricoCirurgicoSelecionados ??= new List<string>();
-            model.RiscoQuedasSelecionados ??= new List<string>();
-            model.MobilidadeSelecionada ??= new List<string>();
             model.DietasSelecionadas ??= new List<string>();
 
             model.CondicoesCronicasDisponiveis = CriarSelectList<Enums.CondicaoCronicaPaciente>(model.CondicoesCronicasSelecionadas);
             model.HistoricoCirurgicoDisponiveis = CriarSelectList<Enums.HistoricoCirurgicoPaciente>(model.HistoricoCirurgicoSelecionados);
-            model.RiscoQuedasDisponiveis = CriarSelectList<Enums.RiscoQuedaPaciente>(model.RiscoQuedasSelecionados);
+            model.RiscoQuedasDisponiveis = CriarSelectList<Enums.RiscoQuedaPaciente>(model.RiscoQuedaSelecionado);
             model.MobilidadeDisponivel = CriarSelectList<Enums.MobilidadePaciente>(model.MobilidadeSelecionada);
             model.DietasDisponiveis = CriarSelectList<Enums.DietaRestricaoPaciente>(model.DietasSelecionadas);
         }
@@ -288,6 +286,16 @@ namespace GestaoSaudeIdosos.Web.Controllers
                     Selected = selecionadosSet.Contains(valor.ToString())
                 })
                 .ToList();
+        }
+
+        private static IEnumerable<SelectListItem> CriarSelectList<TEnum>(string? selecionado)
+            where TEnum : struct, Enum
+        {
+            var valores = string.IsNullOrWhiteSpace(selecionado)
+                ? Array.Empty<string>()
+                : new[] { selecionado };
+
+            return CriarSelectList<TEnum>(valores);
         }
     }
 }
