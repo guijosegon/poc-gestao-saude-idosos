@@ -11,96 +11,102 @@
     var usuariosRecentes = Model.UsuariosRecentes.Take(4).ToList();
 }
 
-<header class="dashboard-header">
-    <div>
+<section class="dashboard-hero">
+    <div class="dashboard-hero__title">
         <h2>Painel geral</h2>
         <p>Resumo das principais informações para apoiar a prevenção de doenças em idosos institucionalizados.</p>
     </div>
-</header>
+</section>
 
-<div class="dashboard-cards">
-    <article class="stat-card">
-        <span class="stat-icon" aria-hidden="true">👵</span>
-        <div>
-            <span class="stat-label">Pacientes monitorados</span>
-            <strong>@Model.TotalPacientes</strong>
-            <small>@pacientesRecentes.Count paciente(s) recém-adicionado(s)</small>
-        </div>
+<div class="summary-grid">
+    <article class="summary-card">
+        <header>
+            <span class="summary-icon" aria-hidden="true">👵</span>
+            <span class="summary-label">Pacientes monitorados</span>
+        </header>
+        <strong class="summary-value">@Model.TotalPacientes</strong>
+        <span class="summary-extra">@pacientesRecentes.Count paciente(s) recém-adicionado(s)</span>
     </article>
-    <article class="stat-card">
-        <span class="stat-icon" aria-hidden="true">🧑‍⚕️</span>
-        <div>
-            <span class="stat-label">Usuários ativos</span>
-            <strong>@Model.TotalUsuarios</strong>
-            <small>@usuariosRecentes.Count novo(s) acesso(s) registrado(s)</small>
-        </div>
+    <article class="summary-card">
+        <header>
+            <span class="summary-icon" aria-hidden="true">🧑‍⚕️</span>
+            <span class="summary-label">Usuários ativos</span>
+        </header>
+        <strong class="summary-value">@Model.TotalUsuarios</strong>
+        <span class="summary-extra">@usuariosRecentes.Count novo(s) acesso(s) registrado(s)</span>
     </article>
-    <article class="stat-card">
-        <span class="stat-icon" aria-hidden="true">📝</span>
-        <div>
-            <span class="stat-label">Formulários ativos</span>
-            <strong>@Model.FormulariosAtivos</strong>
-            <small>Ferramentas prontas para avaliação</small>
-        </div>
+    <article class="summary-card">
+        <header>
+            <span class="summary-icon" aria-hidden="true">📝</span>
+            <span class="summary-label">Formulários ativos</span>
+        </header>
+        <strong class="summary-value">@Model.FormulariosAtivos</strong>
+        <span class="summary-extra">Ferramentas prontas para avaliação</span>
     </article>
-    <article class="stat-card @(alertasCriticos > 0 ? "critical" : string.Empty)">
-        <span class="stat-icon" aria-hidden="true">⚠️</span>
-        <div>
-            <span class="stat-label">Alertas críticos</span>
-            <strong>@alertasCriticos</strong>
-            <small>Somente riscos classificados como alto</small>
-        </div>
+    <article class="summary-card @(alertasCriticos > 0 ? "has-alert" : string.Empty)">
+        <header>
+            <span class="summary-icon" aria-hidden="true">⚠️</span>
+            <span class="summary-label">Alertas críticos</span>
+        </header>
+        <strong class="summary-value">@alertasCriticos</strong>
+        <span class="summary-extra">Somente riscos classificados como alto</span>
     </article>
 </div>
 
-<section class="charts-wrapper">
-    <div class="panel-header">
+<section class="content-block">
+    <header class="content-block__header">
         <h3>Indicadores gráficos</h3>
-        <span class="charts-hint">Os gráficos em tempo real serão carregados automaticamente via Google Charts.</span>
-    </div>
-    <div id="portal-dashboard-charts" class="charts-placeholder" data-gcharts-root>
+        <span>Os gráficos em tempo real serão carregados automaticamente via Google Charts.</span>
+    </header>
+    <div id="portal-dashboard-charts" class="content-block__charts" data-gcharts-root>
         <span class="placeholder-icon" aria-hidden="true">📊</span>
         <p>Quando configurado pelo cliente, os gráficos do Google Charts serão renderizados neste espaço.</p>
     </div>
 </section>
 
-<div class="quick-actions">
-    <a class="quick-card" asp-controller="Pacientes" asp-action="Create" data-open-tab data-tab="Pacientes" data-url='@Url.Action("Create", "Pacientes")'>
-        <span class="quick-icon" aria-hidden="true">➕</span>
-        <div>
-            <span>Adicionar paciente</span>
-            <small>Cadastre idosos e vincule responsáveis</small>
-        </div>
-    </a>
-    <a class="quick-card" asp-controller="Campos" asp-action="Index" data-open-tab data-tab="Campos" data-url='@Url.Action("Index", "Campos")'>
-        <span class="quick-icon" aria-hidden="true">⚙️</span>
-        <div>
-            <span>Configurar campos</span>
-            <small>Personalize perguntas reutilizáveis</small>
-        </div>
-    </a>
-    <a class="quick-card" asp-controller="Formularios" asp-action="Index" data-open-tab data-tab="Formulários" data-url='@Url.Action("Index", "Formularios")'>
-        <span class="quick-icon" aria-hidden="true">📄</span>
-        <div>
-            <span>Montar formulário</span>
-            <small>Combine campos para avaliações</small>
-        </div>
-    </a>
-    <a class="quick-card" asp-controller="Graficos" asp-action="Index" data-open-tab data-tab="Gráficos" data-url='@Url.Action("Index", "Graficos")'>
-        <span class="quick-icon" aria-hidden="true">📈</span>
-        <div>
-            <span>Explorar gráficos</span>
-            <small>Visualize indicadores dos pacientes</small>
-        </div>
-    </a>
-</div>
+<section class="content-block">
+    <header class="content-block__header">
+        <h3>Ações rápidas</h3>
+        <span>Atalhos para navegação imediata.</span>
+    </header>
+    <div class="quick-actions">
+        <a class="quick-card" asp-controller="Pacientes" asp-action="Create" data-open-tab data-tab="Pacientes" data-url='@Url.Action("Create", "Pacientes")'>
+            <span class="quick-icon" aria-hidden="true">➕</span>
+            <div>
+                <span>Adicionar paciente</span>
+                <small>Cadastre idosos e vincule responsáveis</small>
+            </div>
+        </a>
+        <a class="quick-card" asp-controller="Campos" asp-action="Index" data-open-tab data-tab="Campos" data-url='@Url.Action("Index", "Campos")'>
+            <span class="quick-icon" aria-hidden="true">⚙️</span>
+            <div>
+                <span>Configurar campos</span>
+                <small>Personalize perguntas reutilizáveis</small>
+            </div>
+        </a>
+        <a class="quick-card" asp-controller="Formularios" asp-action="Index" data-open-tab data-tab="Formulários" data-url='@Url.Action("Index", "Formularios")'>
+            <span class="quick-icon" aria-hidden="true">📄</span>
+            <div>
+                <span>Montar formulário</span>
+                <small>Combine campos para avaliações</small>
+            </div>
+        </a>
+        <a class="quick-card" asp-controller="Graficos" asp-action="Index" data-open-tab data-tab="Gráficos" data-url='@Url.Action("Index", "Graficos")'>
+            <span class="quick-icon" aria-hidden="true">📈</span>
+            <div>
+                <span>Explorar gráficos</span>
+                <small>Visualize indicadores dos pacientes</small>
+            </div>
+        </a>
+    </div>
+</section>
 
 <div class="dashboard-panels">
-    <section class="panel">
-        <div class="panel-header">
+    <section class="content-block">
+        <header class="content-block__header">
             <h3>Formulários recentes</h3>
             <a asp-controller="Pacientes" asp-action="Create" class="btn-link" data-open-tab data-tab="Pacientes" data-url='@Url.Action("Create", "Pacientes")'>Aplicar formulário</a>
-        </div>
+        </header>
 
         @if (!Model.FormulariosRecentes.Any())
         {
@@ -108,7 +114,7 @@
         }
         else
         {
-            <ul class="list">
+            <ul class="list list-divided">
             @foreach (var form in Model.FormulariosRecentes)
             {
                 <li>
@@ -121,11 +127,11 @@
         }
     </section>
 
-    <section class="panel panel-alerts">
-        <div class="panel-header">
+    <section class="content-block content-block--alerts">
+        <header class="content-block__header">
             <h3>Alertas de alto risco</h3>
             <a asp-controller="Pacientes" asp-action="Index" class="btn-link">Ver todos</a>
-        </div>
+        </header>
 
         @if (!relatoriosAltoRisco.Any())
         {
@@ -133,29 +139,35 @@
         }
         else
         {
-            <ul class="list">
+            <ul class="alert-list">
             @foreach (var relatorio in relatoriosAltoRisco)
             {
-                <li>
-                    <div class="list-title">
+                <li class="alert-card">
+                    <div class="alert-card__title">
                         <strong>@relatorio.PacienteNome</strong>
                         <span class="status-badge danger">@relatorio.NivelRisco</span>
                     </div>
-                    <span>@relatorio.Resumo</span>
-                    <small>@relatorio.Sugestao</small>
+                    <div class="alert-card__field">
+                        <span class="field-label">Resumo</span>
+                        <p>@relatorio.Resumo</p>
+                    </div>
+                    <div class="alert-card__field">
+                        <span class="field-label">Recomendação</span>
+                        <p class="field-recommendation">@relatorio.Sugestao</p>
+                    </div>
                 </li>
             }
             </ul>
         }
     </section>
 
-    <section class="panel">
-        <div class="panel-header">
+    <section class="content-block">
+        <header class="content-block__header">
             <h3>Novos cadastros</h3>
-        </div>
+        </header>
 
-        <div class="split-list">
-            <div>
+        <div class="new-records">
+            <div class="new-records__column">
                 <h4>Pacientes recentes</h4>
                 @if (!pacientesRecentes.Any())
                 {
@@ -163,7 +175,7 @@
                 }
                 else
                 {
-                    <ul class="list compact">
+                    <ul class="list list-divided compact">
                     @foreach (var paciente in pacientesRecentes)
                     {
                         <li>
@@ -174,7 +186,8 @@
                     </ul>
                 }
             </div>
-            <div>
+            <div class="new-records__divider"></div>
+            <div class="new-records__column">
                 <h4>Usuários recentes</h4>
                 @if (!usuariosRecentes.Any())
                 {
@@ -182,7 +195,7 @@
                 }
                 else
                 {
-                    <ul class="list compact">
+                    <ul class="list list-divided compact">
                     @foreach (var usuario in usuariosRecentes)
                     {
                         <li>
