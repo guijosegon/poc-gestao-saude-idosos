@@ -15,7 +15,7 @@ namespace GestaoSaudeIdosos.Web.Mappers
             Responsavel = campo.Usuario != null ? campo.Usuario.NomeCompleto : null,
             DataCadastro = campo.DataCadastro,
             Ativo = campo.Ativo,
-            FormulariosVinculados = campo.FormularioCampos != null ? campo.FormularioCampos.Count : 0
+            FormulariosVinculados = campo.Formularios != null ? campo.Formularios.Count : 0
         };
 
         public static CampoFormViewModel ToFormViewModel(this Campo campo, IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> tiposCampo)

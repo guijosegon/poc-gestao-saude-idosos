@@ -797,6 +797,7 @@ document.addEventListener('DOMContentLoaded', () => {
     configurarEnvioDeFormularios();
     configurarResetDeFiltros();
     configurarAlertasGlobais();
+    configurarSelecaoDeFormularios();
 });
 
 function configurarAtalhosDeAbas() {
@@ -1101,4 +1102,200 @@ function configurarResetDeFiltros() {
 
         window.location.href = url.pathname + url.search;
     });
+}
+
+const modalOverlay = document.getElementById('app-modal');
+const modalContent = modalOverlay ? modalOverlay.querySelector('[data-modal-content]') : null;
+let modalSelectionContext = null;
+
+function configurarSelecaoDeFormularios() {
+    if (!modalOverlay || !modalContent) {
+        return;
+    }
+
+    document.addEventListener('click', async (event) => {
+        const botaoFormulario = event.target instanceof Element ? event.target.closest('[data-aplicar-formulario]') : null;
+        if (botaoFormulario) {
+            event.preventDefault();
+            await abrirSelecaoFormulario(botaoFormulario);
+            return;
+        }
+
+        const botaoPaciente = event.target instanceof Element ? event.target.closest('[data-aplicar-formulario-paciente]') : null;
+        if (botaoPaciente) {
+            event.preventDefault();
+            await abrirSelecaoPaciente(botaoPaciente);
+            return;
+        }
+
+        const fechar = event.target instanceof Element ? event.target.closest('[data-modal-close]') : null;
+        if (fechar) {
+            event.preventDefault();
+            fecharModalSelecao();
+            return;
+        }
+
+        const item = event.target instanceof Element ? event.target.closest('.selection-modal__item') : null;
+        if (item && modalSelectionContext) {
+            event.preventDefault();
+            tratarSelecaoModal(item);
+        }
+
+        if (event.target === modalOverlay) {
+            fecharModalSelecao();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !modalOverlay.hidden) {
+            fecharModalSelecao();
+        }
+    });
+}
+
+async function abrirSelecaoFormulario(botao) {
+    const formularioId = botao.getAttribute('data-formulario-id');
+    const selecaoUrl = botao.getAttribute('data-selecao-url');
+    const aplicarUrl = botao.getAttribute('data-aplicar-url');
+
+    if (!formularioId || !selecaoUrl || !aplicarUrl) {
+        return;
+    }
+
+    const abaOrigem = obterNomeAbaAtual(botao) || 'Formulários';
+    const container = botao.closest('.conteudo');
+    const urlOrigem = container && container.dataset ? container.dataset.url : window.location.pathname + window.location.search;
+
+    const url = new URL(selecaoUrl, window.location.origin);
+    url.searchParams.set('formularioId', formularioId);
+
+    await abrirModalSelecao(url.toString(), {
+        tipo: 'formulario',
+        formularioId,
+        aplicarUrl,
+        abaOrigem,
+        urlOrigem
+    });
+}
+
+async function abrirSelecaoPaciente(botao) {
+    const pacienteId = botao.getAttribute('data-paciente-id');
+    const selecaoUrl = botao.getAttribute('data-selecao-url');
+    const aplicarUrl = botao.getAttribute('data-aplicar-url');
+
+    if (!pacienteId || !selecaoUrl || !aplicarUrl) {
+        return;
+    }
+
+    const abaOrigem = obterNomeAbaAtual(botao) || 'Pacientes';
+    const container = botao.closest('.conteudo');
+    const urlOrigem = container && container.dataset ? container.dataset.url : window.location.pathname + window.location.search;
+
+    const url = new URL(selecaoUrl, window.location.origin);
+    url.searchParams.set('pacienteId', pacienteId);
+
+    await abrirModalSelecao(url.toString(), {
+        tipo: 'paciente',
+        pacienteId,
+        aplicarUrl,
+        abaOrigem,
+        urlOrigem
+    });
+}
+
+async function abrirModalSelecao(url, contexto) {
+    if (!modalOverlay || !modalContent) {
+        return;
+    }
+
+    modalSelectionContext = contexto;
+    modalOverlay.hidden = false;
+    modalContent.innerHTML = '<div class="loading-state">Carregando...</div>';
+
+    try {
+        const resposta = await fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        if (!resposta.ok) {
+            throw new Error('Erro ao carregar lista');
+        }
+
+        const html = await resposta.text();
+        modalContent.innerHTML = html;
+        configurarPesquisaSelecao(modalContent);
+    } catch (error) {
+        modalContent.innerHTML = '<div class="error-state">Não foi possível carregar as opções. Tente novamente.</div>';
+    }
+}
+
+function fecharModalSelecao() {
+    if (!modalOverlay || !modalContent) {
+        return;
+    }
+
+    modalOverlay.hidden = true;
+    modalContent.innerHTML = '';
+    modalSelectionContext = null;
+}
+
+function configurarPesquisaSelecao(container) {
+    if (!container) {
+        return;
+    }
+
+    const campoBusca = container.querySelector('[data-selection-search]');
+    const lista = container.querySelector('[data-selection-list]');
+
+    if (!campoBusca || !lista) {
+        return;
+    }
+
+    campoBusca.addEventListener('input', () => {
+        const termo = campoBusca.value.trim().toLowerCase();
+        lista.querySelectorAll('.selection-modal__item').forEach((item) => {
+            const texto = `${item.dataset.selectionTitle || ''} ${item.dataset.selectionDescription || ''} ${item.dataset.selectionExtra || ''}`.toLowerCase();
+            const visivel = termo.length === 0 || texto.includes(termo);
+            const li = item.closest('li');
+            if (li) {
+                li.style.display = visivel ? '' : 'none';
+            }
+        });
+    });
+
+    window.requestAnimationFrame(() => campoBusca.focus());
+}
+
+function tratarSelecaoModal(item) {
+    if (!modalSelectionContext) {
+        return;
+    }
+
+    const idSelecionado = item.getAttribute('data-selection-id');
+    if (!idSelecionado) {
+        return;
+    }
+
+    const url = new URL(modalSelectionContext.aplicarUrl, window.location.origin);
+
+    if (modalSelectionContext.tipo === 'formulario') {
+        url.searchParams.set('formularioId', modalSelectionContext.formularioId);
+        url.searchParams.set('pacienteId', idSelecionado);
+    } else if (modalSelectionContext.tipo === 'paciente') {
+        url.searchParams.set('formularioId', idSelecionado);
+        url.searchParams.set('pacienteId', modalSelectionContext.pacienteId);
+    }
+
+    if (modalSelectionContext.abaOrigem) {
+        url.searchParams.set('abaOrigem', modalSelectionContext.abaOrigem);
+    }
+
+    if (modalSelectionContext.urlOrigem) {
+        url.searchParams.set('urlOrigem', modalSelectionContext.urlOrigem);
+    }
+
+    fecharModalSelecao();
+    abrirAba('Formulário', url.toString());
 }

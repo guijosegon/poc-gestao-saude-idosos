@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -14,15 +15,18 @@ namespace GestaoSaudeIdosos.Web.Controllers
         private readonly IFormularioAppService _formularioAppService;
         private readonly ICampoAppService _campoAppService;
         private readonly IUsuarioAppService _usuarioAppService;
+        private readonly IFormularioResultadoAppService _formularioResultadoAppService;
 
         public FormulariosController(
             IFormularioAppService formularioAppService,
             ICampoAppService campoAppService,
-            IUsuarioAppService usuarioAppService)
+            IUsuarioAppService usuarioAppService,
+            IFormularioResultadoAppService formularioResultadoAppService)
         {
             _formularioAppService = formularioAppService;
             _campoAppService = campoAppService;
             _usuarioAppService = usuarioAppService;
+            _formularioResultadoAppService = formularioResultadoAppService;
         }
 
         public async Task<IActionResult> Index([FromQuery] FormularioFiltroViewModel filtro)
@@ -85,6 +89,13 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return NotFound();
 
             var detalhes = formulario.ToDetailModel();
+
+            if (formulario.Resultados != null && formulario.Resultados.Any(r => r.Valores is null || r.Valores.Count == 0))
+            {
+                var resultadosCompletos = await _formularioResultadoAppService.ListarPorFormularioAsync(id);
+                detalhes.Aplicacoes = FormularioResultadoViewModelMapper.MapearParaResumo(resultadosCompletos)
+                    .ToList();
+            }
 
             return View(detalhes);
         }

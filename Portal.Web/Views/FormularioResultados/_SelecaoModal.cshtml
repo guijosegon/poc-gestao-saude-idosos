@@ -1,0 +1,54 @@
+@using System.Linq
+@model GestaoSaudeIdosos.Web.ViewModels.FormularioAplicacaoSelecaoViewModel
+@{
+    var tipo = ViewData["SelecaoTipo"] as string ?? string.Empty;
+}
+
+<div class="selection-modal" data-selection-type="@tipo">
+    <header class="selection-modal__header">
+        <h2>@Model.Titulo</h2>
+        <button type="button" class="selection-modal__close" data-modal-close aria-label="Fechar seleção">×</button>
+    </header>
+    <div class="selection-modal__body">
+        <p class="selection-modal__description">@Model.Descricao</p>
+        <div class="selection-modal__search">
+            <label for="selection-modal-search" class="sr-only">Buscar</label>
+            <input type="text" id="selection-modal-search" class="form-control" placeholder="Pesquisar" data-selection-search />
+        </div>
+        <ul class="selection-modal__list" data-selection-list>
+            @if (!Model.Itens.Any())
+            {
+                <li class="selection-modal__empty">Nenhum registro disponível.</li>
+            }
+            else
+            {
+                foreach (var item in Model.Itens)
+                {
+                    <li>
+                        <button type="button"
+                                class="selection-modal__item"
+                                data-selection-id="@item.Id"
+                                data-selection-title="@item.Titulo"
+                                data-selection-description="@item.Descricao"
+                                data-selection-extra="@item.Complemento">
+                            <span class="selection-modal__item-title">@item.Titulo</span>
+                            @if (!string.IsNullOrWhiteSpace(item.Descricao) || !string.IsNullOrWhiteSpace(item.Complemento))
+                            {
+                                <span class="selection-modal__item-meta">
+                                    @if (!string.IsNullOrWhiteSpace(item.Descricao))
+                                    {
+                                        <span>@item.Descricao</span>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(item.Complemento))
+                                    {
+                                        <span>@item.Complemento</span>
+                                    }
+                                </span>
+                            }
+                        </button>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</div>

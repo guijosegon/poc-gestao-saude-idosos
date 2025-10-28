@@ -15,6 +15,14 @@
         </div>
     </div>
     <div class="page-actions">
+        <button type="button" class="btn-primary"
+                data-aplicar-formulario-paciente
+                data-paciente-id="@Model.PacienteId"
+                data-paciente-nome="@Model.NomeCompleto"
+                data-selecao-url='@Url.Action("SelecionarFormulario", "FormularioResultados")'
+                data-aplicar-url='@Url.Action("Aplicar", "FormularioResultados")'>
+            Aplicar formulário
+        </button>
         <a asp-action="Edit" asp-route-id="@Model.PacienteId" class="btn-primary"
            data-open-tab data-tab="Pacientes"
            data-url='@Url.Action("Edit", "Pacientes", new { id = Model.PacienteId })'>Editar</a>
@@ -101,6 +109,11 @@
                     <strong>@formulario.Formulario</strong>
                     <span>@formulario.DataAplicacao.ToString("dd/MM/yyyy") • @formulario.ResponsavelAplicacao</span>
                     <small>@formulario.Destaque</small>
+                    <button type="button"
+                            class="btn-link"
+                            data-open-tab
+                            data-tab="Formulário"
+                            data-url='@Url.Action("Details", "FormularioResultados", new { id = formulario.FormularioResultadoId, abaOrigem = "Pacientes", urlOrigem = Url.Action("Details", "Pacientes", new { id = Model.PacienteId }) })'>Ver respostas</button>
                 </li>
             }
             </ul>

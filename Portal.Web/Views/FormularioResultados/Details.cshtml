@@ -1,0 +1,33 @@
+@using GestaoSaudeIdosos.Domain.Extensions
+@model GestaoSaudeIdosos.Web.ViewModels.FormularioResultadoDetalheViewModel
+@{
+    ViewData["Title"] = "Resultado do formulário";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@Model.Formulario</h1>
+        <p class="page-subtitle">Aplicado para <strong>@Model.Paciente</strong> em @Model.DataAplicacao.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+        @if (!string.IsNullOrWhiteSpace(Model.ResponsavelAplicacao))
+        {
+            <p class="page-subtitle">Responsável: @Model.ResponsavelAplicacao</p>
+        }
+    </div>
+    <div class="page-actions">
+        <button type="button" class="btn-secondary" data-close-current-tab>Fechar</button>
+    </div>
+</section>
+
+<article class="detail-card">
+    <h2>Respostas registradas</h2>
+    <ul class="list">
+        @foreach (var campo in Model.Campos)
+        {
+            <li>
+                <strong>@campo.Campo</strong>
+                <span class="list-meta">@campo.Tipo.GetDisplayName() • @(campo.Obrigatorio ? "Obrigatório" : "Opcional")</span>
+                <div class="list-value">@campo.ValorApresentacao</div>
+            </li>
+        }
+    </ul>
+</article>

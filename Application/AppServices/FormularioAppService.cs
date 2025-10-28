@@ -20,7 +20,22 @@ namespace GestaoSaudeIdosos.Application.AppServices
             _formularioCampoRepository = formularioCampoRepository;
         }
 
-        public async Task<Formulario?> GetCompletoPorIdAsync(int id) => await _formularioRepository.AsQueryable().FirstOrDefaultAsync(f => f.FormularioId == id);
+        public async Task<Formulario?> GetCompletoPorIdAsync(int id)
+        {
+            return await _formularioRepository
+                .AsQueryable(f => f.Usuario)
+                .Include(f => f.Campos)
+                    .ThenInclude(fc => fc.Campo)
+                .Include(f => f.Pacientes)
+                .Include(f => f.Resultados)
+                    .ThenInclude(r => r.Paciente)
+                .Include(f => f.Resultados)
+                    .ThenInclude(r => r.UsuarioAplicacao)
+                .Include(f => f.Resultados)
+                    .ThenInclude(r => r.Valores)
+                        .ThenInclude(v => v.Campo)
+                .FirstOrDefaultAsync(f => f.FormularioId == id);
+        }
 
         public async Task AtualizarCamposAsync(Formulario formulario, IEnumerable<int> camposIds)
         {

@@ -76,6 +76,13 @@ namespace GestaoSaudeIdosos.Web.Controllers
         {
             var paciente = await _pacienteAppService
                 .AsQueryable(p => p.Responsavel)
+                .Include(p => p.Resultados)
+                    .ThenInclude(r => r.Formulario)
+                .Include(p => p.Resultados)
+                    .ThenInclude(r => r.UsuarioAplicacao)
+                .Include(p => p.Resultados)
+                    .ThenInclude(r => r.Valores)
+                        .ThenInclude(v => v.Campo)
                 .FirstOrDefaultAsync(p => p.PacienteId == id);
 
             if (paciente is null)

@@ -12,6 +12,7 @@ namespace GestaoSaudeIdosos.Domain
             services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IPacienteService, PacienteService>();
             services.AddScoped<IFormularioService, FormularioService>();
+            services.AddScoped<IFormularioResultadoService, FormularioResultadoService>();
             services.AddScoped<ICampoService, CampoService>();
             services.AddScoped<IGraficoService, GraficoService>();
 

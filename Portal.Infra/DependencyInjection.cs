@@ -16,6 +16,7 @@ namespace GestaoSaudeIdosos.Infra
             services.AddScoped<IPacienteRepository, PacienteRepository>();
             services.AddScoped<IFormularioRepository, FormularioRepository>();
             services.AddScoped<IFormularioCampoRepository, FormularioCampoRepository>();
+            services.AddScoped<IFormularioResultadoRepository, FormularioResultadoRepository>();
             services.AddScoped<ICampoRepository, CampoRepository>();
             services.AddScoped<IGraficoRepository, GraficoRepository>();
 

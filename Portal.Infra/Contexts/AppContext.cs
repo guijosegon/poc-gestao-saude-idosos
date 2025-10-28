@@ -1,4 +1,4 @@
-﻿using GestaoSaudeIdosos.Domain.Entities;
+using GestaoSaudeIdosos.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestaoSaudeIdosos.Infra.Contexts
@@ -15,7 +15,7 @@ namespace GestaoSaudeIdosos.Infra.Contexts
         public DbSet<Grafico> Graficos { get; set; }
         public DbSet<Formulario> Formularios { get; set; }
         public DbSet<FormularioCampo> FormularioCampos { get; set; }
-        public DbSet<FormularioCampoValor> FormularioCampoValores { get; set; }
         public DbSet<FormularioResultado> FormularioResultados { get; set; }
+        public DbSet<FormularioResultadoValor> FormularioResultadoValores { get; set; }
     }
 }
