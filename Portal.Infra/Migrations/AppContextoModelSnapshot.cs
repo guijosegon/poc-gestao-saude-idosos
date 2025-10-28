@@ -269,11 +269,13 @@ namespace GestaoSaudeIdosos.Infra.Migrations
                     b.Property<string>("HistoricoCirurgico")
                         .HasColumnType("text");
 
-                    b.Property<string>("RiscoQuedas")
-                        .HasColumnType("text");
+                    b.Property<string>("RiscoQueda")
+                        .HasColumnType("text")
+                        .HasColumnName("RiscoQuedas");
 
-                    b.Property<string>("MobilidadeAuxilios")
-                        .HasColumnType("text");
+                    b.Property<string>("Mobilidade")
+                        .HasColumnType("text")
+                        .HasColumnName("MobilidadeAuxilios");
 
                     b.Property<string>("DietasRestricoes")
                         .HasColumnType("text");

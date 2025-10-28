@@ -17,5 +17,21 @@ namespace GestaoSaudeIdosos.Infra.Contexts
         public DbSet<FormularioCampo> FormularioCampos { get; set; }
         public DbSet<FormularioCampoValor> FormularioCampoValores { get; set; }
         public DbSet<FormularioResultado> FormularioResultados { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Paciente>(entity =>
+            {
+                entity.Property(p => p.RiscoQueda)
+                    .HasConversion<string>()
+                    .HasColumnName("RiscoQuedas");
+
+                entity.Property(p => p.Mobilidade)
+                    .HasConversion<string>()
+                    .HasColumnName("MobilidadeAuxilios");
+            });
+        }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -21,7 +21,12 @@ namespace GestaoSaudeIdosos.Web.Mappers
             DataNascimento = paciente.DataNascimento,
             Idade = paciente.Idade,
             Responsavel = paciente.Responsavel != null ? paciente.Responsavel.NomeCompleto : null,
-            DataCadastro = paciente.DataCadastro
+            DataCadastro = paciente.DataCadastro,
+            CondicoesCronicas = paciente.CondicoesCronicas,
+            HistoricoCirurgico = paciente.HistoricoCirurgico,
+            RiscoQueda = paciente.RiscoQueda,
+            Mobilidade = paciente.Mobilidade,
+            DietasRestricoes = paciente.DietasRestricoes
         };
 
         public static PacienteFormViewModel ToFormViewModel(this Paciente paciente)
@@ -36,8 +41,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 ResponsavelId = paciente.ResponsavelId,
                 CondicoesCronicasSelecionadas = ConverterParaLista(paciente.CondicoesCronicas),
                 HistoricoCirurgicoSelecionados = ConverterParaLista(paciente.HistoricoCirurgico),
-                RiscoQuedaSelecionado = ConverterParaPrimeiro(paciente.RiscoQuedas),
-                MobilidadeSelecionada = ConverterParaPrimeiro(paciente.MobilidadeAuxilios),
+                RiscoQueda = paciente.RiscoQueda,
+                Mobilidade = paciente.Mobilidade,
                 DietasSelecionadas = ConverterParaLista(paciente.DietasRestricoes)
             };
         }
@@ -56,8 +61,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 UltimaAtualizacao = paciente.DataCadastro,
                 CondicoesCronicas = ConverterParaDisplay<Enums.CondicaoCronicaPaciente>(paciente.CondicoesCronicas),
                 HistoricoCirurgico = ConverterParaDisplay<Enums.HistoricoCirurgicoPaciente>(paciente.HistoricoCirurgico),
-                RiscoQuedas = ConverterParaDisplay<Enums.RiscoQuedaPaciente>(paciente.RiscoQuedas),
-                MobilidadeAuxilios = ConverterParaDisplay<Enums.MobilidadePaciente>(paciente.MobilidadeAuxilios),
+                RiscoQueda = paciente.RiscoQueda.GetDisplayName(),
+                Mobilidade = paciente.Mobilidade.GetDisplayName(),
                 DietasRestricoes = ConverterParaDisplay<Enums.DietaRestricaoPaciente>(paciente.DietasRestricoes),
                 FormulariosRecentes = Array.Empty<PacienteFormularioResultadoViewModel>()
             };
@@ -81,8 +86,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 ResponsavelId = model.ResponsavelId,
                 CondicoesCronicas = ConverterParaString(model.CondicoesCronicasSelecionadas),
                 HistoricoCirurgico = ConverterParaString(model.HistoricoCirurgicoSelecionados),
-                RiscoQuedas = ConverterValorUnico(model.RiscoQuedaSelecionado),
-                MobilidadeAuxilios = ConverterValorUnico(model.MobilidadeSelecionada),
+                RiscoQueda = model.RiscoQueda ?? Enums.RiscoQuedaPaciente.SemRisco,
+                Mobilidade = model.Mobilidade ?? Enums.MobilidadePaciente.Independente,
                 DietasRestricoes = ConverterParaString(model.DietasSelecionadas)
             };
         }
@@ -102,8 +107,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
             entity.ResponsavelId = model.ResponsavelId;
             entity.CondicoesCronicas = ConverterParaString(model.CondicoesCronicasSelecionadas);
             entity.HistoricoCirurgico = ConverterParaString(model.HistoricoCirurgicoSelecionados);
-            entity.RiscoQuedas = ConverterValorUnico(model.RiscoQuedaSelecionado);
-            entity.MobilidadeAuxilios = ConverterValorUnico(model.MobilidadeSelecionada);
+            entity.RiscoQueda = model.RiscoQueda ?? Enums.RiscoQuedaPaciente.SemRisco;
+            entity.Mobilidade = model.Mobilidade ?? Enums.MobilidadePaciente.Independente;
             entity.DietasRestricoes = ConverterParaString(model.DietasSelecionadas);
         }
 
@@ -145,22 +150,6 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 .ToList();
 
             return itens.Count == 0 ? null : string.Join(';', itens);
-        }
-
-        private static string? ConverterValorUnico(string? valor)
-        {
-            if (string.IsNullOrWhiteSpace(valor))
-            {
-                return null;
-            }
-
-            return valor.Trim();
-        }
-
-        private static string? ConverterParaPrimeiro(string? valor)
-        {
-            var lista = ConverterParaLista(valor);
-            return lista.FirstOrDefault();
         }
 
         private static IEnumerable<string> ConverterParaDisplay<TEnum>(string? valor)
