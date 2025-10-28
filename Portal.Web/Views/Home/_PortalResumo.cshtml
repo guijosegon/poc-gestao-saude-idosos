@@ -1,51 +1,101 @@
+@using System;
+@using System.Linq;
 @model GestaoSaudeIdosos.Web.ViewModels.DashboardViewModel
 
-<h2>Painel geral</h2>
-<p>Resumo das principais informações para apoiar a prevenção de doenças em idosos institucionalizados.</p>
+@{
+    var relatoriosAltoRisco = Model.Relatorios
+        .Where(relatorio => string.Equals(relatorio.NivelRisco, "Alto", StringComparison.OrdinalIgnoreCase))
+        .ToList();
+    var alertasCriticos = relatoriosAltoRisco.Count;
+    var pacientesRecentes = Model.PacientesRecentes.Take(4).ToList();
+    var usuariosRecentes = Model.UsuariosRecentes.Take(4).ToList();
+}
+
+<header class="dashboard-header">
+    <div>
+        <h2>Painel geral</h2>
+        <p>Resumo das principais informações para apoiar a prevenção de doenças em idosos institucionalizados.</p>
+    </div>
+</header>
 
 <div class="dashboard-cards">
-    <div class="card">
-        <span class="card-title">Pacientes</span>
-        <strong>@Model.TotalPacientes</strong>
-        <small>Total de pacientes cadastrados</small>
-    </div>
-    <div class="card">
-        <span class="card-title">Usuários</span>
-        <strong>@Model.TotalUsuarios</strong>
-        <small>Profissionais com acesso</small>
-    </div>
-    <div class="card">
-        <span class="card-title">Formulários ativos</span>
-        <strong>@Model.FormulariosAtivos</strong>
-        <small>Instrumentos prontos para uso</small>
-    </div>
-    <div class="card @(Model.AlertasAtivos > 0 ? "alert" : string.Empty)">
-        <span class="card-title">Alertas</span>
-        <strong>@Model.AlertasAtivos</strong>
-        <small>Riscos que demandam atenção</small>
-    </div>
+    <article class="stat-card">
+        <span class="stat-icon" aria-hidden="true">👵</span>
+        <div>
+            <span class="stat-label">Pacientes monitorados</span>
+            <strong>@Model.TotalPacientes</strong>
+            <small>@pacientesRecentes.Count paciente(s) recém-adicionado(s)</small>
+        </div>
+    </article>
+    <article class="stat-card">
+        <span class="stat-icon" aria-hidden="true">🧑‍⚕️</span>
+        <div>
+            <span class="stat-label">Usuários ativos</span>
+            <strong>@Model.TotalUsuarios</strong>
+            <small>@usuariosRecentes.Count novo(s) acesso(s) registrado(s)</small>
+        </div>
+    </article>
+    <article class="stat-card">
+        <span class="stat-icon" aria-hidden="true">📝</span>
+        <div>
+            <span class="stat-label">Formulários ativos</span>
+            <strong>@Model.FormulariosAtivos</strong>
+            <small>Ferramentas prontas para avaliação</small>
+        </div>
+    </article>
+    <article class="stat-card @(alertasCriticos > 0 ? "critical" : string.Empty)">
+        <span class="stat-icon" aria-hidden="true">⚠️</span>
+        <div>
+            <span class="stat-label">Alertas críticos</span>
+            <strong>@alertasCriticos</strong>
+            <small>Somente riscos classificados como alto</small>
+        </div>
+    </article>
 </div>
+
+<section class="charts-wrapper">
+    <div class="panel-header">
+        <h3>Indicadores gráficos</h3>
+        <span class="charts-hint">Os gráficos em tempo real serão carregados automaticamente via Google Charts.</span>
+    </div>
+    <div id="portal-dashboard-charts" class="charts-placeholder" data-gcharts-root>
+        <span class="placeholder-icon" aria-hidden="true">📊</span>
+        <p>Quando configurado pelo cliente, os gráficos do Google Charts serão renderizados neste espaço.</p>
+    </div>
+</section>
 
 <div class="quick-actions">
     <a class="quick-card" asp-controller="Pacientes" asp-action="Create" data-open-tab data-tab="Pacientes" data-url='@Url.Action("Create", "Pacientes")'>
-        <span>Adicionar paciente</span>
-        <small>Cadastre idosos e vincule responsáveis</small>
+        <span class="quick-icon" aria-hidden="true">➕</span>
+        <div>
+            <span>Adicionar paciente</span>
+            <small>Cadastre idosos e vincule responsáveis</small>
+        </div>
     </a>
     <a class="quick-card" asp-controller="Campos" asp-action="Index" data-open-tab data-tab="Campos" data-url='@Url.Action("Index", "Campos")'>
-        <span>Configurar campos</span>
-        <small>Personalize perguntas reutilizáveis</small>
+        <span class="quick-icon" aria-hidden="true">⚙️</span>
+        <div>
+            <span>Configurar campos</span>
+            <small>Personalize perguntas reutilizáveis</small>
+        </div>
     </a>
     <a class="quick-card" asp-controller="Formularios" asp-action="Index" data-open-tab data-tab="Formulários" data-url='@Url.Action("Index", "Formularios")'>
-        <span>Montar formulário</span>
-        <small>Combine campos para avaliações</small>
+        <span class="quick-icon" aria-hidden="true">📄</span>
+        <div>
+            <span>Montar formulário</span>
+            <small>Combine campos para avaliações</small>
+        </div>
     </a>
     <a class="quick-card" asp-controller="Graficos" asp-action="Index" data-open-tab data-tab="Gráficos" data-url='@Url.Action("Index", "Graficos")'>
-        <span>Explorar gráficos</span>
-        <small>Visualize indicadores dos pacientes</small>
+        <span class="quick-icon" aria-hidden="true">📈</span>
+        <div>
+            <span>Explorar gráficos</span>
+            <small>Visualize indicadores dos pacientes</small>
+        </div>
     </a>
 </div>
 
-<div class="grid-two-columns">
+<div class="dashboard-panels">
     <section class="panel">
         <div class="panel-header">
             <h3>Formulários recentes</h3>
@@ -71,25 +121,25 @@
         }
     </section>
 
-    <section class="panel">
+    <section class="panel panel-alerts">
         <div class="panel-header">
-            <h3>Relatórios e sugestões</h3>
+            <h3>Alertas de alto risco</h3>
             <a asp-controller="Pacientes" asp-action="Index" class="btn-link">Ver todos</a>
         </div>
 
-        @if (!Model.Relatorios.Any())
+        @if (!relatoriosAltoRisco.Any())
         {
-            <p class="empty-state">Nenhum relatório disponível.</p>
+            <p class="empty-state">Nenhum alerta crítico no momento.</p>
         }
         else
         {
             <ul class="list">
-            @foreach (var relatorio in Model.Relatorios)
+            @foreach (var relatorio in relatoriosAltoRisco)
             {
                 <li>
                     <div class="list-title">
                         <strong>@relatorio.PacienteNome</strong>
-                        <span class="status-badge @(relatorio.NivelRisco.ToLower() == "alto" ? "danger" : relatorio.NivelRisco.ToLower() == "moderado" ? "warning" : "success")">@relatorio.NivelRisco</span>
+                        <span class="status-badge danger">@relatorio.NivelRisco</span>
                     </div>
                     <span>@relatorio.Resumo</span>
                     <small>@relatorio.Sugestao</small>
@@ -97,5 +147,52 @@
             }
             </ul>
         }
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <h3>Novos cadastros</h3>
+        </div>
+
+        <div class="split-list">
+            <div>
+                <h4>Pacientes recentes</h4>
+                @if (!pacientesRecentes.Any())
+                {
+                    <p class="empty-state">Sem novos pacientes cadastrados.</p>
+                }
+                else
+                {
+                    <ul class="list compact">
+                    @foreach (var paciente in pacientesRecentes)
+                    {
+                        <li>
+                            <strong>@paciente.NomeCompleto</strong>
+                            <small>Idade @paciente.Idade anos</small>
+                        </li>
+                    }
+                    </ul>
+                }
+            </div>
+            <div>
+                <h4>Usuários recentes</h4>
+                @if (!usuariosRecentes.Any())
+                {
+                    <p class="empty-state">Sem novos usuários cadastrados.</p>
+                }
+                else
+                {
+                    <ul class="list compact">
+                    @foreach (var usuario in usuariosRecentes)
+                    {
+                        <li>
+                            <strong>@usuario.NomeCompleto</strong>
+                            <small>@usuario.Email</small>
+                        </li>
+                    }
+                    </ul>
+                }
+            </div>
+        </div>
     </section>
 </div>

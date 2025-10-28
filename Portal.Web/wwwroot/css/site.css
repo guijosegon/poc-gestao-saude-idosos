@@ -432,48 +432,154 @@ main.container {
     color: var(--danger);
 }
 
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+}
+
+.dashboard-header p {
+    margin: 0.35rem 0 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
 .dashboard-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1.25rem;
-    margin: 1.5rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin: 1.75rem 0 1.5rem;
 }
 
-.card {
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 1.25rem;
-    box-shadow: 0 12px 32px rgba(1, 120, 54, 0.15);
+.stat-card {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.4rem;
+    border-radius: 18px;
+    background: var(--card-bg);
+    box-shadow: 0 18px 40px rgba(1, 120, 54, 0.18);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.25s ease;
 }
 
-.card strong {
-    font-size: 1.85rem;
+.stat-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(1, 146, 67, 0.16), rgba(1, 146, 67, 0));
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 22px 48px rgba(1, 120, 54, 0.22);
+}
+
+.stat-card:hover::after {
+    opacity: 1;
+}
+
+.stat-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.stat-card strong {
+    display: block;
+    font-size: 2.1rem;
     font-weight: 700;
+    margin-top: 0.15rem;
 }
 
-.card small {
+.stat-card small {
     color: var(--muted);
     font-size: 0.85rem;
 }
 
-.card.alert {
-    background: #ffeceb;
-    color: var(--danger);
-    box-shadow: 0 12px 32px rgba(209, 67, 67, 0.15);
-}
-
-.card.alert small {
-    color: inherit;
-}
-
-.card-title {
-    font-size: 0.95rem;
-    color: var(--muted);
+.stat-card .stat-label {
+    display: block;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: rgba(1, 146, 67, 0.12);
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.stat-card.critical {
+    background: #fff5f5;
+    box-shadow: 0 20px 46px rgba(209, 67, 67, 0.18);
+}
+
+.stat-card.critical::after {
+    background: linear-gradient(135deg, rgba(209, 67, 67, 0.26), rgba(209, 67, 67, 0));
+}
+
+.stat-card.critical small,
+.stat-card.critical .stat-label {
+    color: rgba(209, 67, 67, 0.85);
+}
+
+.stat-card.critical .stat-icon {
+    background: rgba(209, 67, 67, 0.18);
+    color: var(--danger);
+}
+
+.charts-wrapper {
+    margin: 0 0 1.75rem;
+    padding: 1.5rem;
+    border-radius: 18px;
+    background: var(--card-bg);
+    box-shadow: 0 18px 42px rgba(1, 120, 54, 0.14);
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.charts-placeholder {
+    border: 2px dashed rgba(1, 146, 67, 0.24);
+    border-radius: 16px;
+    padding: 2.25rem 1.5rem;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.65rem;
+    color: var(--muted);
+    background: rgba(1, 146, 67, 0.035);
+}
+
+.placeholder-icon {
+    font-size: 2.2rem;
+}
+
+.charts-hint {
+    color: var(--muted);
+    font-size: 0.9rem;
 }
 
 .grid-two-columns {
@@ -1041,32 +1147,102 @@ button.btn-link {
 
 .quick-actions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 0.85rem;
-    margin: 1.5rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0 2rem;
 }
 
 .quick-card {
     display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    background: rgba(1, 146, 67, 0.08);
-    padding: 1rem 1.1rem;
-    border-radius: 14px;
+    align-items: flex-start;
+    gap: 0.85rem;
+    background: var(--card-bg);
+    padding: 1.1rem 1.2rem;
+    border-radius: 16px;
     color: var(--text);
     text-decoration: none;
-    transition: transform 0.1s ease, box-shadow 0.15s ease;
+    border: 1px solid rgba(1, 146, 67, 0.12);
+    box-shadow: 0 14px 32px rgba(1, 120, 54, 0.12);
+    transition: transform 0.18s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
 
-.quick-card:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 12px 24px rgba(1, 146, 67, 0.18);
+.quick-card > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.quick-card > div > span {
+    font-weight: 600;
+    font-size: 1rem;
 }
 
 .quick-card small {
     color: var(--muted);
     font-size: 0.85rem;
-} 
+}
+
+.quick-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 42px rgba(1, 120, 54, 0.2);
+    border-color: rgba(1, 146, 67, 0.4);
+}
+
+.quick-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(1, 146, 67, 0.14);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.45rem;
+    flex-shrink: 0;
+    transition: transform 0.18s ease;
+}
+
+.quick-card:hover .quick-icon {
+    transform: scale(1.05);
+}
+
+.dashboard-panels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.panel-alerts {
+    background: linear-gradient(180deg, rgba(255, 236, 235, 0.85), rgba(255, 255, 255, 0.9));
+    border: 1px solid rgba(209, 67, 67, 0.18);
+}
+
+.panel-alerts .panel-header h3 {
+    color: var(--danger);
+}
+
+.split-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+}
+
+.split-list h4 {
+    margin: 0 0 0.75rem;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+}
+
+.list.compact {
+    gap: 0.55rem;
+}
+
+.list.compact li {
+    border-bottom: none;
+    padding-bottom: 0.25rem;
+}
 
 .password-wrapper .toggle-password {
     position: absolute;
