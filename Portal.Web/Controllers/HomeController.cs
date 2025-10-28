@@ -75,7 +75,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
                     HistoricoCirurgico = p.HistoricoCirurgico,
                     RiscoQueda = p.RiscoQueda,
                     Mobilidade = p.Mobilidade,
-                    DietasRestricoes = p.DietasRestricoes
+                    DietasRestricoes = p.DietasRestricoes,
+                    Sexo = p.Sexo
                 })
                 .ToList();
 

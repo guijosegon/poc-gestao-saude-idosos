@@ -114,5 +114,20 @@ namespace GestaoSaudeIdosos.Domain.Common.Helpers
             [Display(Name = "Outra restrição alimentar")]
             Outra = 99
         }
+
+        public enum SexoPaciente
+        {
+            [Display(Name = "Não informado")]
+            NaoInformado = 0,
+
+            [Display(Name = "Feminino")]
+            Feminino = 1,
+
+            [Display(Name = "Masculino")]
+            Masculino = 2,
+
+            [Display(Name = "Outro")]
+            Outro = 99
+        }
     }
 }

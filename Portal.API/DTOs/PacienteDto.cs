@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using GestaoSaudeIdosos.Domain.Common.Helpers;
 
 namespace GestaoSaudeIdosos.API.DTOs
 {
@@ -15,5 +16,6 @@ namespace GestaoSaudeIdosos.API.DTOs
         public DateTime? DataNascimento { get; set; }
 
         public int? ResponsavelId { get; set; }
+        public Enums.SexoPaciente Sexo { get; set; } = Enums.SexoPaciente.NaoInformado;
     }
 }

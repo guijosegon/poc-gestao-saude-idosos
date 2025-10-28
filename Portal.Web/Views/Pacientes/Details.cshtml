@@ -36,6 +36,10 @@
                 <dd>@Model.DataNascimento.ToString("dd/MM/yyyy")</dd>
             </div>
             <div>
+                <dt>Sexo</dt>
+                <dd>@(string.IsNullOrWhiteSpace(Model.Sexo) ? "—" : Model.Sexo)</dd>
+            </div>
+            <div>
                 <dt>CPF/RG</dt>
                 <dd>@(string.IsNullOrWhiteSpace(Model.CpfRg) ? "—" : Model.CpfRg)</dd>
             </div>

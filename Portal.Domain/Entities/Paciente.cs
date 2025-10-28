@@ -22,6 +22,7 @@ namespace GestaoSaudeIdosos.Domain.Entities
         public string? HistoricoCirurgico { get; set; }
         public Enums.RiscoQuedaPaciente RiscoQueda { get; set; } = Enums.RiscoQuedaPaciente.SemRisco;
         public Enums.MobilidadePaciente Mobilidade { get; set; } = Enums.MobilidadePaciente.Independente;
+        public Enums.SexoPaciente Sexo { get; set; } = Enums.SexoPaciente.NaoInformado;
 
         private DateTime _dataNascimento;
         private DateTime _dataCadastro;

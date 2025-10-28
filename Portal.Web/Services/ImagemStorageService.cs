@@ -23,7 +23,8 @@ namespace GestaoSaudeIdosos.Web.Services
                 return caminhoAtual;
             }
 
-            var uploadsRoot = Path.Combine(_environment.WebRootPath, "uploads", subpasta);
+            var webRootPath = ObterWebRootPath();
+            var uploadsRoot = Path.Combine(webRootPath, "uploads", subpasta);
             Directory.CreateDirectory(uploadsRoot);
 
             var extensao = Path.GetExtension(arquivo.FileName);
@@ -58,12 +59,32 @@ namespace GestaoSaudeIdosos.Web.Services
             }
 
             var relativo = caminho.TrimStart('~', '/').Replace('/', Path.DirectorySeparatorChar);
-            var caminhoFisico = Path.Combine(_environment.WebRootPath, relativo);
+            var caminhoFisico = Path.Combine(ObterWebRootPath(), relativo);
 
             if (File.Exists(caminhoFisico))
             {
                 File.Delete(caminhoFisico);
             }
+        }
+
+        private string ObterWebRootPath()
+        {
+            if (!string.IsNullOrWhiteSpace(_environment.WebRootPath))
+            {
+                return _environment.WebRootPath;
+            }
+
+            var contentRoot = _environment.ContentRootPath;
+            if (string.IsNullOrWhiteSpace(contentRoot))
+            {
+                contentRoot = AppContext.BaseDirectory;
+            }
+
+            var webRoot = Path.Combine(contentRoot, "wwwroot");
+            Directory.CreateDirectory(webRoot);
+            _environment.WebRootPath = webRoot;
+
+            return webRoot;
         }
     }
 }

@@ -26,7 +26,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
             HistoricoCirurgico = paciente.HistoricoCirurgico,
             RiscoQueda = paciente.RiscoQueda,
             Mobilidade = paciente.Mobilidade,
-            DietasRestricoes = paciente.DietasRestricoes
+            DietasRestricoes = paciente.DietasRestricoes,
+            Sexo = paciente.Sexo
         };
 
         public static PacienteFormViewModel ToFormViewModel(this Paciente paciente)
@@ -43,7 +44,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 HistoricoCirurgicoSelecionados = ConverterParaLista(paciente.HistoricoCirurgico),
                 RiscoQueda = paciente.RiscoQueda,
                 Mobilidade = paciente.Mobilidade,
-                DietasSelecionadas = ConverterParaLista(paciente.DietasRestricoes)
+                DietasSelecionadas = ConverterParaLista(paciente.DietasRestricoes),
+                Sexo = paciente.Sexo
             };
         }
 
@@ -64,7 +66,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 RiscoQueda = paciente.RiscoQueda.GetDisplayName(),
                 Mobilidade = paciente.Mobilidade.GetDisplayName(),
                 DietasRestricoes = ConverterParaDisplay<Enums.DietaRestricaoPaciente>(paciente.DietasRestricoes),
-                FormulariosRecentes = Array.Empty<PacienteFormularioResultadoViewModel>()
+                FormulariosRecentes = Array.Empty<PacienteFormularioResultadoViewModel>(),
+                Sexo = paciente.Sexo.GetDisplayName()
             };
         }
 
@@ -88,7 +91,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 HistoricoCirurgico = ConverterParaString(model.HistoricoCirurgicoSelecionados),
                 RiscoQueda = model.RiscoQueda ?? Enums.RiscoQuedaPaciente.SemRisco,
                 Mobilidade = model.Mobilidade ?? Enums.MobilidadePaciente.Independente,
-                DietasRestricoes = ConverterParaString(model.DietasSelecionadas)
+                DietasRestricoes = ConverterParaString(model.DietasSelecionadas),
+                Sexo = model.Sexo ?? Enums.SexoPaciente.NaoInformado
             };
         }
 
@@ -110,6 +114,7 @@ namespace GestaoSaudeIdosos.Web.Mappers
             entity.RiscoQueda = model.RiscoQueda ?? Enums.RiscoQuedaPaciente.SemRisco;
             entity.Mobilidade = model.Mobilidade ?? Enums.MobilidadePaciente.Independente;
             entity.DietasRestricoes = ConverterParaString(model.DietasSelecionadas);
+            entity.Sexo = model.Sexo ?? Enums.SexoPaciente.NaoInformado;
         }
 
         private static int CalcularIdade(DateTime dataNascimento)
