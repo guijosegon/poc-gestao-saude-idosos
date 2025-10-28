@@ -29,29 +29,15 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var query = _usuarioAppService.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(filtro.Busca))
-            {
-                var busca = filtro.Busca.Trim();
-                query = query.Where(u => EF.Functions.ILike(u.NomeCompleto, $"%{busca}%")
-                    || EF.Functions.ILike(u.Email, $"%{busca}%"));
-            }
-
+                query = query.Where(u => EF.Functions.ILike(u.NomeCompleto, $"%{filtro.Busca.Trim()}%") || EF.Functions.ILike(u.Email, $"%{filtro.Busca.Trim()}%"));
             if (filtro.Perfil.HasValue)
-            {
-                var perfil = filtro.Perfil.Value;
-                query = query.Where(u => u.Perfil == perfil);
-            }
-
+                query = query.Where(u => u.Perfil == filtro.Perfil.Value);
             if (filtro.Ativo.HasValue)
-            {
-                var ativo = filtro.Ativo.Value;
-                query = query.Where(u => u.Ativo == ativo);
-            }
+                query = query.Where(u => u.Ativo == filtro.Ativo.Value);
 
             var itensPorPagina = filtro.ItensPorPagina;
             var totalRegistros = await query.CountAsync();
-            var totalPaginas = totalRegistros == 0
-                ? 0
-                : (int)Math.Ceiling(totalRegistros / (double)itensPorPagina);
+            var totalPaginas = totalRegistros is 0 ? 0 : (int)Math.Ceiling(totalRegistros / (double)itensPorPagina);
 
             var paginaAtual = filtro.Pagina;
             if (totalPaginas > 0 && paginaAtual > totalPaginas)
