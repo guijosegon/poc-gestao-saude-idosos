@@ -1,4 +1,6 @@
-using System;
+﻿using System;
+using GestaoSaudeIdosos.Domain.Common.Helpers;
+using GestaoSaudeIdosos.Web.Extensions;
 
 namespace GestaoSaudeIdosos.Web.ViewModels
 {
@@ -14,8 +16,11 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public DateTime DataCadastro { get; set; }
         public string? CondicoesCronicas { get; set; }
         public string? HistoricoCirurgico { get; set; }
-        public string? RiscoQuedas { get; set; }
-        public string? MobilidadeAuxilios { get; set; }
+        public Enums.RiscoQuedaPaciente RiscoQueda { get; set; } = Enums.RiscoQuedaPaciente.SemRisco;
+        public Enums.MobilidadePaciente Mobilidade { get; set; } = Enums.MobilidadePaciente.Independente;
         public string? DietasRestricoes { get; set; }
+
+        public string RiscoQuedaDescricao => RiscoQueda.GetDisplayName();
+        public string MobilidadeDescricao => Mobilidade.GetDisplayName();
     }
 }

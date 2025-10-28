@@ -1,5 +1,7 @@
-﻿using GestaoSaudeIdosos.Domain.Extensions;
+﻿using GestaoSaudeIdosos.Domain.Common.Helpers;
+using GestaoSaudeIdosos.Domain.Extensions;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GestaoSaudeIdosos.Domain.Entities
 {
@@ -19,8 +21,13 @@ namespace GestaoSaudeIdosos.Domain.Entities
         public string? ImagemPerfil { get; set; }
         public string? CondicoesCronicas { get; set; }
         public string? HistoricoCirurgico { get; set; }
-        public string? RiscoQuedas { get; set; }
-        public string? MobilidadeAuxilios { get; set; }
+
+        [Column("RiscoQuedas")]
+        public Enums.RiscoQuedaPaciente RiscoQueda { get; set; } = Enums.RiscoQuedaPaciente.SemRisco;
+
+        [Column("MobilidadeAuxilios")]
+        public Enums.MobilidadePaciente Mobilidade { get; set; } = Enums.MobilidadePaciente.Independente;
+
         public string? DietasRestricoes { get; set; }
         private DateTime _dataNascimento;
         private DateTime _dataCadastro;

@@ -1,4 +1,6 @@
-using GestaoSaudeIdosos.Application.Interfaces;
+﻿using GestaoSaudeIdosos.Application.Interfaces;
+using GestaoSaudeIdosos.Domain.Common.Helpers;
+using GestaoSaudeIdosos.Web.Extensions;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -75,8 +77,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
                     DataCadastro = p.DataCadastro,
                     CondicoesCronicas = p.CondicoesCronicas,
                     HistoricoCirurgico = p.HistoricoCirurgico,
-                    RiscoQuedas = p.RiscoQuedas,
-                    MobilidadeAuxilios = p.MobilidadeAuxilios,
+                    RiscoQueda = p.RiscoQueda,
+                    Mobilidade = p.Mobilidade,
                     DietasRestricoes = p.DietasRestricoes
                 })
                 .ToList();
@@ -143,31 +145,34 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(paciente.RiscoQuedas))
-            {
-                resumoPartes.Add($"Risco de quedas: {paciente.RiscoQuedas}.");
+            resumoPartes.Add($"Risco de quedas: {paciente.RiscoQuedaDescricao}.");
 
-                if (paciente.RiscoQuedas.IndexOf("alto", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
+            switch (paciente.RiscoQueda)
+            {
+                case Enums.RiscoQuedaPaciente.Alto:
+                case Enums.RiscoQuedaPaciente.QuedasRecorrentes:
                     nivelRisco = Math.Max(nivelRisco, riscoAlto);
                     sugestoes.Add("Intensificar fisioterapia e revisar plano de prevenção de quedas.");
-                }
-                else if (paciente.RiscoQuedas.IndexOf("moderado", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
+                    break;
+                case Enums.RiscoQuedaPaciente.Moderado:
                     nivelRisco = Math.Max(nivelRisco, riscoModerado);
                     sugestoes.Add("Reforçar orientações ambientais e exercícios de equilíbrio.");
-                }
+                    break;
             }
 
-            if (!string.IsNullOrWhiteSpace(paciente.MobilidadeAuxilios))
+            resumoPartes.Add($"Mobilidade e auxílios: {paciente.MobilidadeDescricao}.");
+
+            if (paciente.Mobilidade is Enums.MobilidadePaciente.CadeiraDeRodas
+                or Enums.MobilidadePaciente.Acamado
+                or Enums.MobilidadePaciente.Andador
+                or Enums.MobilidadePaciente.Bengala
+                or Enums.MobilidadePaciente.ProteseOuOrtese)
             {
-                resumoPartes.Add($"Mobilidade e auxílios: {paciente.MobilidadeAuxilios}.");
-
-                if (ContemTermo(paciente.MobilidadeAuxilios, "cadeira", "andador", "imobilidade"))
-                {
-                    nivelRisco = Math.Max(nivelRisco, riscoModerado);
-                }
-
+                nivelRisco = Math.Max(nivelRisco, riscoModerado);
+                sugestoes.Add("Verificar manutenção e adequação dos dispositivos de mobilidade utilizados.");
+            }
+            else if (paciente.Mobilidade == Enums.MobilidadePaciente.Outro)
+            {
                 sugestoes.Add("Verificar manutenção e adequação dos dispositivos de mobilidade utilizados.");
             }
 

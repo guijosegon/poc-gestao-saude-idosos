@@ -59,7 +59,7 @@
             </div>
             <div>
                 <dt>Mobilidade e auxílios</dt>
-                <dd>@(Model.MobilidadeAuxilios.Any() ? string.Join(", ", Model.MobilidadeAuxilios) : "—")</dd>
+                <dd>@(!string.IsNullOrWhiteSpace(Model.Mobilidade) ? Model.Mobilidade : "—")</dd>
             </div>
             <div>
                 <dt>Dietas e restrições</dt>
@@ -77,7 +77,7 @@
             </div>
             <div>
                 <dt>Risco de quedas</dt>
-                <dd>@(Model.RiscoQuedas.Any() ? string.Join(", ", Model.RiscoQuedas) : "—")</dd>
+                <dd>@(!string.IsNullOrWhiteSpace(Model.RiscoQueda) ? Model.RiscoQueda : "—")</dd>
             </div>
         </dl>
     </article>

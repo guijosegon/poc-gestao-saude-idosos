@@ -105,9 +105,9 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.MobilidadeSelecionada)
-                @Html.DropDownListFor(m => m.MobilidadeSelecionada, Model.MobilidadeDisponivel, "Selecione", new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.MobilidadeSelecionada, "", new { @class = "field-validation-error" })
+                @Html.LabelFor(m => m.Mobilidade)
+                @Html.DropDownListFor(m => m.Mobilidade, Model.MobilidadeDisponivel, "Selecione", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Mobilidade, "", new { @class = "field-validation-error" })
             </div>
 
             <div class="form-group" data-multi-select>
@@ -157,9 +157,9 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.RiscoQuedaSelecionado)
-                @Html.DropDownListFor(m => m.RiscoQuedaSelecionado, Model.RiscoQuedasDisponiveis, "Selecione", new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.RiscoQuedaSelecionado, "", new { @class = "field-validation-error" })
+                @Html.LabelFor(m => m.RiscoQueda)
+                @Html.DropDownListFor(m => m.RiscoQueda, Model.RiscoQuedasDisponiveis, "Selecione", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.RiscoQueda, "", new { @class = "field-validation-error" })
             </div>
         </div>
     </div>

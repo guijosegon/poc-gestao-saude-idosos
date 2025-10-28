@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace GestaoSaudeIdosos.Web.ViewModels
@@ -15,8 +15,8 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public DateTime UltimaAtualizacao { get; set; }
         public IEnumerable<string> CondicoesCronicas { get; set; } = Array.Empty<string>();
         public IEnumerable<string> HistoricoCirurgico { get; set; } = Array.Empty<string>();
-        public IEnumerable<string> RiscoQuedas { get; set; } = Array.Empty<string>();
-        public IEnumerable<string> MobilidadeAuxilios { get; set; } = Array.Empty<string>();
+        public string RiscoQueda { get; set; } = string.Empty;
+        public string Mobilidade { get; set; } = string.Empty;
         public IEnumerable<string> DietasRestricoes { get; set; } = Array.Empty<string>();
         public IEnumerable<PacienteFormularioResultadoViewModel> FormulariosRecentes { get; set; } = Array.Empty<PacienteFormularioResultadoViewModel>();
     }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using GestaoSaudeIdosos.Application.Interfaces;
@@ -264,11 +264,13 @@ namespace GestaoSaudeIdosos.Web.Controllers
             model.CondicoesCronicasSelecionadas ??= new List<string>();
             model.HistoricoCirurgicoSelecionados ??= new List<string>();
             model.DietasSelecionadas ??= new List<string>();
+            model.RiscoQueda ??= Enums.RiscoQuedaPaciente.SemRisco;
+            model.Mobilidade ??= Enums.MobilidadePaciente.Independente;
 
             model.CondicoesCronicasDisponiveis = CriarSelectList<Enums.CondicaoCronicaPaciente>(model.CondicoesCronicasSelecionadas);
             model.HistoricoCirurgicoDisponiveis = CriarSelectList<Enums.HistoricoCirurgicoPaciente>(model.HistoricoCirurgicoSelecionados);
-            model.RiscoQuedasDisponiveis = CriarSelectList<Enums.RiscoQuedaPaciente>(model.RiscoQuedaSelecionado);
-            model.MobilidadeDisponivel = CriarSelectList<Enums.MobilidadePaciente>(model.MobilidadeSelecionada);
+            model.RiscoQuedasDisponiveis = CriarSelectList<Enums.RiscoQuedaPaciente>(model.RiscoQueda?.ToString());
+            model.MobilidadeDisponivel = CriarSelectList<Enums.MobilidadePaciente>(model.Mobilidade?.ToString());
             model.DietasDisponiveis = CriarSelectList<Enums.DietaRestricaoPaciente>(model.DietasSelecionadas);
         }
 

@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using GestaoSaudeIdosos.Domain.Common.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -45,11 +46,11 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public IEnumerable<SelectListItem> HistoricoCirurgicoDisponiveis { get; set; } = Enumerable.Empty<SelectListItem>();
 
         [Display(Name = "Risco de quedas")]
-        public string? RiscoQuedaSelecionado { get; set; }
+        public Enums.RiscoQuedaPaciente? RiscoQueda { get; set; } = Enums.RiscoQuedaPaciente.SemRisco;
         public IEnumerable<SelectListItem> RiscoQuedasDisponiveis { get; set; } = Enumerable.Empty<SelectListItem>();
 
         [Display(Name = "Mobilidade e auxílios")]
-        public string? MobilidadeSelecionada { get; set; }
+        public Enums.MobilidadePaciente? Mobilidade { get; set; } = Enums.MobilidadePaciente.Independente;
         public IEnumerable<SelectListItem> MobilidadeDisponivel { get; set; } = Enumerable.Empty<SelectListItem>();
 
         [Display(Name = "Dietas e restrições alimentares")]
