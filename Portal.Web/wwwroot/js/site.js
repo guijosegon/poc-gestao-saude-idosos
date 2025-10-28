@@ -380,6 +380,7 @@ function atualizarConteudoDaAba(conteudo, documento, mensagensTempData) {
     executarScriptsDoConteudo(documento, conteudo);
     ativarTooltips();
     aplicarValidacao(conteudo);
+    inicializarMultiSelects(conteudo);
 }
 
 let menuIsOpen = false;
@@ -515,11 +516,95 @@ function aplicarValidacao(contexto = document) {
     });
 }
 
+function inicializarMultiSelects(contexto = document) {
+    const alvo = contexto instanceof HTMLElement ? contexto : document;
+    const containers = alvo.querySelectorAll('[data-multi-select]');
+
+    containers.forEach(container => {
+        if (!container || container.dataset.multiSelectReady === "true") {
+            return;
+        }
+
+        container.dataset.multiSelectReady = "true";
+
+        const chipsContainer = container.querySelector('[data-multi-select-chips]');
+        const searchInput = container.querySelector('[data-multi-select-search]');
+        const optionElements = Array.from(container.querySelectorAll('.multi-select__option'));
+
+        if (!chipsContainer || optionElements.length === 0) {
+            return;
+        }
+
+        const placeholder = chipsContainer.dataset.placeholder || '';
+
+        const atualizarChips = () => {
+            chipsContainer.innerHTML = '';
+
+            const selecionados = optionElements.filter(opcao => {
+                const checkbox = opcao.querySelector('input[type="checkbox"]');
+                return checkbox && checkbox.checked;
+            });
+
+            if (selecionados.length === 0) {
+                if (placeholder) {
+                    const placeholderElement = document.createElement('span');
+                    placeholderElement.className = 'multi-select__placeholder';
+                    placeholderElement.textContent = placeholder;
+                    chipsContainer.appendChild(placeholderElement);
+                }
+                return;
+            }
+
+            selecionados.forEach(opcao => {
+                const checkbox = opcao.querySelector('input[type="checkbox"]');
+                const label = opcao.dataset.label || checkbox?.value || '';
+                if (!checkbox) {
+                    return;
+                }
+
+                const chip = document.createElement('button');
+                chip.type = 'button';
+                chip.className = 'multi-select__chip';
+                chip.dataset.value = checkbox.value;
+                chip.innerHTML = `<span>${label}</span><span aria-hidden="true">×</span>`;
+                chip.addEventListener('click', () => {
+                    checkbox.checked = false;
+                    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+                });
+                chipsContainer.appendChild(chip);
+            });
+        };
+
+        optionElements.forEach(opcao => {
+            const checkbox = opcao.querySelector('input[type="checkbox"]');
+            if (!checkbox) {
+                return;
+            }
+
+            checkbox.addEventListener('change', atualizarChips);
+        });
+
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                const termo = searchInput.value.trim().toLowerCase();
+                optionElements.forEach(opcao => {
+                    const texto = (opcao.dataset.label || '').toLowerCase();
+                    const visivel = termo.length === 0 || texto.includes(termo);
+                    opcao.style.display = visivel ? '' : 'none';
+                });
+            });
+        }
+
+        atualizarChips();
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     ativarTooltips();
     ativarConteudo('Portal');
     setupMenuModalInteractions();
     configurarAtalhosDeAbas();
+    inicializarMultiSelects();
     aplicarValidacao(document);
     configurarEnvioDeFormularios();
     configurarAlertasGlobais();

@@ -19,97 +19,150 @@
       data-close-on-success="true">
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.PacienteId)
-    <div class="form-grid">
-        <div class="form-group">
-            <label>Código</label>
-            <p class="form-readonly">@Model.PacienteId</p>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(m => m.NomeCompleto)
-            @Html.TextBoxFor(m => m.NomeCompleto, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.NomeCompleto, "", new { @class = "field-validation-error" })
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(m => m.DataNascimento)
-            @Html.TextBoxFor(m => m.DataNascimento, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-            @Html.ValidationMessageFor(m => m.DataNascimento, "", new { @class = "field-validation-error" })
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(m => m.CpfRg)
-            @Html.TextBoxFor(m => m.CpfRg, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.CpfRg, "", new { @class = "field-validation-error" })
-        </div>
-
-        <div class="form-group">
-            <label>Foto atual</label>
-            <div class="table-avatar">
-                <img src="@(string.IsNullOrWhiteSpace(Model.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : Url.Content(Model.ImagemPerfil))"
-                     alt="Foto de @Model.NomeCompleto"
-                     class="avatar avatar-sm" />
-                <div class="table-avatar__info">
-                    <strong>@Model.NomeCompleto</strong>
-                </div>
-            </div>
-            @Html.HiddenFor(m => m.ImagemPerfil)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(m => m.ImagemPerfilArquivo)
-            @Html.TextBoxFor(m => m.ImagemPerfilArquivo, new { type = "file", @class = "form-control", accept = "image/*" })
-            @Html.ValidationMessageFor(m => m.ImagemPerfilArquivo, "", new { @class = "field-validation-error" })
-            <small class="field-help">Envie uma nova foto para atualizar o cadastro.</small>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(m => m.ResponsavelId)
-            @Html.DropDownListFor(m => m.ResponsavelId, Model.Responsaveis, "Selecione", new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.ResponsavelId, "", new { @class = "field-validation-error" })
-        </div>
-
-    </div>
-
-    <fieldset class="form-fieldset">
-        <legend>Perfil clínico</legend>
+    <div class="form-section">
+        <h2 class="form-section__title">Dados cadastrais</h2>
+        <p class="form-section__description">Revise informações principais e o responsável pelo acompanhamento.</p>
         <div class="form-grid">
             <div class="form-group">
+                <label>Código</label>
+                <p class="form-readonly">@Model.PacienteId</p>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NomeCompleto)
+                @Html.TextBoxFor(m => m.NomeCompleto, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.NomeCompleto, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.DataNascimento)
+                @Html.TextBoxFor(m => m.DataNascimento, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                @Html.ValidationMessageFor(m => m.DataNascimento, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.CpfRg)
+                @Html.TextBoxFor(m => m.CpfRg, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.CpfRg, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.ResponsavelId)
+                @Html.DropDownListFor(m => m.ResponsavelId, Model.Responsaveis, "Selecione", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ResponsavelId, "", new { @class = "field-validation-error" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h2 class="form-section__title">Foto de perfil</h2>
+        <p class="form-section__description">Atualize a imagem utilizada nas listagens e relatórios.</p>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Foto atual</label>
+                <div class="table-avatar">
+                    <img src="@(string.IsNullOrWhiteSpace(Model.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : Url.Content(Model.ImagemPerfil))"
+                         alt="Foto de @Model.NomeCompleto"
+                         class="avatar avatar-sm" />
+                    <div class="table-avatar__info">
+                        <strong>@Model.NomeCompleto</strong>
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.ImagemPerfil)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.ImagemPerfilArquivo)
+                @Html.TextBoxFor(m => m.ImagemPerfilArquivo, new { type = "file", @class = "form-control", accept = "image/*" })
+                @Html.ValidationMessageFor(m => m.ImagemPerfilArquivo, "", new { @class = "field-validation-error" })
+                <small class="field-help">Envie uma nova foto para atualizar o cadastro.</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h2 class="form-section__title">Perfil clínico</h2>
+        <p class="form-section__description">Mantenha o histórico clínico atualizado para um cuidado mais efetivo.</p>
+        <div class="form-grid">
+            <div class="form-group" data-multi-select>
                 @Html.LabelFor(m => m.CondicoesCronicasSelecionadas)
-                @Html.ListBoxFor(m => m.CondicoesCronicasSelecionadas, Model.CondicoesCronicasDisponiveis, new { @class = "form-control", multiple = "multiple" })
+                <div class="multi-select__chips" data-multi-select-chips data-placeholder="Nenhuma condição selecionada."></div>
+                <div class="multi-select__search">
+                    <input type="text" class="form-control" placeholder="Buscar condição..." data-multi-select-search />
+                </div>
+                <div class="multi-select__options" data-multi-select-options>
+                    @{ var condicaoIndex = 0; }
+                    @foreach (var opcao in Model.CondicoesCronicasDisponiveis)
+                    {
+                        var optionId = $"condicao-{condicaoIndex++}";
+                        <label class="multi-select__option" data-label="@opcao.Text" for="@optionId">
+                            <input type="checkbox" id="@optionId" name="CondicoesCronicasSelecionadas" value="@opcao.Value" @(opcao.Selected ? "checked" : null) />
+                            <span>@opcao.Text</span>
+                        </label>
+                    }
+                </div>
                 @Html.ValidationMessageFor(m => m.CondicoesCronicasSelecionadas, "", new { @class = "field-validation-error" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.MobilidadeSelecionada)
-                @Html.ListBoxFor(m => m.MobilidadeSelecionada, Model.MobilidadeDisponivel, new { @class = "form-control", multiple = "multiple" })
+                @Html.DropDownListFor(m => m.MobilidadeSelecionada, Model.MobilidadeDisponivel, "Selecione", new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.MobilidadeSelecionada, "", new { @class = "field-validation-error" })
             </div>
 
-            <div class="form-group">
+            <div class="form-group" data-multi-select>
                 @Html.LabelFor(m => m.DietasSelecionadas)
-                @Html.ListBoxFor(m => m.DietasSelecionadas, Model.DietasDisponiveis, new { @class = "form-control", multiple = "multiple" })
+                <div class="multi-select__chips" data-multi-select-chips data-placeholder="Nenhuma dieta selecionada."></div>
+                <div class="multi-select__search">
+                    <input type="text" class="form-control" placeholder="Buscar dieta ou restrição..." data-multi-select-search />
+                </div>
+                <div class="multi-select__options" data-multi-select-options>
+                    @{ var dietaIndex = 0; }
+                    @foreach (var opcao in Model.DietasDisponiveis)
+                    {
+                        var optionId = $"dieta-{dietaIndex++}";
+                        <label class="multi-select__option" data-label="@opcao.Text" for="@optionId">
+                            <input type="checkbox" id="@optionId" name="DietasSelecionadas" value="@opcao.Value" @(opcao.Selected ? "checked" : null) />
+                            <span>@opcao.Text</span>
+                        </label>
+                    }
+                </div>
                 @Html.ValidationMessageFor(m => m.DietasSelecionadas, "", new { @class = "field-validation-error" })
             </div>
         </div>
-    </fieldset>
+    </div>
 
-    <fieldset class="form-fieldset">
-        <legend>Histórico</legend>
+    <div class="form-section">
+        <h2 class="form-section__title">Histórico</h2>
+        <p class="form-section__description">Documente ocorrências e riscos para acompanhar a evolução do paciente.</p>
         <div class="form-grid">
-            <div class="form-group">
+            <div class="form-group" data-multi-select>
                 @Html.LabelFor(m => m.HistoricoCirurgicoSelecionados)
-                @Html.ListBoxFor(m => m.HistoricoCirurgicoSelecionados, Model.HistoricoCirurgicoDisponiveis, new { @class = "form-control", multiple = "multiple" })
+                <div class="multi-select__chips" data-multi-select-chips data-placeholder="Nenhum histórico selecionado."></div>
+                <div class="multi-select__search">
+                    <input type="text" class="form-control" placeholder="Buscar procedimento..." data-multi-select-search />
+                </div>
+                <div class="multi-select__options" data-multi-select-options>
+                    @{ var historicoIndex = 0; }
+                    @foreach (var opcao in Model.HistoricoCirurgicoDisponiveis)
+                    {
+                        var optionId = $"historico-{historicoIndex++}";
+                        <label class="multi-select__option" data-label="@opcao.Text" for="@optionId">
+                            <input type="checkbox" id="@optionId" name="HistoricoCirurgicoSelecionados" value="@opcao.Value" @(opcao.Selected ? "checked" : null) />
+                            <span>@opcao.Text</span>
+                        </label>
+                    }
+                </div>
                 @Html.ValidationMessageFor(m => m.HistoricoCirurgicoSelecionados, "", new { @class = "field-validation-error" })
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.RiscoQuedasSelecionados)
-                @Html.ListBoxFor(m => m.RiscoQuedasSelecionados, Model.RiscoQuedasDisponiveis, new { @class = "form-control", multiple = "multiple" })
-                @Html.ValidationMessageFor(m => m.RiscoQuedasSelecionados, "", new { @class = "field-validation-error" })
+                @Html.LabelFor(m => m.RiscoQuedaSelecionado)
+                @Html.DropDownListFor(m => m.RiscoQuedaSelecionado, Model.RiscoQuedasDisponiveis, "Selecione", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.RiscoQuedaSelecionado, "", new { @class = "field-validation-error" })
             </div>
         </div>
-    </fieldset>
+    </div>
 
     <div class="form-actions">
         <button type="submit" class="btn-primary">Salvar alterações</button>

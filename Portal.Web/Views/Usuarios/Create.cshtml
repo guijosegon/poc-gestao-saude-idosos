@@ -17,56 +17,72 @@
       data-success-url='@Url.Action("Index", "Usuarios")'
       data-close-on-success="true">
     @Html.AntiForgeryToken()
-    <div class="form-grid">
-        <div class="form-group">
-            @Html.LabelFor(m => m.NomeCompleto)
-            @Html.TextBoxFor(m => m.NomeCompleto, new { @class = "form-control", placeholder = "Nome completo" })
-            @Html.ValidationMessageFor(m => m.NomeCompleto, "", new { @class = "field-validation-error" })
-        </div>
+    <div class="form-section">
+        <h2 class="form-section__title">Dados cadastrais</h2>
+        <p class="form-section__description">Informe os dados básicos utilizados para identificar o profissional.</p>
+        <div class="form-grid">
+            <div class="form-group">
+                @Html.LabelFor(m => m.NomeCompleto)
+                @Html.TextBoxFor(m => m.NomeCompleto, new { @class = "form-control", placeholder = "Nome completo" })
+                @Html.ValidationMessageFor(m => m.NomeCompleto, "", new { @class = "field-validation-error" })
+            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.CpfRg)
-            @Html.TextBoxFor(m => m.CpfRg, new { @class = "form-control", placeholder = "000.000.000-00" })
-            @Html.ValidationMessageFor(m => m.CpfRg, "", new { @class = "field-validation-error" })
-        </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.CpfRg)
+                @Html.TextBoxFor(m => m.CpfRg, new { @class = "form-control", placeholder = "000.000.000-00" })
+                @Html.ValidationMessageFor(m => m.CpfRg, "", new { @class = "field-validation-error" })
+            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.ImagemPerfilArquivo)
-            @Html.TextBoxFor(m => m.ImagemPerfilArquivo, new { type = "file", @class = "form-control", accept = "image/*" })
-            @Html.ValidationMessageFor(m => m.ImagemPerfilArquivo, "", new { @class = "field-validation-error" })
-            <small class="field-help">Formatos recomendados: JPG ou PNG.</small>
-        </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "email@exemplo.com", autocomplete = "email" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "field-validation-error" })
+            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.Email)
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "email@exemplo.com", autocomplete = "email" })
-            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "field-validation-error" })
-        </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Perfil)
+                @Html.DropDownListFor(m => m.Perfil, (IEnumerable<SelectListItem>)ViewBag.Perfis, "Selecione", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Perfil, "", new { @class = "field-validation-error" })
+            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.Perfil)
-            @Html.DropDownListFor(m => m.Perfil, (IEnumerable<SelectListItem>)ViewBag.Perfis, "Selecione", new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Perfil, "", new { @class = "field-validation-error" })
+            <div class="form-group form-switch">
+                <label class="switch-label">
+                    @Html.CheckBoxFor(m => m.Ativo)
+                    <span>Usuário ativo</span>
+                </label>
+            </div>
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.Senha)
-            @Html.PasswordFor(m => m.Senha, new { @class = "form-control", placeholder = "Senha temporária" })
-            @Html.ValidationMessageFor(m => m.Senha, "", new { @class = "field-validation-error" })
-            <small class="field-help">A senha é armazenada de forma criptografada.</small>
+    <div class="form-section">
+        <h2 class="form-section__title">Foto de perfil</h2>
+        <p class="form-section__description">Adicione uma foto para personalizar a experiência do usuário.</p>
+        <div class="form-grid">
+            <div class="form-group">
+                @Html.LabelFor(m => m.ImagemPerfilArquivo)
+                @Html.TextBoxFor(m => m.ImagemPerfilArquivo, new { type = "file", @class = "form-control", accept = "image/*" })
+                @Html.ValidationMessageFor(m => m.ImagemPerfilArquivo, "", new { @class = "field-validation-error" })
+                <small class="field-help">Formatos recomendados: JPG ou PNG.</small>
+            </div>
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.ConfirmacaoSenha, "Confirmar senha")
-            @Html.PasswordFor(m => m.ConfirmacaoSenha, new { @class = "form-control", placeholder = "Repita a senha" })
-            @Html.ValidationMessageFor(m => m.ConfirmacaoSenha, "", new { @class = "field-validation-error" })
-        </div>
+    <div class="form-section">
+        <h2 class="form-section__title">Segurança</h2>
+        <p class="form-section__description">Defina a senha temporária que será utilizada no primeiro acesso.</p>
+        <div class="form-grid">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Senha)
+                @Html.PasswordFor(m => m.Senha, new { @class = "form-control", placeholder = "Senha temporária" })
+                @Html.ValidationMessageFor(m => m.Senha, "", new { @class = "field-validation-error" })
+                <small class="field-help">A senha é armazenada de forma criptografada.</small>
+            </div>
 
-        <div class="form-group form-switch">
-            <label class="switch-label">
-                @Html.CheckBoxFor(m => m.Ativo)
-                <span>Usuário ativo</span>
-            </label>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConfirmacaoSenha, "Confirmar senha")
+                @Html.PasswordFor(m => m.ConfirmacaoSenha, new { @class = "form-control", placeholder = "Repita a senha" })
+                @Html.ValidationMessageFor(m => m.ConfirmacaoSenha, "", new { @class = "field-validation-error" })
+            </div>
         </div>
     </div>
 

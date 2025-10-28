@@ -11,7 +11,7 @@
     <a asp-action="Create" class="btn-primary" data-open-tab data-tab="Campo" data-url='@Url.Action("Create", "Campos")'>Novo campo</a>
 </section>
 
-<form method="get" class="filters">
+<form method="get" class="filters" action="@Url.Action("Index", "Campos")">
     <div class="filters__row">
         <div class="form-group">
             <label for="Busca">Buscar</label>
