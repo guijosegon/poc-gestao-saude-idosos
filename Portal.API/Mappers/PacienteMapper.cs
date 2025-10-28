@@ -11,7 +11,7 @@ namespace GestaoSaudeIdosos.API.Mappers
             return new Paciente
             {
                 PacienteId = dto.PacienteId ?? 0,
-                Nome = dto.Nome,
+                NomeCompleto = dto.Nome,
                 DataNascimento = (dto.DataNascimento ?? DateTime.UtcNow).EnsureUtc(),
                 ResponsavelId = dto.ResponsavelId,
                 Idade = CalcularIdade(dto.DataNascimento.EnsureUtc())
@@ -20,7 +20,7 @@ namespace GestaoSaudeIdosos.API.Mappers
 
         public static void UpdateEntity(this Paciente entity, PacienteDto dto)
         {
-            entity.Nome = dto.Nome;
+            entity.NomeCompleto = dto.Nome;
             if (dto.DataNascimento.HasValue)
             {
                 var dataNascimento = dto.DataNascimento.Value.EnsureUtc();
@@ -36,7 +36,7 @@ namespace GestaoSaudeIdosos.API.Mappers
             return new PacienteDto
             {
                 PacienteId = entity.PacienteId,
-                Nome = entity.Nome,
+                Nome = entity.NomeCompleto,
                 DataNascimento = entity.DataNascimento,
                 ResponsavelId = entity.ResponsavelId
             };

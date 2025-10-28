@@ -38,7 +38,7 @@ namespace GestaoSaudeIdosos.API.Controllers.Authorize
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, login.Email),
-                new Claim(ClaimTypes.Name, login.Nome),
+                new Claim(ClaimTypes.Name, login.NomeCompleto),
                 new Claim(ClaimTypes.Role, login.Perfil.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };

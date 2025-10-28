@@ -11,7 +11,7 @@ namespace GestaoSaudeIdosos.API.Mappers
             Expression<Func<Usuario, Usuario>> b = a => new Usuario
             {
                 UsuarioId = a.UsuarioId,
-                Nome = a.Nome,
+                NomeCompleto = a.NomeCompleto,
                 Email = a.Email,
                 Senha = a.Senha,
                 Perfil = a.Perfil,
@@ -28,7 +28,7 @@ namespace GestaoSaudeIdosos.API.Mappers
             return new Usuario
             {
                 UsuarioId = dto.UsuarioId ?? 0,
-                Nome = dto.Nome,
+                NomeCompleto = dto.Nome,
                 Email = dto.Email,
                 Senha = dto.Senha,
                 Perfil = dto.Perfil,
@@ -38,7 +38,7 @@ namespace GestaoSaudeIdosos.API.Mappers
 
         public static void UpdateEntity(this Usuario entity, UsuarioDto dto)
         {
-            entity.Nome = dto.Nome;
+            entity.NomeCompleto = dto.Nome;
             entity.Email = dto.Email;
             entity.Perfil = dto.Perfil;
             entity.Ativo = dto.Ativo;
@@ -52,7 +52,7 @@ namespace GestaoSaudeIdosos.API.Mappers
             return new UsuarioDto
             {
                 UsuarioId = entity.UsuarioId,
-                Nome = entity.Nome,
+                Nome = entity.NomeCompleto,
                 Email = entity.Email,
                 Senha = entity.Senha,
                 Perfil = entity.Perfil,

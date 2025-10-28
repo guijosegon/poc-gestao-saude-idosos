@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GestaoSaudeIdosos.Application.Interfaces;
+﻿using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Web.Mappers;
 using GestaoSaudeIdosos.Web.Services;
 using GestaoSaudeIdosos.Web.ViewModels;
@@ -35,23 +32,13 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var query = _pacienteAppService.AsQueryable(p => p.Responsavel);
 
             if (!string.IsNullOrWhiteSpace(filtro.Busca))
-            {
-                var busca = filtro.Busca.Trim();
-                query = query.Where(p => EF.Functions.ILike(p.NomeCompleto, $"%{busca}%")
-                    || EF.Functions.ILike(p.CpfRg ?? string.Empty, $"%{busca}%"));
-            }
-
+                query = query.Where(p => EF.Functions.ILike(p.NomeCompleto, $"%{filtro.Busca.Trim()}%") || EF.Functions.ILike(p.CpfRg ?? string.Empty, $"%{filtro.Busca.Trim()}%"));
             if (filtro.ResponsavelId.HasValue)
-            {
-                var responsavelId = filtro.ResponsavelId.Value;
-                query = query.Where(p => p.ResponsavelId == responsavelId);
-            }
+                query = query.Where(p => p.ResponsavelId == filtro.ResponsavelId.Value);
 
             var itensPorPagina = filtro.ItensPorPagina;
             var totalRegistros = await query.CountAsync();
-            var totalPaginas = totalRegistros == 0
-                ? 0
-                : (int)Math.Ceiling(totalRegistros / (double)itensPorPagina);
+            var totalPaginas = totalRegistros is 0 ? 0 : (int)Math.Ceiling(totalRegistros / (double)itensPorPagina);
 
             var paginaAtual = filtro.Pagina;
             if (totalPaginas > 0 && paginaAtual > totalPaginas)
@@ -184,6 +171,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var paciente = await _pacienteAppService
                 .AsTracking(p => p.Responsavel)
                 .FirstOrDefaultAsync(p => p.PacienteId == id);
+
             if (paciente is null)
                 return NotFound();
 
@@ -217,6 +205,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var paciente = await _pacienteAppService
                 .AsQueryable(p => p.Responsavel)
                 .FirstOrDefaultAsync(p => p.PacienteId == id);
+
             if (paciente is null)
                 return NotFound();
 
@@ -232,6 +221,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var paciente = await _pacienteAppService
                 .AsTracking(p => p.Responsavel)
                 .FirstOrDefaultAsync(p => p.PacienteId == id);
+
             if (paciente is null)
                 return NotFound();
 
@@ -269,13 +259,10 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
             model.CondicoesCronicasDisponiveis = CriarSelectList<Enums.CondicaoCronicaPaciente>(model.CondicoesCronicasSelecionadas);
             model.HistoricoCirurgicoDisponiveis = CriarSelectList<Enums.HistoricoCirurgicoPaciente>(model.HistoricoCirurgicoSelecionados);
-            model.RiscoQuedasDisponiveis = CriarSelectList<Enums.RiscoQuedaPaciente>(model.RiscoQueda?.ToString());
-            model.MobilidadeDisponivel = CriarSelectList<Enums.MobilidadePaciente>(model.Mobilidade?.ToString());
             model.DietasDisponiveis = CriarSelectList<Enums.DietaRestricaoPaciente>(model.DietasSelecionadas);
         }
 
-        private static IEnumerable<SelectListItem> CriarSelectList<TEnum>(IEnumerable<string> selecionados)
-            where TEnum : struct, Enum
+        private static IEnumerable<SelectListItem> CriarSelectList<TEnum>(IEnumerable<string> selecionados) where TEnum : struct, Enum
         {
             var selecionadosSet = new HashSet<string>(selecionados ?? Enumerable.Empty<string>(), StringComparer.OrdinalIgnoreCase);
 
@@ -288,16 +275,6 @@ namespace GestaoSaudeIdosos.Web.Controllers
                     Selected = selecionadosSet.Contains(valor.ToString())
                 })
                 .ToList();
-        }
-
-        private static IEnumerable<SelectListItem> CriarSelectList<TEnum>(string? selecionado)
-            where TEnum : struct, Enum
-        {
-            var valores = string.IsNullOrWhiteSpace(selecionado)
-                ? Array.Empty<string>()
-                : new[] { selecionado };
-
-            return CriarSelectList<TEnum>(valores);
         }
     }
 }

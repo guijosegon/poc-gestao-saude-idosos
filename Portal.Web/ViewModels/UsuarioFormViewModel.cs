@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Domain.Common.Validation;
-using Microsoft.AspNetCore.Http;
 
 namespace GestaoSaudeIdosos.Web.ViewModels
 {

@@ -1,13 +1,9 @@
 ﻿using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Domain.Common.Helpers;
-using GestaoSaudeIdosos.Web.Extensions;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -216,16 +212,12 @@ namespace GestaoSaudeIdosos.Web.Controllers
             static bool ContemTermo(string? texto, params string[] termos)
             {
                 if (string.IsNullOrWhiteSpace(texto))
-                {
                     return false;
-                }
 
                 foreach (var termo in termos)
                 {
                     if (texto.IndexOf(termo, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
                         return true;
-                    }
                 }
 
                 return false;
