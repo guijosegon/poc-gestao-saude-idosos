@@ -16,7 +16,7 @@
     Tem certeza que deseja excluir o campo <strong>@Model.Descricao</strong>? Formulários que já utilizam este componente permanecerão inalterados, mas ele deixará de estar disponível para novas configurações.
 </div>
 
-<form asp-action="Delete" method="post"
+<form action='@Url.Action("Delete", "Campos")' method="post"
       data-success-tab="Campos"
       data-success-url='@Url.Action("Index", "Campos")'
       data-close-on-success="true">

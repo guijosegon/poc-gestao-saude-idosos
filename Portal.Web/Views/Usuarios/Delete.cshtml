@@ -16,7 +16,7 @@
     Tem certeza que deseja excluir o usuário <strong>@Model.NomeCompleto</strong> (código @Model.UsuarioId)? Após confirmar ele perderá o acesso ao portal.
 </div>
 
-<form asp-action="Delete" asp-controller="Usuários" method="post"
+<form action='@Url.Action("Delete", "Usuarios")' method="post"
       data-success-tab="Usuários"
       data-success-url='@Url.Action("Index", "Usuarios")'
       data-close-on-success="true">

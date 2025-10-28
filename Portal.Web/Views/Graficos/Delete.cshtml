@@ -16,7 +16,7 @@
     Confirma a exclusão do gráfico <strong>@Model.Descricao</strong>? A remoção é apenas visual nesta demonstração.
 </div>
 
-<form asp-action="Delete" method="post"
+<form action='@Url.Action("Delete", "Graficos")' method="post"
       data-success-tab="Gráficos"
       data-success-url='@Url.Action("Index", "Graficos")'
       data-close-on-success="true">

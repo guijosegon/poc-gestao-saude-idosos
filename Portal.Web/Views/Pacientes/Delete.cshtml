@@ -16,7 +16,7 @@
     Tem certeza que deseja remover <strong>@Model.NomeCompleto</strong> (código @Model.PacienteId)? A exclusão é definitiva.
 </div>
 
-<form asp-action="Delete" method="post"
+<form action='@Url.Action("Delete", "Pacientes")' method="post"
       data-success-tab="Pacientes"
       data-success-url='@Url.Action("Index", "Pacientes")'
       data-close-on-success="true">

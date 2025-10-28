@@ -981,8 +981,6 @@ button.btn-link {
 .multi-select__options {
     border: 1px solid var(--border);
     border-radius: 12px;
-    max-height: 240px;
-    overflow-y: auto;
     padding: 0.4rem;
     display: flex;
     flex-direction: column;

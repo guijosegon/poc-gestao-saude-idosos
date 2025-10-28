@@ -126,12 +126,6 @@
                 @Html.ValidationMessageFor(m => m.CondicoesCronicasSelecionadas, "", new { @class = "field-validation-error" })
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.Mobilidade)
-                @Html.DropDownListFor(m => m.Mobilidade, Model.MobilidadeDisponivel, "Selecione", new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Mobilidade, "", new { @class = "field-validation-error" })
-            </div>
-
             <div class="form-group" data-multi-select>
                 @Html.LabelFor(m => m.DietasSelecionadas)
                 <div class="multi-select__chips" data-multi-select-chips data-placeholder="Nenhuma dieta selecionada."></div>
@@ -147,6 +141,12 @@
                     }
                 </div>
                 @Html.ValidationMessageFor(m => m.DietasSelecionadas, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Mobilidade)
+                @Html.DropDownListFor(m => m.Mobilidade, Model.MobilidadeDisponivel, "Selecione", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Mobilidade, "", new { @class = "field-validation-error" })
             </div>
         </div>
     </div>
