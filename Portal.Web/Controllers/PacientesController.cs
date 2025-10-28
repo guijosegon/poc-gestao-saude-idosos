@@ -256,16 +256,14 @@ namespace GestaoSaudeIdosos.Web.Controllers
             model.DietasSelecionadas ??= new List<string>();
             model.RiscoQueda ??= Enums.RiscoQuedaPaciente.SemRisco;
             model.Mobilidade ??= Enums.MobilidadePaciente.Independente;
+            model.Sexo ??= Enums.SexoPaciente.NaoInformado;
 
             model.CondicoesCronicasDisponiveis = CriarSelectList<Enums.CondicaoCronicaPaciente>(model.CondicoesCronicasSelecionadas);
             model.HistoricoCirurgicoDisponiveis = CriarSelectList<Enums.HistoricoCirurgicoPaciente>(model.HistoricoCirurgicoSelecionados);
             model.DietasDisponiveis = CriarSelectList<Enums.DietaRestricaoPaciente>(model.DietasSelecionadas);
-            model.RiscoQuedasDisponiveis = CriarSelectList<Enums.RiscoQuedaPaciente>(model.RiscoQueda.HasValue
-                ? new[] { model.RiscoQueda.Value.ToString() }
-                : Enumerable.Empty<string>());
-            model.MobilidadeDisponivel = CriarSelectList<Enums.MobilidadePaciente>(model.Mobilidade.HasValue
-                ? new[] { model.Mobilidade.Value.ToString() }
-                : Enumerable.Empty<string>());
+            model.RiscoQuedasDisponiveis = CriarSelectList(model.RiscoQueda);
+            model.MobilidadeDisponivel = CriarSelectList(model.Mobilidade);
+            model.SexosDisponiveis = CriarSelectList(model.Sexo);
         }
 
         private static IEnumerable<SelectListItem> CriarSelectList<TEnum>(IEnumerable<string> selecionados) where TEnum : struct, Enum
@@ -279,6 +277,21 @@ namespace GestaoSaudeIdosos.Web.Controllers
                     Value = valor.ToString(),
                     Text = valor.GetDisplayName(),
                     Selected = selecionadosSet.Contains(valor.ToString())
+                })
+                .ToList();
+        }
+
+        private static IEnumerable<SelectListItem> CriarSelectList<TEnum>(TEnum? selecionado) where TEnum : struct, Enum
+        {
+            var selecionadoValor = selecionado?.ToString();
+
+            return Enum.GetValues(typeof(TEnum))
+                .Cast<TEnum>()
+                .Select(valor => new SelectListItem
+                {
+                    Value = valor.ToString(),
+                    Text = valor.GetDisplayName(),
+                    Selected = selecionadoValor == valor.ToString()
                 })
                 .ToList();
         }

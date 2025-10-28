@@ -41,6 +41,12 @@
             </div>
 
             <div class="form-group">
+                @Html.LabelFor(m => m.Sexo)
+                @Html.DropDownListFor(m => m.Sexo, Model.SexosDisponiveis, "Selecione", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Sexo, "", new { @class = "field-validation-error" })
+            </div>
+
+            <div class="form-group">
                 @Html.LabelFor(m => m.CpfRg)
                 @Html.TextBoxFor(m => m.CpfRg, new { @class = "form-control" })
                 @Html.ValidationMessageFor(m => m.CpfRg, "", new { @class = "field-validation-error" })
