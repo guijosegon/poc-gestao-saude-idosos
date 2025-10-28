@@ -8,7 +8,7 @@ namespace GestaoSaudeIdosos.Infra.Repositories
 {
     public class FormularioResultadoRepository : Repository<FormularioResultado>, IFormularioResultadoRepository
     {
-        public FormularioResultadoRepository(AppContext dbContext) : base(dbContext)
+        public FormularioResultadoRepository(Contexts.AppContext dbContext) : base(dbContext)
         {
         }
 
@@ -36,15 +36,14 @@ namespace GestaoSaudeIdosos.Infra.Repositories
                 .Include(r => r.UsuarioAplicacao)
                 .Include(r => r.Valores)
                     .ThenInclude(v => v.Campo)
-                .Where(r => r.PacienteId == pacienteId)
-                .OrderByDescending(r => r.DataPreenchimento);
+                .Where(r => r.PacienteId == pacienteId);
 
             if (limite.HasValue)
             {
                 query = query.Take(limite.Value);
             }
 
-            return await query.ToListAsync();
+            return await query.OrderByDescending(r => r.DataPreenchimento).ToListAsync();
         }
 
         public async Task<List<FormularioResultado>> ListarPorFormularioAsync(int formularioId, int? limite = null)
@@ -56,15 +55,14 @@ namespace GestaoSaudeIdosos.Infra.Repositories
                 .Include(r => r.UsuarioAplicacao)
                 .Include(r => r.Valores)
                     .ThenInclude(v => v.Campo)
-                .Where(r => r.FormularioId == formularioId)
-                .OrderByDescending(r => r.DataPreenchimento);
+                .Where(r => r.FormularioId == formularioId);
 
             if (limite.HasValue)
             {
                 query = query.Take(limite.Value);
             }
 
-            return await query.ToListAsync();
+            return await query.OrderByDescending(r => r.DataPreenchimento).ToListAsync();
         }
     }
 }

@@ -24,7 +24,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         {
             filtro ??= new CampoFiltroViewModel();
 
-            var query = _campoAppService.AsQueryable(a => a.Usuario, a => a.FormularioCampos);
+            var query = _campoAppService.AsQueryable(a => a.Usuario, a => a.ResultadoValores);
 
             if (!string.IsNullOrWhiteSpace(filtro.Busca))
             {
@@ -89,7 +89,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var campo = await _campoAppService
-                .AsQueryable(a => a.Usuario, a => a.FormularioCampos)
+                .AsQueryable(a => a.Usuario, a => a.ResultadoValores)
                 .FirstOrDefaultAsync(f => f.CampoId == id);
 
             if (campo is null)

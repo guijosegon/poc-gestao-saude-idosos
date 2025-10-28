@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GestaoSaudeIdosos.Infra.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using AppContext = GestaoSaudeIdosos.Infra.Contexts.AppContext;
@@ -13,9 +14,11 @@ using AppContext = GestaoSaudeIdosos.Infra.Contexts.AppContext;
 namespace GestaoSaudeIdosos.Infra.Migrations
 {
     [DbContext(typeof(AppContext))]
-    partial class AppContextModelSnapshot : ModelSnapshot
+    [Migration("20251028232853_Release_03")]
+    partial class Release_03
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

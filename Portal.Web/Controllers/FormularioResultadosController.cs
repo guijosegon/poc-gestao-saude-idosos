@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-using System.Linq;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -66,6 +65,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> SelecionarFormulario(int pacienteId)
         {
             var paciente = await _pacienteAppService.AsQueryable().FirstOrDefaultAsync(p => p.PacienteId == pacienteId);
+
             if (paciente is null)
                 return NotFound();
 
@@ -96,16 +96,19 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Aplicar(int formularioId, int pacienteId, string? abaOrigem, string? urlOrigem)
         {
             var formulario = await _formularioAppService.GetCompletoPorIdAsync(formularioId);
+
             if (formulario is null || !formulario.Ativo)
                 return NotFound();
 
             var paciente = await _pacienteAppService.AsQueryable().FirstOrDefaultAsync(p => p.PacienteId == pacienteId);
+
             if (paciente is null)
                 return NotFound();
 
             if (formulario.Campos is null || !formulario.Campos.Any())
             {
                 ViewData["Erro"] = "Este formulário ainda não possui campos configurados.";
+
                 return View("Aplicar", new FormularioAplicacaoViewModel
                 {
                     FormularioId = formulario.FormularioId,
@@ -127,21 +130,22 @@ namespace GestaoSaudeIdosos.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
+                TempData["Erro"] = "Revise os dados informados.";
                 return await ReexibirAplicacaoAsync(model, "Revise os dados informados.");
             }
 
             var formulario = await _formularioAppService.GetCompletoPorIdAsync(model.FormularioId);
+
             if (formulario is null || !formulario.Ativo)
                 return NotFound();
 
             var paciente = await _pacienteAppService.AsQueryable().FirstOrDefaultAsync(p => p.PacienteId == model.PacienteId);
+
             if (paciente is null)
                 return NotFound();
 
             if (formulario.Campos is null || !formulario.Campos.Any())
-            {
                 return await ReexibirAplicacaoAsync(model, "Este formulário ainda não possui campos configurados.");
-            }
 
             var campos = formulario.Campos.ToDictionary(fc => fc.FormularioCampoId);
             var valores = new List<FormularioResultadoValor>();
@@ -178,9 +182,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
 
             if (!ModelState.IsValid)
-            {
                 return await ReexibirAplicacaoAsync(model, "Não foi possível aplicar o formulário. Corrija os erros destacados.");
-            }
 
             var usuarioAplicacaoId = await ObterUsuarioAtualAsync();
 
@@ -205,6 +207,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Details(int id, string? abaOrigem, string? urlOrigem)
         {
             var resultado = await _formularioResultadoAppService.ObterCompletoAsync(id);
+
             if (resultado is null)
                 return NotFound();
 
@@ -229,9 +232,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         private string ObterUrlRetorno(string? urlOrigem)
         {
             if (!string.IsNullOrWhiteSpace(urlOrigem) && Url.IsLocalUrl(urlOrigem))
-            {
                 return urlOrigem;
-            }
 
             return Url.Action("Index", "Formularios") ?? "/";
         }
@@ -239,6 +240,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         private async Task<int?> ObterUsuarioAtualAsync()
         {
             var email = User?.Identity?.Name;
+
             if (string.IsNullOrWhiteSpace(email))
                 return null;
 
@@ -285,9 +287,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 case Enums.TipoCampo.Checkbox:
                     return (campoModel.ValorBooleano ? "true" : "false", true);
                 default:
-                    return string.IsNullOrWhiteSpace(campoModel.Valor)
-                        ? (null, true)
-                        : (campoModel.Valor.Trim(), true);
+                    return string.IsNullOrWhiteSpace(campoModel.Valor) ? (null, true) : (campoModel.Valor.Trim(), true);
             }
         }
     }

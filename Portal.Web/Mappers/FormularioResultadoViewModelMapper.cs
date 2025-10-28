@@ -29,7 +29,7 @@ namespace GestaoSaudeIdosos.Web.Mappers
                     Obrigatorio = fc.Obrigatorio,
                     Ordem = fc.Ordem,
                     TextoAjuda = fc.Campo?.TextoAjuda,
-                    Opcoes = fc.Campo?.Opcoes?.AsReadOnly() ?? Array.Empty<string>(),
+                    Opcoes = fc.Campo?.Opcoes?.AsReadOnly() ?? Array.Empty<string>().AsReadOnly(),
                     Valor = null,
                     ValorBooleano = false
                 })
