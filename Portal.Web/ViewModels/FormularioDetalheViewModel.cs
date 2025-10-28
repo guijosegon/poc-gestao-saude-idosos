@@ -11,5 +11,6 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public string? Responsavel { get; set; }
         public DateTime DataCadastro { get; set; }
         public IEnumerable<FormularioCampoResumoViewModel> Campos { get; set; } = Array.Empty<FormularioCampoResumoViewModel>();
+        public IEnumerable<FormularioResultadoResumoViewModel> Aplicacoes { get; set; } = Array.Empty<FormularioResultadoResumoViewModel>();
     }
 }

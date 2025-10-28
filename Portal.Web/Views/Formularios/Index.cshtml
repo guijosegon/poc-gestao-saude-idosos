@@ -73,6 +73,15 @@ else
                     <a asp-action="Details" asp-route-id="@formulario.FormularioId" class="btn-link"
                            data-open-tab data-tab="Formulários"
                        data-url='@Url.Action("Details", "Formularios", new { id = formulario.FormularioId })'>Detalhes</a>
+                    <button type="button"
+                            class="btn-link"
+                            data-aplicar-formulario
+                            data-formulario-id="@formulario.FormularioId"
+                            data-formulario-descricao="@formulario.Descricao"
+                            data-selecao-url='@Url.Action("SelecionarPaciente", "FormularioResultados")'
+                            data-aplicar-url='@Url.Action("Aplicar", "FormularioResultados")'>
+                        Aplicar em paciente
+                    </button>
                     <a asp-action="Edit" asp-route-id="@formulario.FormularioId" class="btn-link"
                            data-open-tab data-tab="Formulários"
                        data-url='@Url.Action("Edit", "Formularios", new { id = formulario.FormularioId })'>Editar</a>

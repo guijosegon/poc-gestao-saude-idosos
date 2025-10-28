@@ -1,6 +1,7 @@
 using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace GestaoSaudeIdosos.Web.Mappers
@@ -70,7 +71,10 @@ namespace GestaoSaudeIdosos.Web.Mappers
                             Ordem = c.Ordem
                         })
                         .ToList()
-                    : new List<FormularioCampoResumoViewModel>()
+                    : new List<FormularioCampoResumoViewModel>(),
+                Aplicacoes = formulario.Resultados != null
+                    ? FormularioResultadoViewModelMapper.MapearParaResumo(formulario.Resultados).ToList()
+                    : new List<FormularioResultadoResumoViewModel>()
             };
         }
 

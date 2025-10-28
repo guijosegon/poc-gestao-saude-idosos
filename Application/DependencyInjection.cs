@@ -13,6 +13,7 @@ namespace GestaoSaudeIdosos.Application
             services.AddScoped<IUsuarioAppService, UsuarioAppService>();
             services.AddScoped<IPacienteAppService, PacienteAppService>();
             services.AddScoped<IFormularioAppService, FormularioAppService>();
+            services.AddScoped<IFormularioResultadoAppService, FormularioResultadoAppService>();
             services.AddScoped<ICampoAppService, CampoAppService>();
             services.AddScoped<IGraficoAppService, GraficoAppService>();
             services.AddSingleton<IPasswordHasher, Argon2PasswordHasher>();

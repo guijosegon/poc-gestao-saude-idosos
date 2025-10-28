@@ -9,6 +9,14 @@
         <p class="page-subtitle">Configuração do instrumento para aplicação aos pacientes.</p>
     </div>
     <div class="page-actions">
+        <button type="button" class="btn-primary"
+                data-aplicar-formulario
+                data-formulario-id="@Model.FormularioId"
+                data-formulario-descricao="@Model.Descricao"
+                data-selecao-url='@Url.Action("SelecionarPaciente", "FormularioResultados")'
+                data-aplicar-url='@Url.Action("Aplicar", "FormularioResultados")'>
+            Aplicar formulário
+        </button>
         <a asp-action="Edit" asp-route-id="@Model.FormularioId" class="btn-primary"
            data-open-tab data-tab="Formulário - @Model.Descricao"
            data-url='@Url.Action("Edit", "Formularios", new { id = Model.FormularioId })'>Editar</a>
@@ -52,3 +60,32 @@
         </ul>
     </article>
 </div>
+
+<article class="detail-card">
+    <h2>Aplicações registradas</h2>
+    @if (!Model.Aplicacoes.Any())
+    {
+        <p class="empty-state">Este formulário ainda não foi aplicado.</p>
+    }
+    else
+    {
+        <ul class="list">
+        @foreach (var aplicacao in Model.Aplicacoes)
+        {
+            <li>
+                <strong>@(string.IsNullOrWhiteSpace(aplicacao.Paciente) ? "Paciente não identificado" : aplicacao.Paciente)</strong>
+                <span>@aplicacao.DataAplicacao.ToLocalTime().ToString("dd/MM/yyyy HH:mm") • @(string.IsNullOrWhiteSpace(aplicacao.Responsavel) ? "Aplicador não informado" : aplicacao.Responsavel)</span>
+                @if (!string.IsNullOrWhiteSpace(aplicacao.Destaque))
+                {
+                    <small>@aplicacao.Destaque</small>
+                }
+                <button type="button"
+                        class="btn-link"
+                        data-open-tab
+                        data-tab="Formulário"
+                        data-url='@Url.Action("Details", "FormularioResultados", new { id = aplicacao.FormularioResultadoId, abaOrigem = "Formulários", urlOrigem = Url.Action("Details", "Formularios", new { id = Model.FormularioId }) })'>Ver respostas</button>
+            </li>
+        }
+        </ul>
+    }
+</article>

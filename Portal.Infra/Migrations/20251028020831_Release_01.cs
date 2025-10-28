@@ -168,10 +168,10 @@ namespace GestaoSaudeIdosos.Infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FormularioCampoValores",
+                name: "FormularioResultadoValores",
                 columns: table => new
                 {
-                    FormularioCampoValorId = table.Column<int>(type: "integer", nullable: false)
+                    FormularioResultadoValorId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Chave = table.Column<string>(type: "text", nullable: false),
                     Valor = table.Column<string>(type: "text", nullable: false),
@@ -183,20 +183,20 @@ namespace GestaoSaudeIdosos.Infra.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FormularioCampoValores", x => x.FormularioCampoValorId);
+                    table.PrimaryKey("PK_FormularioResultadoValores", x => x.FormularioResultadoValorId);
                     table.ForeignKey(
-                        name: "FK_FormularioCampoValores_Campos_CampoId",
+                        name: "FK_FormularioResultadoValores_Campos_CampoId",
                         column: x => x.CampoId,
                         principalTable: "Campos",
                         principalColumn: "CampoId");
                     table.ForeignKey(
-                        name: "FK_FormularioCampoValores_FormularioCampos_FormularioCampoId",
+                        name: "FK_FormularioResultadoValores_FormularioCampos_FormularioCampoId",
                         column: x => x.FormularioCampoId,
                         principalTable: "FormularioCampos",
                         principalColumn: "FormularioCampoId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FormularioCampoValores_Formularios_FormularioId",
+                        name: "FK_FormularioResultadoValores_Formularios_FormularioId",
                         column: x => x.FormularioId,
                         principalTable: "Formularios",
                         principalColumn: "FormularioId",
@@ -249,18 +249,18 @@ namespace GestaoSaudeIdosos.Infra.Migrations
                 column: "FormularioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FormularioCampoValores_CampoId",
-                table: "FormularioCampoValores",
+                name: "IX_FormularioResultadoValores_CampoId",
+                table: "FormularioResultadoValores",
                 column: "CampoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FormularioCampoValores_FormularioCampoId",
-                table: "FormularioCampoValores",
+                name: "IX_FormularioResultadoValores_FormularioCampoId",
+                table: "FormularioResultadoValores",
                 column: "FormularioCampoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FormularioCampoValores_FormularioId",
-                table: "FormularioCampoValores",
+                name: "IX_FormularioResultadoValores_FormularioId",
+                table: "FormularioResultadoValores",
                 column: "FormularioId");
 
             migrationBuilder.CreateIndex(
@@ -298,7 +298,7 @@ namespace GestaoSaudeIdosos.Infra.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "FormularioCampoValores");
+                name: "FormularioResultadoValores");
 
             migrationBuilder.DropTable(
                 name: "FormularioResultados");

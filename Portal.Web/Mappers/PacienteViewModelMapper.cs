@@ -67,7 +67,18 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 RiscoQueda = paciente.RiscoQueda.GetDisplayName(),
                 Mobilidade = paciente.Mobilidade.GetDisplayName(),
                 DietasRestricoes = ConverterParaDisplay<Enums.DietaRestricaoPaciente>(paciente.DietasRestricoes),
-                FormulariosRecentes = Array.Empty<PacienteFormularioResultadoViewModel>(),
+                FormulariosRecentes = paciente.Resultados != null
+                    ? FormularioResultadoViewModelMapper.MapearParaResumo(paciente.Resultados)
+                        .Select(r => new PacienteFormularioResultadoViewModel
+                        {
+                            FormularioResultadoId = r.FormularioResultadoId,
+                            Formulario = r.Formulario,
+                            DataAplicacao = r.DataAplicacao,
+                            ResponsavelAplicacao = r.Responsavel ?? string.Empty,
+                            Destaque = r.Destaque ?? string.Empty
+                        })
+                        .ToList()
+                    : Array.Empty<PacienteFormularioResultadoViewModel>(),
                 Sexo = paciente.Sexo.GetDisplayName()
             };
         }

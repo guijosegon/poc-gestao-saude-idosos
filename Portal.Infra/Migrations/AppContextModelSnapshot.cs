@@ -135,13 +135,13 @@ namespace GestaoSaudeIdosos.Infra.Migrations
                     b.ToTable("FormularioCampos");
                 });
 
-            modelBuilder.Entity("GestaoSaudeIdosos.Domain.Entities.FormularioCampoValor", b =>
+            modelBuilder.Entity("GestaoSaudeIdosos.Domain.Entities.FormularioResultadoValor", b =>
                 {
-                    b.Property<int>("FormularioCampoValorId")
+                    b.Property<int>("FormularioResultadoValorId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FormularioCampoValorId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FormularioResultadoValorId"));
 
                     b.Property<int?>("CampoId")
                         .HasColumnType("integer");
@@ -166,7 +166,7 @@ namespace GestaoSaudeIdosos.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("FormularioCampoValorId");
+                    b.HasKey("FormularioResultadoValorId");
 
                     b.HasIndex("CampoId");
 
@@ -174,7 +174,7 @@ namespace GestaoSaudeIdosos.Infra.Migrations
 
                     b.HasIndex("FormularioId");
 
-                    b.ToTable("FormularioCampoValores");
+                    b.ToTable("FormularioResultadoValores");
                 });
 
             modelBuilder.Entity("GestaoSaudeIdosos.Domain.Entities.FormularioResultado", b =>
@@ -383,7 +383,7 @@ namespace GestaoSaudeIdosos.Infra.Migrations
                     b.Navigation("Formulario");
                 });
 
-            modelBuilder.Entity("GestaoSaudeIdosos.Domain.Entities.FormularioCampoValor", b =>
+            modelBuilder.Entity("GestaoSaudeIdosos.Domain.Entities.FormularioResultadoValor", b =>
                 {
                     b.HasOne("GestaoSaudeIdosos.Domain.Entities.Campo", null)
                         .WithMany("FormularioCampos")

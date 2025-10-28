@@ -1,0 +1,158 @@
+@using System
+@model GestaoSaudeIdosos.Web.ViewModels.FormularioAplicacaoViewModel
+@{
+    ViewData["Title"] = "Aplicar formulário";
+    var sucessoTab = string.IsNullOrWhiteSpace(Model.AbaOrigem) ? "Formulários" : Model.AbaOrigem;
+    var sucessoUrl = string.IsNullOrWhiteSpace(Model.UrlOrigem) ? Url.Action("Index", "Formularios") : Model.UrlOrigem;
+}
+
+<section class="page-header">
+    <div>
+        <h1>Aplicar formulário</h1>
+        <p class="page-subtitle">Preencha os campos do formulário <strong>@Model.FormularioDescricao</strong> para o paciente <strong>@Model.PacienteNome</strong>.</p>
+    </div>
+    <div class="page-actions">
+        <button type="button" class="btn-secondary" data-close-current-tab>Cancelar</button>
+    </div>
+</section>
+
+<form method="post"
+      action="@Url.Action("Aplicar", "FormularioResultados")"
+      class="form-card"
+      data-close-on-success="true"
+      data-success-tab="@sucessoTab"
+      data-success-url="@sucessoUrl">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="FormularioId" value="@Model.FormularioId" />
+    <input type="hidden" name="PacienteId" value="@Model.PacienteId" />
+    <input type="hidden" name="AbaOrigem" value="@Model.AbaOrigem" />
+    <input type="hidden" name="UrlOrigem" value="@Model.UrlOrigem" />
+
+    <header class="form-card__header">
+        <div>
+            <h2>@Model.FormularioDescricao</h2>
+            <span class="form-card__subtitle">Paciente: @Model.PacienteNome</span>
+        </div>
+    </header>
+
+    @if (!Model.Campos.Any())
+    {
+        <p class="empty-state">Nenhum campo foi configurado para este formulário.</p>
+    }
+    else
+    {
+        <div class="form-grid">
+        @for (var i = 0; i < Model.Campos.Count; i++)
+        {
+            var campo = Model.Campos[i];
+            var valorName = $"Campos[{i}].Valor";
+            var valorBooleanoName = $"Campos[{i}].ValorBooleano";
+            var errosValor = ViewData.ModelState.ContainsKey(valorName) ? ViewData.ModelState[valorName]?.Errors : null;
+            var errosBooleano = ViewData.ModelState.ContainsKey(valorBooleanoName) ? ViewData.ModelState[valorBooleanoName]?.Errors : null;
+            var possuiErro = (errosValor?.Count ?? 0) > 0 || (errosBooleano?.Count ?? 0) > 0;
+
+            <div class="form-group @(possuiErro ? "has-error" : null)">
+                <input type="hidden" name="Campos[@i].FormularioCampoId" value="@campo.FormularioCampoId" />
+                <input type="hidden" name="Campos[@i].CampoId" value="@campo.CampoId" />
+                <input type="hidden" name="Campos[@i].Tipo" value="@campo.Tipo" />
+                <input type="hidden" name="Campos[@i].Obrigatorio" value="@campo.Obrigatorio" />
+
+                <label class="form-label" for="campo-@campo.FormularioCampoId">
+                    @campo.CampoDescricao
+                    @if (campo.Obrigatorio)
+                    {
+                        <span class="required-indicator" title="Campo obrigatório">*</span>
+                    }
+                </label>
+
+                @switch (campo.Tipo)
+                {
+                    case GestaoSaudeIdosos.Domain.Common.Helpers.Enums.TipoCampo.Numero:
+                        {
+                            <input type="number"
+                                   id="campo-@campo.FormularioCampoId"
+                                   class="form-control"
+                                   name="@valorName"
+                                   value="@campo.Valor"
+                                   step="any" />
+                            break;
+                        }
+                    case GestaoSaudeIdosos.Domain.Common.Helpers.Enums.TipoCampo.Data:
+                        {
+                            <input type="date"
+                                   id="campo-@campo.FormularioCampoId"
+                                   class="form-control"
+                                   name="@valorName"
+                                   value="@campo.Valor" />
+                            break;
+                        }
+                    case GestaoSaudeIdosos.Domain.Common.Helpers.Enums.TipoCampo.DataHora:
+                        {
+                            <input type="datetime-local"
+                                   id="campo-@campo.FormularioCampoId"
+                                   class="form-control"
+                                   name="@valorName"
+                                   value="@campo.Valor" />
+                            break;
+                        }
+                    case GestaoSaudeIdosos.Domain.Common.Helpers.Enums.TipoCampo.Selecao:
+                        {
+                            <select id="campo-@campo.FormularioCampoId"
+                                    class="form-control"
+                                    name="@valorName">
+                                <option value="">Selecione</option>
+                                @foreach (var opcao in campo.Opcoes)
+                                {
+                                    var selecionada = string.Equals(opcao, campo.Valor, StringComparison.OrdinalIgnoreCase);
+                                    <option value="@opcao" @(selecionada ? "selected" : null)>@opcao</option>
+                                }
+                            </select>
+                            break;
+                        }
+                    case GestaoSaudeIdosos.Domain.Common.Helpers.Enums.TipoCampo.Checkbox:
+                        {
+                            <input type="hidden" name="@valorBooleanoName" value="false" />
+                            <label class="checkbox-field">
+                                <input type="checkbox"
+                                       name="@valorBooleanoName"
+                                       value="true"
+                                       @(campo.ValorBooleano || string.Equals(campo.Valor, "true", StringComparison.OrdinalIgnoreCase) ? "checked" : null) />
+                                <span>Marcar opção</span>
+                            </label>
+                            break;
+                        }
+                    default:
+                        {
+                            <input type="text"
+                                   id="campo-@campo.FormularioCampoId"
+                                   class="form-control"
+                                   name="@valorName"
+                                   value="@campo.Valor" />
+                            break;
+                        }
+                }
+
+                @if (!string.IsNullOrWhiteSpace(campo.TextoAjuda))
+                {
+                    <small class="form-text">@campo.TextoAjuda</small>
+                }
+
+                @if (errosValor is not null && errosValor.Count > 0)
+                {
+                    <span class="text-danger">@errosValor.First().ErrorMessage</span>
+                }
+                else if (errosBooleano is not null && errosBooleano.Count > 0)
+                {
+                    <span class="text-danger">@errosBooleano.First().ErrorMessage</span>
+                }
+            </div>
+        }
+        </div>
+    }
+
+    <footer class="form-card__footer">
+        <button type="submit" class="btn-primary" @(Model.Campos.Any() ? null : "disabled")>Aplicar formulário</button>
+        <button type="button" class="btn-secondary" data-close-current-tab>Cancelar</button>
+    </footer>
+</form>

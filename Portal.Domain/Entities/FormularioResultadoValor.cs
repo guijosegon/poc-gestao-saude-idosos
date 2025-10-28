@@ -1,25 +1,27 @@
-﻿using GestaoSaudeIdosos.Domain.Extensions;
+using GestaoSaudeIdosos.Domain.Extensions;
 using System;
 
 namespace GestaoSaudeIdosos.Domain.Entities
 {
-    public class FormularioCampoValor
+    public class FormularioResultadoValor
     {
-        public FormularioCampoValor()
+        public FormularioResultadoValor()
         {
             Chave = Guid.NewGuid().ToString();
             DataCadastro = DateTime.UtcNow;
-        } 
+        }
 
-        public int FormularioCampoValorId { get; set; }
-        public string Chave { get; set; }
-        public string Valor { get; set; }
+        public int FormularioResultadoValorId { get; set; }
+        public string Chave { get; set; } = string.Empty;
+        public string? Valor { get; set; }
+
         private DateTime _dataCadastro;
         public DateTime DataCadastro
         {
             get => _dataCadastro;
             set => _dataCadastro = value.EnsureUtc();
         }
+
         private DateTime? _dataPreenchimento;
         public DateTime? DataPreenchimento
         {
@@ -27,10 +29,13 @@ namespace GestaoSaudeIdosos.Domain.Entities
             set => _dataPreenchimento = value.EnsureUtc();
         }
 
-        public int FormularioCampoId { get; set; }
-        public FormularioCampo FormularioCampo { get; set; }
+        public int FormularioResultadoId { get; set; }
+        public FormularioResultado FormularioResultado { get; set; } = null!;
 
-        public int FormularioId { get; set; }
-        public Formulario Formulario { get; set; }
+        public int FormularioCampoId { get; set; }
+        public FormularioCampo FormularioCampo { get; set; } = null!;
+
+        public int CampoId { get; set; }
+        public Campo Campo { get; set; } = null!;
     }
 }

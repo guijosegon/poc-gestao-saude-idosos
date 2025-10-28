@@ -24,6 +24,7 @@ namespace GestaoSaudeIdosos.Web.ViewModels
 
     public class PacienteFormularioResultadoViewModel
     {
+        public int FormularioResultadoId { get; set; }
         public string Formulario { get; set; } = string.Empty;
         public DateTime DataAplicacao { get; set; }
         public string ResponsavelAplicacao { get; set; } = string.Empty;

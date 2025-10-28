@@ -1,5 +1,6 @@
-﻿using GestaoSaudeIdosos.Domain.Extensions;
+using GestaoSaudeIdosos.Domain.Extensions;
 using System;
+using System.Collections.Generic;
 
 namespace GestaoSaudeIdosos.Domain.Entities
 {
@@ -10,17 +11,21 @@ namespace GestaoSaudeIdosos.Domain.Entities
             Chave = Guid.NewGuid().ToString();
             DataCadastro = DateTime.UtcNow;
             Ativo = true;
+            Valores = new List<FormularioResultadoValor>();
         }
 
         public int FormularioResultadoId { get; set; }
         public string Chave { get; set; }
+
         private DateTime _dataPreenchimento;
         public DateTime DataPreenchimento
         {
             get => _dataPreenchimento;
             set => _dataPreenchimento = value.EnsureUtc();
         }
+
         public bool Ativo { get; set; }
+
         private DateTime _dataCadastro;
         public DateTime DataCadastro
         {
@@ -29,12 +34,14 @@ namespace GestaoSaudeIdosos.Domain.Entities
         }
 
         public int PacienteId { get; set; }
-        public Paciente Paciente { get; set; }
+        public Paciente Paciente { get; set; } = null!;
 
         public int FormularioId { get; set; }
-        public Formulario Formulario { get; set; }
+        public Formulario Formulario { get; set; } = null!;
 
+        public int? UsuarioAplicacaoId { get; set; }
+        public Usuario? UsuarioAplicacao { get; set; }
 
-        //public ICollection<FormularioCampoValor> Campos { get; set; }
+        public ICollection<FormularioResultadoValor> Valores { get; set; }
     }
 }

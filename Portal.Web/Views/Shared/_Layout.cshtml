@@ -58,6 +58,13 @@
         @RenderBody()
     </main>
 
+    <div id="app-modal" class="modal-overlay" hidden>
+        <div class="modal-overlay__backdrop" data-modal-close></div>
+        <div class="modal-overlay__container" role="dialog" aria-modal="true">
+            <div class="modal-overlay__content" data-modal-content></div>
+        </div>
+    </div>
+
     <footer class="footer">
         <small>&copy; @DateTime.UtcNow.Year - Portal Gestão Asilos</small>
     </footer>

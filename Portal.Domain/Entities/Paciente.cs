@@ -1,5 +1,7 @@
-﻿using GestaoSaudeIdosos.Domain.Common.Helpers;
+using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Domain.Extensions;
+using System;
+using System.Collections.Generic;
 
 namespace GestaoSaudeIdosos.Domain.Entities
 {
@@ -10,6 +12,7 @@ namespace GestaoSaudeIdosos.Domain.Entities
             Chave = Guid.NewGuid().ToString();
             DataCadastro = DateTime.UtcNow;
             Ativo = true;
+            Resultados = new List<FormularioResultado>();
         }
 
         public int PacienteId { get; set; }
@@ -46,5 +49,7 @@ namespace GestaoSaudeIdosos.Domain.Entities
         public virtual Usuario? Responsavel { get; set; }
         public int? UsuarioCadastroId { get; set; }
         public virtual Usuario? UsuarioCadastro { get; set; }
+
+        public ICollection<FormularioResultado> Resultados { get; set; }
     }
 }
