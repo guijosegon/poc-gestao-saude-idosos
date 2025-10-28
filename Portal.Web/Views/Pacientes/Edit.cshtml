@@ -87,9 +87,6 @@
             <div class="form-group" data-multi-select>
                 @Html.LabelFor(m => m.CondicoesCronicasSelecionadas)
                 <div class="multi-select__chips" data-multi-select-chips data-placeholder="Nenhuma condição selecionada."></div>
-                <div class="multi-select__search">
-                    <input type="text" class="form-control" placeholder="Buscar condição..." data-multi-select-search />
-                </div>
                 <div class="multi-select__options" data-multi-select-options>
                     @{ var condicaoIndex = 0; }
                     @foreach (var opcao in Model.CondicoesCronicasDisponiveis)
@@ -113,9 +110,6 @@
             <div class="form-group" data-multi-select>
                 @Html.LabelFor(m => m.DietasSelecionadas)
                 <div class="multi-select__chips" data-multi-select-chips data-placeholder="Nenhuma dieta selecionada."></div>
-                <div class="multi-select__search">
-                    <input type="text" class="form-control" placeholder="Buscar dieta ou restrição..." data-multi-select-search />
-                </div>
                 <div class="multi-select__options" data-multi-select-options>
                     @{ var dietaIndex = 0; }
                     @foreach (var opcao in Model.DietasDisponiveis)
@@ -139,9 +133,6 @@
             <div class="form-group" data-multi-select>
                 @Html.LabelFor(m => m.HistoricoCirurgicoSelecionados)
                 <div class="multi-select__chips" data-multi-select-chips data-placeholder="Nenhum histórico selecionado."></div>
-                <div class="multi-select__search">
-                    <input type="text" class="form-control" placeholder="Buscar procedimento..." data-multi-select-search />
-                </div>
                 <div class="multi-select__options" data-multi-select-options>
                     @{ var historicoIndex = 0; }
                     @foreach (var opcao in Model.HistoricoCirurgicoDisponiveis)

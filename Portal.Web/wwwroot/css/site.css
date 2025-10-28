@@ -768,10 +768,6 @@ main.container {
     font-weight: 700;
 }
 
-.multi-select__search .form-control {
-    padding: 0.65rem 0.85rem;
-}
-
 .multi-select__options {
     border: 1px solid var(--border);
     border-radius: 12px;
