@@ -22,6 +22,8 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         [Display(Name = "Foto do perfil")]
         public IFormFile? ImagemPerfilArquivo { get; set; }
 
+        public bool RemoverImagemPerfil { get; set; }
+
         [Display(Name = "Data de nascimento")]
         [Required(ErrorMessage = "Informe a data de nascimento.")]
         [DataType(DataType.Date)]

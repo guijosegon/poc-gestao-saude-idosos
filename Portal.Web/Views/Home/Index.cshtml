@@ -2,6 +2,9 @@
 @{
     ViewData["Title"] = "Home";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var usuarioAvatar = string.IsNullOrWhiteSpace(Model.UsuarioImagemPerfil)
+        ? Url.Content("~/images/avatar-generico.svg")
+        : Url.Content(Model.UsuarioImagemPerfil);
 }
 
 <div class="layout-container">
@@ -10,6 +13,7 @@
         <div class="header-info">
             <span>Portal Gestão Idosos</span>
             <div class="user-info">
+                <img src="@usuarioAvatar" alt="Foto de @Model.UsuarioNome" class="avatar avatar-sm user-info__avatar" />
                 <span class="user-name">@Model.UsuarioNome</span>
                 <form action="@Url.Action("Logout", "Login")" method="post" class="logout-form">
                     @Html.AntiForgeryToken()

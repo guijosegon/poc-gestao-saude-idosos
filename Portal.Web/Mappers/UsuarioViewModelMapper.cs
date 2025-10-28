@@ -39,7 +39,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
             CpfRg = usuario.CpfRg,
             ImagemPerfil = usuario.ImagemPerfil,
             Perfil = usuario.Perfil.ToString(),
-            Ativo = usuario.Ativo
+            Ativo = usuario.Ativo,
+            RemoverImagemPerfil = false
         };
 
         public static Usuario ToEntity(this UsuarioFormViewModel model)

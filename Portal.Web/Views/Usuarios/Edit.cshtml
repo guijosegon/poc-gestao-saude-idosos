@@ -81,17 +81,36 @@
         <h2 class="form-section__title">Foto de perfil</h2>
         <p class="form-section__description">Visualize a imagem atual e envie uma nova quando necessário.</p>
         <div class="form-grid">
+            @{
+                var possuiFoto = !string.IsNullOrWhiteSpace(Model.ImagemPerfil);
+                var fotoPadrao = Url.Content("~/images/avatar-generico.svg");
+                var fotoAtual = possuiFoto ? Url.Content(Model.ImagemPerfil) : fotoPadrao;
+                var inputArquivoId = Html.IdFor(m => m.NovaImagemPerfil);
+            }
             <div class="form-group">
                 <label>Foto atual</label>
-                <div class="table-avatar">
-                    <img src="@(string.IsNullOrWhiteSpace(Model.ImagemPerfil) ? Url.Content("~/images/avatar-generico.svg") : Url.Content(Model.ImagemPerfil))"
+                <div class="photo-preview"
+                     data-photo-manager
+                     data-photo-default="@fotoPadrao"
+                     data-photo-stored="@(possuiFoto ? fotoAtual : string.Empty)"
+                     data-photo-file-input="#@inputArquivoId">
+                    <img src="@fotoAtual"
                          alt="Foto de @Model.NomeCompleto"
-                         class="avatar avatar-sm" />
-                    <div class="table-avatar__info">
-                        <strong>@Model.NomeCompleto</strong>
+                         class="photo-preview__image avatar avatar-lg"
+                         data-photo-image />
+                    <p class="photo-preview__empty" data-photo-empty @(possuiFoto ? "hidden" : null)>Nenhuma foto cadastrada.</p>
+                    <div class="photo-preview__actions">
+                        <button type="button" class="btn-link" data-photo-view @(possuiFoto ? null : "disabled")>Visualizar</button>
+                        <button type="button"
+                                class="btn-link text-danger"
+                                data-photo-remove
+                                data-remove-text="Remover foto"
+                                data-restore-text="Desfazer remoção"
+                                @(possuiFoto ? null : "disabled")>Remover foto</button>
                     </div>
+                    @Html.HiddenFor(m => m.ImagemPerfil, new { data_photo_value = "true" })
+                    @Html.HiddenFor(m => m.RemoverImagemPerfil, new { data_photo_remove_flag = "true" })
                 </div>
-                @Html.HiddenFor(m => m.ImagemPerfil)
             </div>
 
             <div class="form-group">
