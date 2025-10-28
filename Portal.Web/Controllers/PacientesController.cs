@@ -181,8 +181,21 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return View(model);
             }
 
-            var imagemAtualizada = await _imagemStorageService.SalvarAsync(model.ImagemPerfilArquivo, "pacientes", paciente.ImagemPerfil);
-            model.ImagemPerfil = imagemAtualizada;
+            if (model.ImagemPerfilArquivo is { Length: > 0 })
+            {
+                model.RemoverImagemPerfil = false;
+            }
+
+            if (model.RemoverImagemPerfil)
+            {
+                _imagemStorageService.Remover(paciente.ImagemPerfil);
+                model.ImagemPerfil = null;
+            }
+            else
+            {
+                var imagemAtualizada = await _imagemStorageService.SalvarAsync(model.ImagemPerfilArquivo, "pacientes", paciente.ImagemPerfil);
+                model.ImagemPerfil = imagemAtualizada;
+            }
 
             model.ApplyToEntity(paciente);
 

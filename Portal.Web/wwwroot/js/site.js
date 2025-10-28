@@ -381,6 +381,7 @@ function atualizarConteudoDaAba(conteudo, documento, mensagensTempData) {
     ativarTooltips();
     aplicarValidacao(conteudo);
     inicializarMultiSelects(conteudo);
+    inicializarGerenciadoresDeFoto(conteudo);
 }
 
 let menuIsOpen = false;
@@ -516,6 +517,192 @@ function aplicarValidacao(contexto = document) {
     });
 }
 
+function inicializarGerenciadoresDeFoto(contexto = document) {
+    const scope = contexto instanceof HTMLElement ? contexto : document;
+    const containers = scope.querySelectorAll('[data-photo-manager]');
+
+    containers.forEach(container => {
+        if (!(container instanceof HTMLElement)) {
+            return;
+        }
+
+        if (container.dataset.photoConfigured === 'true') {
+            return;
+        }
+
+        const valueInput = container.querySelector('[data-photo-value]');
+        const removeInput = container.querySelector('[data-photo-remove-flag]');
+        const image = container.querySelector('[data-photo-image]');
+        const emptyState = container.querySelector('[data-photo-empty]');
+        const viewButton = container.querySelector('[data-photo-view]');
+        const removeButton = container.querySelector('[data-photo-remove]');
+        const defaultImage = container.dataset.photoDefault || '';
+        let storedImage = container.dataset.photoStored || '';
+        const fileInputSelector = container.dataset.photoFileInput || '';
+
+        let fileInput = null;
+        if (fileInputSelector) {
+            fileInput = container.closest('form')?.querySelector(fileInputSelector)
+                || scope.querySelector(fileInputSelector)
+                || document.querySelector(fileInputSelector);
+        }
+
+        if (!(fileInput instanceof HTMLInputElement)) {
+            fileInput = null;
+        }
+
+        let originalValue = valueInput ? valueInput.value : '';
+        let objectUrl = null;
+        let isMarkedForRemoval = removeInput ? removeInput.value === 'true' : false;
+
+        const clearObjectUrl = () => {
+            if (objectUrl) {
+                URL.revokeObjectURL(objectUrl);
+                objectUrl = null;
+            }
+        };
+
+        const updateRemoveButtonLabel = (hasFile) => {
+            if (!removeButton) {
+                return;
+            }
+
+            const removeText = removeButton.dataset.removeText || removeButton.textContent;
+            const restoreText = removeButton.dataset.restoreText || removeText;
+
+            if (isMarkedForRemoval && !hasFile) {
+                removeButton.textContent = restoreText;
+            } else {
+                removeButton.textContent = removeText;
+            }
+        };
+
+        const updateState = () => {
+            const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
+            const hasOriginal = !!originalValue && !isMarkedForRemoval;
+            const hasPreview = hasFile || hasOriginal;
+
+            if (image) {
+                if (hasFile && objectUrl) {
+                    image.src = objectUrl;
+                } else if (hasOriginal && storedImage) {
+                    image.src = storedImage;
+                } else if (defaultImage) {
+                    image.src = defaultImage;
+                }
+            }
+
+            if (emptyState) {
+                emptyState.hidden = !!hasPreview;
+            }
+
+            if (viewButton) {
+                viewButton.disabled = !hasPreview;
+            }
+
+            if (removeButton) {
+                const canRemove = !!originalValue || hasFile;
+                removeButton.disabled = !canRemove;
+            }
+
+            updateRemoveButtonLabel(hasFile);
+        };
+
+        const resetRemovalState = () => {
+            isMarkedForRemoval = false;
+            if (removeInput) {
+                removeInput.value = 'false';
+            }
+            if (valueInput) {
+                valueInput.value = originalValue;
+            }
+        };
+
+        if (fileInput) {
+            fileInput.addEventListener('change', () => {
+                clearObjectUrl();
+
+                if (fileInput.files && fileInput.files.length > 0) {
+                    objectUrl = URL.createObjectURL(fileInput.files[0]);
+                }
+
+                resetRemovalState();
+                updateState();
+            });
+        }
+
+        if (removeButton) {
+            removeButton.addEventListener('click', () => {
+                const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
+
+                if (hasFile) {
+                    clearObjectUrl();
+                    if (fileInput) {
+                        fileInput.value = '';
+                    }
+                    updateState();
+                    return;
+                }
+
+                if (!originalValue) {
+                    isMarkedForRemoval = false;
+                    if (removeInput) {
+                        removeInput.value = 'false';
+                    }
+                    updateState();
+                    return;
+                }
+
+                isMarkedForRemoval = !isMarkedForRemoval;
+
+                if (removeInput) {
+                    removeInput.value = isMarkedForRemoval ? 'true' : 'false';
+                }
+
+                if (valueInput) {
+                    valueInput.value = isMarkedForRemoval ? '' : originalValue;
+                }
+
+                updateState();
+            });
+        }
+
+        if (viewButton) {
+            viewButton.addEventListener('click', () => {
+                if (viewButton.disabled) {
+                    return;
+                }
+
+                const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
+                let previewUrl = null;
+
+                if (hasFile && objectUrl) {
+                    previewUrl = objectUrl;
+                } else if (!isMarkedForRemoval && storedImage) {
+                    previewUrl = storedImage;
+                } else if (defaultImage) {
+                    previewUrl = defaultImage;
+                }
+
+                if (previewUrl) {
+                    window.open(previewUrl, '_blank', 'noopener');
+                }
+            });
+        }
+
+        if (valueInput) {
+            valueInput.addEventListener('change', () => {
+                originalValue = valueInput.value;
+                storedImage = container.dataset.photoStored || storedImage;
+                updateState();
+            });
+        }
+
+        container.dataset.photoConfigured = 'true';
+        updateState();
+    });
+}
+
 function inicializarMultiSelects(contexto = document) {
     const alvo = contexto instanceof HTMLElement ? contexto : document;
     const containers = alvo.querySelectorAll('[data-multi-select]');
@@ -605,6 +792,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupMenuModalInteractions();
     configurarAtalhosDeAbas();
     inicializarMultiSelects();
+    inicializarGerenciadoresDeFoto();
     aplicarValidacao(document);
     configurarEnvioDeFormularios();
     configurarResetDeFiltros();

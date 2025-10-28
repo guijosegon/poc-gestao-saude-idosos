@@ -45,7 +45,8 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 RiscoQueda = paciente.RiscoQueda,
                 Mobilidade = paciente.Mobilidade,
                 DietasSelecionadas = ConverterParaLista(paciente.DietasRestricoes),
-                Sexo = paciente.Sexo
+                Sexo = paciente.Sexo,
+                RemoverImagemPerfil = false
             };
         }
 

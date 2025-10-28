@@ -1,4 +1,6 @@
-﻿using GestaoSaudeIdosos.Application.Interfaces;
+﻿using System;
+using System.Linq;
+using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -42,6 +44,11 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var usuarios = await _usuarioAppService.AsQueryable().ToListAsync();
             var pacientes = await _pacienteAppService.AsQueryable().ToListAsync();
             var formularios = await _formularioAppService.AsQueryable().ToListAsync();
+
+            var usuarioAtualEmail = User.Identity?.Name;
+            var usuarioAtual = !string.IsNullOrWhiteSpace(usuarioAtualEmail)
+                ? usuarios.FirstOrDefault(u => string.Equals(u.Email, usuarioAtualEmail, StringComparison.OrdinalIgnoreCase))
+                : null;
 
             var usuariosRecentes = usuarios
                 .OrderByDescending(u => u.DataCadastro)
@@ -101,7 +108,10 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
             return new DashboardViewModel
             {
-                UsuarioNome = User.Identity?.Name ?? "Usuário",
+                UsuarioNome = !string.IsNullOrWhiteSpace(usuarioAtual?.NomeCompleto)
+                    ? usuarioAtual.NomeCompleto
+                    : (usuarioAtualEmail ?? "Usuário"),
+                UsuarioImagemPerfil = usuarioAtual?.ImagemPerfil,
                 TotalUsuarios = usuarios.Count,
                 TotalPacientes = pacientes.Count,
                 FormulariosAtivos = formularios.Count(f => f.Ativo),
