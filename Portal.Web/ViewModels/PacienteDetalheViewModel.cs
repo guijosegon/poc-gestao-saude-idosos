@@ -13,7 +13,7 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public DateTime DataNascimento { get; set; }
         public string Responsavel { get; set; } = string.Empty;
         public DateTime UltimaAtualizacao { get; set; }
-        public string Sexo { get; set; } = string.Empty;
+        public string Genero { get; set; } = string.Empty;
         public IEnumerable<string> CondicoesCronicas { get; set; } = Array.Empty<string>();
         public IEnumerable<string> HistoricoCirurgico { get; set; } = Array.Empty<string>();
         public string RiscoQueda { get; set; } = string.Empty;

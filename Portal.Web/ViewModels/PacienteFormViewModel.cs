@@ -29,9 +29,9 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         [DataType(DataType.Date)]
         public DateTime? DataNascimento { get; set; }
 
-        [Display(Name = "Sexo")]
-        public Enums.SexoPaciente? Sexo { get; set; } = Enums.SexoPaciente.NaoInformado;
-        public IEnumerable<SelectListItem> SexosDisponiveis { get; set; } = Enumerable.Empty<SelectListItem>();
+        [Display(Name = "Genero")]
+        public Enums.GeneroPaciente? Genero { get; set; } = Enums.GeneroPaciente.NaoInformado;
+        public IEnumerable<SelectListItem> GenerosDisponiveis { get; set; } = Enumerable.Empty<SelectListItem>();
 
         [Display(Name = "Responsável")]
         [Required(ErrorMessage = "Selecione um responsável.")]

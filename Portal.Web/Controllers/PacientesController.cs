@@ -276,14 +276,14 @@ namespace GestaoSaudeIdosos.Web.Controllers
             model.DietasSelecionadas ??= new List<string>();
             model.RiscoQueda ??= Enums.RiscoQuedaPaciente.SemRisco;
             model.Mobilidade ??= Enums.MobilidadePaciente.Independente;
-            model.Sexo ??= Enums.SexoPaciente.NaoInformado;
+            model.Genero ??= Enums.GeneroPaciente.NaoInformado;
 
             model.CondicoesCronicasDisponiveis = CriarSelectList<Enums.CondicaoCronicaPaciente>(model.CondicoesCronicasSelecionadas);
             model.HistoricoCirurgicoDisponiveis = CriarSelectList<Enums.HistoricoCirurgicoPaciente>(model.HistoricoCirurgicoSelecionados);
             model.DietasDisponiveis = CriarSelectList<Enums.DietaRestricaoPaciente>(model.DietasSelecionadas);
             model.RiscoQuedasDisponiveis = CriarSelectList(model.RiscoQueda);
             model.MobilidadeDisponivel = CriarSelectList(model.Mobilidade);
-            model.SexosDisponiveis = CriarSelectList(model.Sexo);
+            model.GenerosDisponiveis = CriarSelectList(model.Genero);
         }
 
         private static IEnumerable<SelectListItem> CriarSelectList<TEnum>(IEnumerable<string> selecionados) where TEnum : struct, Enum

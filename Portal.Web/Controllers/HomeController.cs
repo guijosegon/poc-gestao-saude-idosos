@@ -98,7 +98,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                     RiscoQueda = p.RiscoQueda,
                     Mobilidade = p.Mobilidade,
                     DietasRestricoes = p.DietasRestricoes,
-                    Sexo = p.Sexo
+                    Genero = p.Genero
                 })
                 .ToList();
 

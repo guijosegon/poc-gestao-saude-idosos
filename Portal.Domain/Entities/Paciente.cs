@@ -2,6 +2,7 @@ using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Domain.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GestaoSaudeIdosos.Domain.Entities
 {
@@ -25,7 +26,9 @@ namespace GestaoSaudeIdosos.Domain.Entities
         public string? HistoricoCirurgico { get; set; }
         public Enums.RiscoQuedaPaciente RiscoQueda { get; set; } = Enums.RiscoQuedaPaciente.SemRisco;
         public Enums.MobilidadePaciente Mobilidade { get; set; } = Enums.MobilidadePaciente.Independente;
-        public Enums.SexoPaciente Sexo { get; set; } = Enums.SexoPaciente.NaoInformado;
+
+        [Column("Sexo")]
+        public Enums.GeneroPaciente Genero { get; set; } = Enums.GeneroPaciente.NaoInformado;
 
         private DateTime _dataNascimento;
         private DateTime _dataCadastro;

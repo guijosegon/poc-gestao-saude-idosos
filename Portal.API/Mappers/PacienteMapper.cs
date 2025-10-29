@@ -15,7 +15,7 @@ namespace GestaoSaudeIdosos.API.Mappers
                 DataNascimento = (dto.DataNascimento ?? DateTime.UtcNow).EnsureUtc(),
                 ResponsavelId = dto.ResponsavelId,
                 Idade = CalcularIdade(dto.DataNascimento.EnsureUtc()),
-                Sexo = dto.Sexo
+                Genero = dto.Genero
             };
         }
 
@@ -30,7 +30,7 @@ namespace GestaoSaudeIdosos.API.Mappers
             }
 
             entity.ResponsavelId = dto.ResponsavelId;
-            entity.Sexo = dto.Sexo;
+            entity.Genero = dto.Genero;
         }
 
         public static PacienteDto ToDto(this Paciente entity)
@@ -41,7 +41,7 @@ namespace GestaoSaudeIdosos.API.Mappers
                 Nome = entity.NomeCompleto,
                 DataNascimento = entity.DataNascimento,
                 ResponsavelId = entity.ResponsavelId,
-                Sexo = entity.Sexo
+                Genero = entity.Genero
             };
         }
 

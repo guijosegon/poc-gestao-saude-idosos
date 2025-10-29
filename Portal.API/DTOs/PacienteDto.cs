@@ -16,6 +16,6 @@ namespace GestaoSaudeIdosos.API.DTOs
         public DateTime? DataNascimento { get; set; }
 
         public int? ResponsavelId { get; set; }
-        public Enums.SexoPaciente Sexo { get; set; } = Enums.SexoPaciente.NaoInformado;
+        public Enums.GeneroPaciente Genero { get; set; } = Enums.GeneroPaciente.NaoInformado;
     }
 }
