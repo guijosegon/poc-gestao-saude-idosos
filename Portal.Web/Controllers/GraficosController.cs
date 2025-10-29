@@ -789,7 +789,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         private record GraficoSerieItem(string Categoria, double Valor);
 
-        private class GraficoPreviewRequest
+        public class GraficoPreviewRequest
         {
             public string? Descricao { get; set; }
             public Enums.TipoOrigemGrafico Origem { get; set; }
