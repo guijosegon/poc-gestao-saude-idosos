@@ -634,7 +634,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 .AsNoTracking()
                 .Select(p => new
                 {
-                    p.Sexo,
+                    p.Genero,
                     p.RiscoQueda,
                     p.Mobilidade,
                     p.Ativo,
@@ -645,8 +645,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
             return campo switch
             {
-                Enums.GraficoPacienteCampo.Sexo => pacientes
-                    .GroupBy(p => p.Sexo)
+                Enums.GraficoPacienteCampo.Genero => pacientes
+                    .GroupBy(p => p.Genero)
                     .Select(g => new GraficoSerieItem(g.Key.GetDisplayName(), g.Count()))
                     .OrderByDescending(g => g.Valor)
                     .ToList(),

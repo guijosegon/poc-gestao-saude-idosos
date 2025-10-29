@@ -19,10 +19,10 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public Enums.RiscoQuedaPaciente RiscoQueda { get; set; } = Enums.RiscoQuedaPaciente.SemRisco;
         public Enums.MobilidadePaciente Mobilidade { get; set; } = Enums.MobilidadePaciente.Independente;
         public string? DietasRestricoes { get; set; }
-        public Enums.SexoPaciente Sexo { get; set; } = Enums.SexoPaciente.NaoInformado;
+        public Enums.GeneroPaciente Genero { get; set; } = Enums.GeneroPaciente.NaoInformado;
 
         public string RiscoQuedaDescricao => RiscoQueda.GetDisplayName();
         public string MobilidadeDescricao => Mobilidade.GetDisplayName();
-        public string SexoDescricao => Sexo.GetDisplayName();
+        public string GeneroDescricao => Genero.GetDisplayName();
     }
 }

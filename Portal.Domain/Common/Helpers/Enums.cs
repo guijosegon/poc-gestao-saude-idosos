@@ -115,7 +115,7 @@ namespace GestaoSaudeIdosos.Domain.Common.Helpers
             Outra = 99
         }
 
-        public enum SexoPaciente
+        public enum GeneroPaciente
         {
             [Display(Name = "Não informado")]
             NaoInformado = 0,
@@ -156,8 +156,8 @@ namespace GestaoSaudeIdosos.Domain.Common.Helpers
 
         public enum GraficoPacienteCampo
         {
-            [Display(Name = "Sexo do paciente")]
-            Sexo = 1,
+            [Display(Name = "Genero do paciente")]
+            Genero = 1,
 
             [Display(Name = "Risco de queda")]
             RiscoQueda = 2,

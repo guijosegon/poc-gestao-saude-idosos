@@ -27,7 +27,7 @@ namespace GestaoSaudeIdosos.Web.Mappers
             RiscoQueda = paciente.RiscoQueda,
             Mobilidade = paciente.Mobilidade,
             DietasRestricoes = paciente.DietasRestricoes,
-            Sexo = paciente.Sexo
+            Genero = paciente.Genero
         };
 
         public static PacienteFormViewModel ToFormViewModel(this Paciente paciente)
@@ -45,7 +45,7 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 RiscoQueda = paciente.RiscoQueda,
                 Mobilidade = paciente.Mobilidade,
                 DietasSelecionadas = ConverterParaLista(paciente.DietasRestricoes),
-                Sexo = paciente.Sexo,
+                Genero = paciente.Genero,
                 RemoverImagemPerfil = false
             };
         }
@@ -79,7 +79,7 @@ namespace GestaoSaudeIdosos.Web.Mappers
                         })
                         .ToList()
                     : Array.Empty<PacienteFormularioResultadoViewModel>(),
-                Sexo = paciente.Sexo.GetDisplayName()
+                Genero = paciente.Genero.GetDisplayName()
             };
         }
 
@@ -104,7 +104,7 @@ namespace GestaoSaudeIdosos.Web.Mappers
                 RiscoQueda = model.RiscoQueda ?? Enums.RiscoQuedaPaciente.SemRisco,
                 Mobilidade = model.Mobilidade ?? Enums.MobilidadePaciente.Independente,
                 DietasRestricoes = ConverterParaString(model.DietasSelecionadas),
-                Sexo = model.Sexo ?? Enums.SexoPaciente.NaoInformado
+                Genero = model.Genero ?? Enums.GeneroPaciente.NaoInformado
             };
         }
 
@@ -126,7 +126,7 @@ namespace GestaoSaudeIdosos.Web.Mappers
             entity.RiscoQueda = model.RiscoQueda ?? Enums.RiscoQuedaPaciente.SemRisco;
             entity.Mobilidade = model.Mobilidade ?? Enums.MobilidadePaciente.Independente;
             entity.DietasRestricoes = ConverterParaString(model.DietasSelecionadas);
-            entity.Sexo = model.Sexo ?? Enums.SexoPaciente.NaoInformado;
+            entity.Genero = model.Genero ?? Enums.GeneroPaciente.NaoInformado;
         }
 
         private static int CalcularIdade(DateTime dataNascimento)
