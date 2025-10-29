@@ -1,6 +1,5 @@
 using GestaoSaudeIdosos.Domain.Common.Helpers;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace GestaoSaudeIdosos.Web.ViewModels

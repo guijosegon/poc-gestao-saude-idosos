@@ -1,5 +1,4 @@
-﻿using System;
-using GestaoSaudeIdosos.Domain.Common.Helpers;
+﻿using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Web.Extensions;
 
 namespace GestaoSaudeIdosos.Web.ViewModels

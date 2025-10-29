@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Domain.Common.Helpers;
@@ -55,15 +52,12 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         private async Task<DashboardViewModel> CriarDashboardAsync()
         {
+            var formularios = await _formularioAppService.AsQueryable(a => a.Campos, a => a.Pacientes).ToListAsync();
+            var pacientes = await _pacienteAppService.AsQueryable(a => a.Responsavel).ToListAsync();
             var usuarios = await _usuarioAppService.AsQueryable().ToListAsync();
-            var pacientes = await _pacienteAppService.AsQueryable().ToListAsync();
-            var formularios = await _formularioAppService.AsQueryable().ToListAsync();
             var graficos = await _graficoAppService.AsQueryable().ToListAsync();
-
             var usuarioAtualEmail = User.Identity?.Name;
-            var usuarioAtual = !string.IsNullOrWhiteSpace(usuarioAtualEmail)
-                ? usuarios.FirstOrDefault(u => string.Equals(u.Email, usuarioAtualEmail, StringComparison.OrdinalIgnoreCase))
-                : null;
+            var usuarioAtual = !string.IsNullOrWhiteSpace(usuarioAtualEmail) ? usuarios.FirstOrDefault(u => string.Equals(u.Email, usuarioAtualEmail, StringComparison.OrdinalIgnoreCase)) : null;
 
             var usuariosRecentes = usuarios
                 .OrderByDescending(u => u.DataCadastro)
@@ -115,22 +109,13 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 })
                 .ToList();
 
-            var relatorios = pacientesRecentes
-                .Select(MontarRelatorioPaciente)
-                .ToList();
-
+            var relatorios = pacientesRecentes.Select(MontarRelatorioPaciente).ToList();
             var alertasAtivos = relatorios.Count(r => !string.Equals(r.NivelRisco, "Baixo", StringComparison.OrdinalIgnoreCase));
-
-            var graficosPortal = graficos
-                .Where(g => g.ExibirNoPortal)
-                .Select(CriarGraficoPortal)
-                .ToList();
+            var graficosPortal = graficos.Where(g => g.ExibirNoPortal).Select(CriarGraficoPortal).ToList();
 
             return new DashboardViewModel
             {
-                UsuarioNome = !string.IsNullOrWhiteSpace(usuarioAtual?.NomeCompleto)
-                    ? usuarioAtual.NomeCompleto
-                    : (usuarioAtualEmail ?? "Usuário"),
+                UsuarioNome = !string.IsNullOrWhiteSpace(usuarioAtual?.NomeCompleto) ? usuarioAtual.NomeCompleto : (usuarioAtualEmail ?? "Usuário"),
                 UsuarioImagemPerfil = usuarioAtual?.ImagemPerfil,
                 TotalUsuarios = usuarios.Count,
                 TotalPacientes = pacientes.Count,
@@ -276,8 +261,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
             try
             {
-                return JsonSerializer.Deserialize<GraficoConfiguracaoModel>(configuracao, GraficoJsonOptions)
-                    ?? new GraficoConfiguracaoModel();
+                return JsonSerializer.Deserialize<GraficoConfiguracaoModel>(configuracao, GraficoJsonOptions) ?? new GraficoConfiguracaoModel();
             }
             catch
             {

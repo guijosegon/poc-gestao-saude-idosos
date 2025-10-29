@@ -96,10 +96,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Create()
         {
             var responsaveis = await ObterResponsaveisAsync();
-            var model = new PacienteFormViewModel
-            {
-                Responsaveis = responsaveis
-            };
+            var model = new PacienteFormViewModel { Responsaveis = responsaveis };
 
             PreencherOpcoesClinicas(model);
 

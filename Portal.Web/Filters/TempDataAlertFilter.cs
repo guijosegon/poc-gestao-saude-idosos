@@ -25,9 +25,7 @@ namespace GestaoSaudeIdosos.Web.Filters
         private static void AplicarMensagem(Controller controller, ResultExecutingContext context, string tempDataKey, string headerName, string viewDataKey)
         {
             if (!controller.TempData.TryGetValue(tempDataKey, out var valor))
-            {
                 return;
-            }
 
             if (valor is not string mensagem || string.IsNullOrWhiteSpace(mensagem))
             {

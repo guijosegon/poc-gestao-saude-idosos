@@ -1,6 +1,5 @@
 ﻿using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Domain.Extensions;
-using System;
 
 namespace GestaoSaudeIdosos.Domain.Entities
 {

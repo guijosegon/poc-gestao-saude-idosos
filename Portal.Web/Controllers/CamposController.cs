@@ -27,32 +27,18 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var query = _campoAppService.AsQueryable(a => a.Usuario, a => a.ResultadoValores);
 
             if (!string.IsNullOrWhiteSpace(filtro.Busca))
-            {
-                var busca = filtro.Busca.Trim();
-                query = query.Where(c => EF.Functions.ILike(c.Descricao, $"%{busca}%"));
-            }
-
+                query = query.Where(c => EF.Functions.ILike(c.Descricao, $"%{filtro.Busca.Trim()}%"));
             if (filtro.Tipo.HasValue)
-            {
-                var tipo = filtro.Tipo.Value;
-                query = query.Where(c => c.Tipo == tipo);
-            }
-
+                query = query.Where(c => c.Tipo == filtro.Tipo.Value);
             if (filtro.Ativo.HasValue)
-            {
-                var ativo = filtro.Ativo.Value;
-                query = query.Where(c => c.Ativo == ativo);
-            }
+                query = query.Where(c => c.Ativo == filtro.Ativo.Value);
 
             var itensPorPagina = filtro.ItensPorPagina;
             var totalRegistros = await query.CountAsync();
-            var totalPaginas = totalRegistros == 0
-                ? 0
-                : (int)Math.Ceiling(totalRegistros / (double)itensPorPagina);
+            var totalPaginas = totalRegistros is 0 ? 0 : (int)Math.Ceiling(totalRegistros / (double)itensPorPagina);
 
             var paginaAtual = filtro.Pagina;
-            if (totalPaginas > 0 && paginaAtual > totalPaginas)
-                paginaAtual = totalPaginas;
+            if (totalPaginas > 0 && paginaAtual > totalPaginas) paginaAtual = totalPaginas;
 
             var registros = await query
                 .OrderByDescending(c => c.DataCadastro)
@@ -104,16 +90,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
             return View(detalhes);
         }
 
-        public IActionResult Create()
-        {
-            var model = new CampoFormViewModel
-            {
-                TiposCampo = CampoViewModelMapper.ObterTiposCampo()
-            };
-
-            return View(model);
-        }
-
+        public IActionResult Create() => View(new CampoFormViewModel { TiposCampo = CampoViewModelMapper.ObterTiposCampo() });
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CampoFormViewModel model)

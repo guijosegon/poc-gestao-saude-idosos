@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace GestaoSaudeIdosos.Web.Extensions
 {
     public static class EnumExtensions
     {
-        public static string GetDisplayName<TEnum>(this TEnum value)
-            where TEnum : struct, Enum
+        public static string GetDisplayName<TEnum>(this TEnum value) where TEnum : struct, Enum
         {
             var member = typeof(TEnum).GetMember(value.ToString()).FirstOrDefault();
             var display = member?
@@ -19,8 +15,7 @@ namespace GestaoSaudeIdosos.Web.Extensions
             return display?.Name ?? value.ToString();
         }
 
-        public static IEnumerable<string> GetDisplayNames<TEnum>(this IEnumerable<TEnum> values)
-            where TEnum : struct, Enum
+        public static IEnumerable<string> GetDisplayNames<TEnum>(this IEnumerable<TEnum> values) where TEnum : struct, Enum
         {
             return values.Select(GetDisplayName);
         }

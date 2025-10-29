@@ -1,5 +1,4 @@
 using GestaoSaudeIdosos.Domain.Common.Helpers;
-using System;
 
 namespace GestaoSaudeIdosos.Web.ViewModels
 {

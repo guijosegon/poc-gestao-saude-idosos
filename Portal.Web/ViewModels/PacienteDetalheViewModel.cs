@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace GestaoSaudeIdosos.Web.ViewModels
+﻿namespace GestaoSaudeIdosos.Web.ViewModels
 {
     public class PacienteDetalheViewModel
     {

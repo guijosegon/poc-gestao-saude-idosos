@@ -1,6 +1,4 @@
 using GestaoSaudeIdosos.Domain.Common.Helpers;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace GestaoSaudeIdosos.Web.ViewModels

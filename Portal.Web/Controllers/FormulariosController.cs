@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -36,26 +35,16 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var query = _formularioAppService.AsQueryable(f => f.Campos, f => f.Pacientes);
 
             if (!string.IsNullOrWhiteSpace(filtro.Busca))
-            {
-                var busca = filtro.Busca.Trim();
-                query = query.Where(f => EF.Functions.ILike(f.Descricao, $"%{busca}%"));
-            }
-
+                query = query.Where(f => EF.Functions.ILike(f.Descricao, $"%{filtro.Busca.Trim()}%"));
             if (filtro.Ativo.HasValue)
-            {
-                var ativo = filtro.Ativo.Value;
-                query = query.Where(f => f.Ativo == ativo);
-            }
+                query = query.Where(f => f.Ativo == filtro.Ativo.Value);
 
             var itensPorPagina = filtro.ItensPorPagina;
             var totalRegistros = await query.CountAsync();
-            var totalPaginas = totalRegistros == 0
-                ? 0
-                : (int)Math.Ceiling(totalRegistros / (double)itensPorPagina);
+            var totalPaginas = totalRegistros is 0 ? 0 : (int)Math.Ceiling(totalRegistros / (double)itensPorPagina);
 
             var paginaAtual = filtro.Pagina;
-            if (totalPaginas > 0 && paginaAtual > totalPaginas)
-                paginaAtual = totalPaginas;
+            if (totalPaginas > 0 && paginaAtual > totalPaginas) paginaAtual = totalPaginas;
 
             var registros = await query
                 .OrderByDescending(f => f.DataCadastro)
@@ -85,6 +74,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var formulario = await _formularioAppService.GetCompletoPorIdAsync(id);
+
             if (formulario is null)
                 return NotFound();
 
@@ -93,8 +83,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (formulario.Resultados != null && formulario.Resultados.Any(r => r.Valores is null || r.Valores.Count == 0))
             {
                 var resultadosCompletos = await _formularioResultadoAppService.ListarPorFormularioAsync(id);
-                detalhes.Aplicacoes = FormularioResultadoViewModelMapper.MapearParaResumo(resultadosCompletos)
-                    .ToList();
+                detalhes.Aplicacoes = FormularioResultadoViewModelMapper.MapearParaResumo(resultadosCompletos).ToList();
             }
 
             return View(detalhes);
@@ -136,6 +125,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var formulario = await _formularioAppService.GetCompletoPorIdAsync(id);
+
             if (formulario is null)
                 return NotFound();
 
@@ -159,6 +149,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return View(model);
 
             var formulario = await _formularioAppService.GetCompletoPorIdAsync(id);
+
             if (formulario is null)
                 return NotFound();
 
@@ -182,6 +173,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var formulario = await _formularioAppService.GetCompletoPorIdAsync(id);
+
             if (formulario is null)
                 return NotFound();
 
@@ -195,6 +187,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> ConfirmDelete(int id)
         {
             var formulario = await _formularioAppService.AsTracking().FirstOrDefaultAsync(f => f.FormularioId == id);
+
             if (formulario is null)
                 return NotFound();
 
@@ -204,13 +197,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<FormularioFormViewModel> CriarFormularioAsync()
-        {
-            return new FormularioFormViewModel
-            {
-                CamposDisponiveis = await ObterCamposAsync()
-            };
-        }
+        private async Task<FormularioFormViewModel> CriarFormularioAsync() => new FormularioFormViewModel { CamposDisponiveis = await ObterCamposAsync() };
 
         private async Task<IEnumerable<SelectListItem>> ObterCamposAsync()
         {
@@ -230,6 +217,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         private async Task<int?> ObterUsuarioAtualAsync()
         {
             var email = User?.Identity?.Name;
+
             if (string.IsNullOrWhiteSpace(email))
                 return null;
 

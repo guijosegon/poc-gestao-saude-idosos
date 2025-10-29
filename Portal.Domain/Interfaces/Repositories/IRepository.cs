@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace GestaoSaudeIdosos.Domain.Interfaces.Repositories

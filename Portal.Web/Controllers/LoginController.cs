@@ -19,12 +19,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Index()
-        {
-            var model = new LoginViewModel();
-
-            return View(model);
-        }
+        public IActionResult Index() => View(new LoginViewModel());
 
         [HttpPost]
         [AllowAnonymous]

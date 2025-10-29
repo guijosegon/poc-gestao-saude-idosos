@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -141,9 +139,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
             catch (Exception ex)
             {
-                ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message)
-                    ? "Não foi possível cadastrar o gráfico. Tente novamente."
-                    : ex.Message;
+                ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message) ? "Não foi possível cadastrar o gráfico. Tente novamente." : ex.Message;
 
                 model = await PopularListasAsync(model);
                 return View(model);
@@ -202,9 +198,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
             catch (Exception ex)
             {
-                ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message)
-                    ? "Não foi possível atualizar o gráfico. Tente novamente."
-                    : ex.Message;
+                ViewData["Erro"] = string.IsNullOrWhiteSpace(ex.Message) ? "Não foi possível atualizar o gráfico. Tente novamente." : ex.Message;
 
                 model = await PopularListasAsync(model);
                 return View(model);
@@ -363,13 +357,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
             model.Formularios = await ObterFormulariosAsync(model.FormularioId);
 
             if (model.FormularioId.HasValue)
-            {
                 model.CamposFormulario = await ObterCamposFormularioAsync(model.FormularioId.Value, model.FormularioCampoId);
-            }
             else
-            {
                 model.CamposFormulario = Enumerable.Empty<SelectListItem>();
-            }
 
             return model;
         }
@@ -710,9 +700,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 .Where(f => f.FormularioId == formularioId)
                 .SelectMany(f => f.Campos)
                 .Where(fc => fc.CampoId == campoId)
-                .Select(fc => fc.Campo != null && !string.IsNullOrWhiteSpace(fc.Campo.Descricao)
-                    ? fc.Campo.Descricao
-                    : $"Campo {fc.CampoId}")
+                .Select(fc => fc.Campo != null && !string.IsNullOrWhiteSpace(fc.Campo.Descricao) ? fc.Campo.Descricao : $"Campo {fc.CampoId}")
                 .FirstOrDefaultAsync();
 
             return string.IsNullOrWhiteSpace(descricao) ? "Resposta" : descricao;
@@ -720,12 +708,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         private static Dictionary<string, object?> CriarOpcoesGrafico(Enums.TipoGrafico tipo, string titulo, GraficoConfiguracaoModel configuracao, string categoriaLabel, string valorLabel)
         {
-            var eixoHorizontal = string.IsNullOrWhiteSpace(configuracao.TituloEixoHorizontal)
-                ? categoriaLabel
-                : configuracao.TituloEixoHorizontal;
-            var eixoVertical = string.IsNullOrWhiteSpace(configuracao.TituloEixoVertical)
-                ? valorLabel
-                : configuracao.TituloEixoVertical;
+            var eixoHorizontal = string.IsNullOrWhiteSpace(configuracao.TituloEixoHorizontal) ? categoriaLabel : configuracao.TituloEixoHorizontal;
+            var eixoVertical = string.IsNullOrWhiteSpace(configuracao.TituloEixoVertical) ? valorLabel : configuracao.TituloEixoVertical;
 
             var opcoes = new Dictionary<string, object?>
             {

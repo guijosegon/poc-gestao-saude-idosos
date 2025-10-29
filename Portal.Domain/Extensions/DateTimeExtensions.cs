@@ -1,5 +1,3 @@
-using System;
-
 namespace GestaoSaudeIdosos.Domain.Extensions
 {
     public static class DateTimeExtensions

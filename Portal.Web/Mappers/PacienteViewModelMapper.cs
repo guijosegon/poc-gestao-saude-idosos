@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Domain.Extensions;

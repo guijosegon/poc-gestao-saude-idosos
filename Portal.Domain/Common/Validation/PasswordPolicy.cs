@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace GestaoSaudeIdosos.Domain.Common.Validation
 {
     public static class PasswordPolicy

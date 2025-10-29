@@ -1,10 +1,3 @@
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-
 namespace GestaoSaudeIdosos.Web.Services
 {
     public class ImagemStorageService : IImagemStorageService
@@ -19,9 +12,7 @@ namespace GestaoSaudeIdosos.Web.Services
         public async Task<string?> SalvarAsync(IFormFile? arquivo, string subpasta, string? caminhoAtual = null, CancellationToken cancellationToken = default)
         {
             if (arquivo is null || arquivo.Length == 0)
-            {
                 return caminhoAtual;
-            }
 
             var webRootPath = ObterWebRootPath();
             var uploadsRoot = Path.Combine(webRootPath, "uploads", subpasta);
@@ -54,9 +45,7 @@ namespace GestaoSaudeIdosos.Web.Services
         private void RemoverArquivoFisico(string? caminho)
         {
             if (string.IsNullOrWhiteSpace(caminho))
-            {
                 return;
-            }
 
             var relativo = caminho.TrimStart('~', '/').Replace('/', Path.DirectorySeparatorChar);
             var caminhoFisico = Path.Combine(ObterWebRootPath(), relativo);
@@ -70,9 +59,7 @@ namespace GestaoSaudeIdosos.Web.Services
         private string ObterWebRootPath()
         {
             if (!string.IsNullOrWhiteSpace(_environment.WebRootPath))
-            {
                 return _environment.WebRootPath;
-            }
 
             var contentRoot = _environment.ContentRootPath;
             if (string.IsNullOrWhiteSpace(contentRoot))

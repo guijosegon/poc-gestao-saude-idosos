@@ -1,7 +1,5 @@
 using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Domain.Extensions;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GestaoSaudeIdosos.Domain.Entities

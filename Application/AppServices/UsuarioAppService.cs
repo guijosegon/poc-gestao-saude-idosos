@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Application.Security;
 using GestaoSaudeIdosos.Domain.Common.Validation;

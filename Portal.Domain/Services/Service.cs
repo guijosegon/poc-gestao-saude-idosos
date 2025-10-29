@@ -1,6 +1,5 @@
 using GestaoSaudeIdosos.Domain.Interfaces.Repositories;
 using GestaoSaudeIdosos.Domain.Interfaces.Services;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace GestaoSaudeIdosos.Domain.Services

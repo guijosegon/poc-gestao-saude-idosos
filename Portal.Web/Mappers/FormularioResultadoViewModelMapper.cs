@@ -1,10 +1,7 @@
 using GestaoSaudeIdosos.Domain.Common.Helpers;
 using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Web.ViewModels;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace GestaoSaudeIdosos.Web.Mappers
 {

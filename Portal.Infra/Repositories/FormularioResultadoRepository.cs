@@ -1,8 +1,6 @@
 using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Domain.Interfaces.Repositories;
-using GestaoSaudeIdosos.Infra.Contexts;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace GestaoSaudeIdosos.Infra.Repositories
 {

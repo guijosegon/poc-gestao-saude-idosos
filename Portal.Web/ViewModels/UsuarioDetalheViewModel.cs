@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace GestaoSaudeIdosos.Web.ViewModels
 {
     public class UsuarioDetalheViewModel
