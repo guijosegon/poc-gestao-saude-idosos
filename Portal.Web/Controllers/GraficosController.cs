@@ -638,7 +638,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
                     p.RiscoQueda,
                     p.Mobilidade,
                     p.Ativo,
-                    p.Idade
+                    p.Idade,
+                    Responsavel = p.Responsavel != null ? p.Responsavel.NomeCompleto : null
                 })
                 .ToListAsync();
 
@@ -670,6 +671,12 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
                 Enums.GraficoPacienteCampo.FaixaEtaria => pacientes
                     .GroupBy(p => ObterDescricaoFaixaEtaria(p.Idade))
+                    .Select(g => new GraficoSerieItem(g.Key, g.Count()))
+                    .OrderByDescending(g => g.Valor)
+                    .ToList(),
+
+                Enums.GraficoPacienteCampo.Responsavel => pacientes
+                    .GroupBy(p => string.IsNullOrWhiteSpace(p.Responsavel) ? "Sem responsável" : p.Responsavel)
                     .Select(g => new GraficoSerieItem(g.Key, g.Count()))
                     .OrderByDescending(g => g.Valor)
                     .ToList(),

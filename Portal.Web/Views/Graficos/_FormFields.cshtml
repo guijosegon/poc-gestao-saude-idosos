@@ -29,7 +29,7 @@
     </div>
 </div>
 
-<div class="form-section" data-grafico-origem-section="@Enums.TipoOrigemGrafico.Paciente" @(Model.Origem == Enums.TipoOrigemGrafico.Paciente ? string.Empty : "hidden")>
+<div class="form-section" data-grafico-origem-section="@((int)Enums.TipoOrigemGrafico.Paciente)" @(Model.Origem == Enums.TipoOrigemGrafico.Paciente ? string.Empty : "hidden")>
     <header class="form-section__header">
         <h3>Configuração dos dados de pacientes</h3>
         <span>Escolha qual característica servirá como base para agrupamento.</span>
@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<div class="form-section" data-grafico-origem-section="@Enums.TipoOrigemGrafico.Formulario" @(Model.Origem == Enums.TipoOrigemGrafico.Formulario ? string.Empty : "hidden")>
+<div class="form-section" data-grafico-origem-section="@((int)Enums.TipoOrigemGrafico.Formulario)" @(Model.Origem == Enums.TipoOrigemGrafico.Formulario ? string.Empty : "hidden")>
     <header class="form-section__header">
         <h3>Configuração dos dados de formulários</h3>
         <span>Selecione o formulário e o campo que fornecerá os valores.</span>
