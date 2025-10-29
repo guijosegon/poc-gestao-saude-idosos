@@ -1,4 +1,7 @@
 @model IEnumerable<GestaoSaudeIdosos.Web.ViewModels.GraficoListItemViewModel>
+@using System.Linq
+@using GestaoSaudeIdosos.Domain.Common.Helpers
+@using GestaoSaudeIdosos.Web.Extensions
 @{
     ViewData["Title"] = "Gráficos";
 }
@@ -6,7 +9,7 @@
 <section class="page-header">
     <div>
         <h1>Galeria de gráficos</h1>
-        <p class="page-subtitle">Monte visualizações com dados dos formulários para apoiar decisões clínicas.</p>
+        <p class="page-subtitle">Monte visualizações com dados do portal para apoiar decisões clínicas.</p>
     </div>
     <a asp-action="Create" class="btn-primary" data-open-tab data-tab="Gráficos" data-url='@Url.Action("Create", "Graficos")'>Novo gráfico</a>
 </section>
@@ -26,17 +29,29 @@ else
         <article class="summary-card">
             <header>
                 <h2>@grafico.Descricao</h2>
+                <div class="badge-group">
+                    <span class="badge">@grafico.Origem.GetDisplayName()</span>
+                    <span class="badge badge--neutral">@grafico.Tipo.GetDisplayName()</span>
+                </div>
             </header>
+            <div class="summary-card__chart" data-grafico-element
+                 data-grafico-id="@grafico.GraficoId"
+                 data-grafico-tipo="@((int)grafico.Tipo)"
+                 data-grafico-origem="@((int)grafico.Origem)"
+                 data-grafico-descricao="@grafico.Descricao"
+                 data-grafico-dados-url='@Url.Action("Dados", "Graficos", new { id = grafico.GraficoId })'>
+                <p class="chart-placeholder">Carregando visualização...</p>
+            </div>
             <footer>
                 <div class="card-actions">
                     <a asp-action="Details" asp-route-id="@grafico.GraficoId" class="btn-link"
-                           data-open-tab data-tab="Gráficos"
+                       data-open-tab data-tab="Gráficos"
                        data-url='@Url.Action("Details", "Graficos", new { id = grafico.GraficoId })'>Detalhes</a>
                     <a asp-action="Edit" asp-route-id="@grafico.GraficoId" class="btn-link"
-                           data-open-tab data-tab="Gráficos"
+                       data-open-tab data-tab="Gráficos"
                        data-url='@Url.Action("Edit", "Graficos", new { id = grafico.GraficoId })'>Editar</a>
                     <a asp-action="Delete" asp-route-id="@grafico.GraficoId" class="btn-link text-danger"
-                           data-open-tab data-tab="Gráficos"
+                       data-open-tab data-tab="Gráficos"
                        data-url='@Url.Action("Delete", "Graficos", new { id = grafico.GraficoId })'>Excluir</a>
                 </div>
             </footer>
@@ -47,28 +62,10 @@ else
 
 @section Scripts {
     <script>
-        (function () {
-            const scriptElement = document.currentScript;
-            const container = scriptElement ? scriptElement.closest(".conteudo") : null;
-            const destino = "Graficos";
-            const urlDestino = `@Url.Action("Index", "Graficos")`;
-
-            if (!container || !container.id) {
-                return;
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.Graficos) {
+                window.Graficos.renderChartsIn(document);
             }
-
-            const prefixo = "conteudo-";
-            if (!container.id.startsWith(prefixo)) {
-                return;
-            }
-
-            const abaAtual = container.id.substring(prefixo.length);
-            if (abaAtual === destino) {
-                return;
-            }
-
-            fecharAba(abaAtual);
-            abrirAba(destino, urlDestino);
-        })();
+        });
     </script>
 }

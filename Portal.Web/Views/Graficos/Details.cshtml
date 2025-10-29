@@ -1,4 +1,6 @@
 @model GestaoSaudeIdosos.Web.ViewModels.GraficoDetalheViewModel
+@using GestaoSaudeIdosos.Domain.Common.Helpers
+@using GestaoSaudeIdosos.Web.Extensions
 @{
     ViewData["Title"] = "Detalhes do gráfico";
 }
@@ -18,8 +20,74 @@
 </section>
 
 <div class="detail-grid">
+    <article class="detail-card detail-card--wide">
+        <h2>Pré-visualização</h2>
+        <div class="chart-preview" data-grafico-element
+             data-grafico-id="@Model.GraficoId"
+             data-grafico-tipo="@((int)Model.Tipo)"
+             data-grafico-origem="@((int)Model.Origem)"
+             data-grafico-descricao="@Model.Descricao"
+             data-grafico-dados-url='@Url.Action("Dados", "Graficos", new { id = Model.GraficoId })'>
+            <p class="chart-placeholder">Carregando visualização...</p>
+        </div>
+    </article>
     <article class="detail-card">
-        <h2>Resumo</h2>
-        <p>Utilize este gráfico para apresentar tendências e comparativos relevantes para a equipe assistencial.</p>
+        <h2>Configuração</h2>
+        <dl class="detail-list">
+            <div class="detail-list__item">
+                <dt>Origem dos dados</dt>
+                <dd>@Model.Origem.GetDisplayName()</dd>
+            </div>
+            <div class="detail-list__item">
+                <dt>Tipo de gráfico</dt>
+                <dd>@Model.Tipo.GetDisplayName()</dd>
+            </div>
+            @if (Model.Origem == Enums.TipoOrigemGrafico.Paciente && !string.IsNullOrWhiteSpace(Model.CampoDescricao))
+            {
+                <div class="detail-list__item">
+                    <dt>Campo do paciente</dt>
+                    <dd>@Model.CampoDescricao</dd>
+                </div>
+            }
+            @if (Model.Origem == Enums.TipoOrigemGrafico.Formulario)
+            {
+                <div class="detail-list__item">
+                    <dt>Formulário</dt>
+                    <dd>@(string.IsNullOrWhiteSpace(Model.FormularioDescricao) ? "Formulário selecionado" : Model.FormularioDescricao)</dd>
+                </div>
+                <div class="detail-list__item">
+                    <dt>Campo do formulário</dt>
+                    <dd>@(string.IsNullOrWhiteSpace(Model.CampoDescricao) ? "Campo selecionado" : Model.CampoDescricao)</dd>
+                </div>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.Configuracao.TituloEixoHorizontal))
+            {
+                <div class="detail-list__item">
+                    <dt>Eixo horizontal</dt>
+                    <dd>@Model.Configuracao.TituloEixoHorizontal</dd>
+                </div>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.Configuracao.TituloEixoVertical))
+            {
+                <div class="detail-list__item">
+                    <dt>Eixo vertical</dt>
+                    <dd>@Model.Configuracao.TituloEixoVertical</dd>
+                </div>
+            }
+            <div class="detail-list__item">
+                <dt>Legenda</dt>
+                <dd>@(Model.Configuracao.MostrarLegenda ? "Exibida" : "Oculta")</dd>
+            </div>
+        </dl>
     </article>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.Graficos) {
+                window.Graficos.renderChartsIn(document);
+            }
+        });
+    </script>
+}

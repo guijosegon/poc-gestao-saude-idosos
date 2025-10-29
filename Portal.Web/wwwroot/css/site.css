@@ -847,6 +847,17 @@ button.btn-link {
     gap: 1rem;
 }
 
+.form-card .form-section[data-grafico-origem-section] {
+    border: 1px solid rgba(1, 146, 67, 0.14);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    background: rgba(1, 146, 67, 0.04);
+}
+
+.form-card .form-section[data-grafico-origem-section][hidden] {
+    display: none;
+}
+
 .form-card .form-section + .form-section {
     border-top: 1px solid rgba(31, 41, 51, 0.08);
     padding-top: 1.5rem;
@@ -862,6 +873,51 @@ button.btn-link {
     margin: 0;
     color: var(--muted);
     font-size: 0.95rem;
+}
+
+.form-section__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-section__header h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.form-section__header span {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.help-text {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: -0.2rem;
+}
+
+.preview-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+.chart-preview {
+    border: 1px dashed rgba(1, 146, 67, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(1, 146, 67, 0.04);
+}
+
+.chart-preview .chart-placeholder,
+.chart-preview .chart-error,
+.chart-preview .chart-empty {
+    width: 100%;
 }
 
 .form-grid {
@@ -1092,6 +1148,59 @@ button.btn-link {
     justify-content: space-between;
     align-items: center;
     gap: 0.75rem;
+}
+
+.badge-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(1, 146, 67, 0.12);
+    color: var(--primary-dark);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge--neutral {
+    background: rgba(31, 41, 51, 0.08);
+    color: var(--text);
+}
+
+.summary-card__chart {
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    border-radius: 12px;
+    border: 1px dashed rgba(1, 146, 67, 0.18);
+    background: rgba(1, 146, 67, 0.04);
+    width: 100%;
+}
+
+.chart-placeholder,
+.chart-error,
+.chart-empty {
+    margin: 0;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.chart-error {
+    color: var(--danger);
+}
+
+.chart-empty {
+    color: var(--muted);
+    font-style: italic;
 }
 
 .summary-meta {
@@ -1575,6 +1684,47 @@ button.btn-link {
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
+}
+
+.content-block__charts[data-grafico-portal] {
+    border: none;
+    padding: 0;
+    text-align: left;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+.chart-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 16px 36px rgba(15, 56, 33, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.chart-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.chart-card__body {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    width: 100%;
+}
+
+.content-block__charts[data-grafico-portal] .chart-placeholder,
+.content-block__charts[data-grafico-portal] .chart-error,
+.content-block__charts[data-grafico-portal] .chart-empty {
+    font-size: 0.85rem;
 }
 
 .dashboard-panels {

@@ -6,24 +6,22 @@
 <section class="page-header">
     <div>
         <h1>Novo gráfico</h1>
-        <p class="page-subtitle">Transforme respostas de formulários em visualizações do Google Charts.</p>
+        <p class="page-subtitle">Monte visualizações interativas com dados dos pacientes ou respostas de formulários.</p>
     </div>
     <a asp-action="Index" class="btn-link"
        data-open-tab data-close-current-tab data-tab="Gráficos" data-url='@Url.Action("Index", "Graficos")'>Voltar</a>
 </section>
 
 <form action="@Url.Action("Create", "Graficos")" method="post" class="form-card" novalidate
+      data-grafico-form
+      data-preview-url='@Url.Action("Preview", "Graficos")'
+      data-campos-url='@Url.Action("CamposFormulario", "Graficos")'
       data-success-tab="Gráficos"
       data-success-url='@Url.Action("Index", "Graficos")'
       data-close-on-success="true">
     @Html.AntiForgeryToken()
-    <div class="form-grid">
-        <div class="form-group">
-            @Html.LabelFor(m => m.Descricao)
-            @Html.TextBoxFor(m => m.Descricao, new { @class = "form-control", placeholder = "Ex.: Evolução da pressão arterial" })
-            @Html.ValidationMessageFor(m => m.Descricao, "", new { @class = "field-validation-error" })
-        </div>
-    </div>
+
+    @Html.Partial("_FormFields", Model)
 
     <div class="form-actions">
         <button type="submit" class="btn-primary">Salvar gráfico</button>
@@ -31,3 +29,13 @@
            data-open-tab data-close-current-tab data-tab="Gráficos" data-url='@Url.Action("Index", "Graficos")'>Cancelar</a>
     </div>
 </form>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.Graficos) {
+                window.Graficos.initializeForms(document);
+            }
+        });
+    </script>
+}

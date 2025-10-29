@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
@@ -38,6 +40,22 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            var selecionados = model.GraficosSelecionados.Distinct().ToHashSet();
+            var graficos = await _graficoAppService.AsQueryable().ToListAsync();
+
+            foreach (var grafico in graficos)
+            {
+                var exibir = selecionados.Contains(grafico.GraficoId);
+
+                if (grafico.ExibirNoPortal != exibir)
+                {
+                    grafico.ExibirNoPortal = exibir;
+                    _graficoAppService.Update(grafico);
+                }
+            }
+
+            model.GraficosSelecionados = selecionados.ToList();
+
             TempData["Sucesso"] = "Preferências do dashboard atualizadas.";
             return View(model);
         }
@@ -71,7 +89,10 @@ namespace GestaoSaudeIdosos.Web.Controllers
                         Descricao = g.Descricao
                     })
                     .ToList(),
-                GraficosSelecionados = graficos.Select(g => g.GraficoId).ToList()
+                GraficosSelecionados = graficos
+                    .Where(g => g.ExibirNoPortal)
+                    .Select(g => g.GraficoId)
+                    .ToList()
             };
         }
     }

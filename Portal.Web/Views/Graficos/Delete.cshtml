@@ -1,4 +1,6 @@
 @model GestaoSaudeIdosos.Web.ViewModels.GraficoDetalheViewModel
+@using GestaoSaudeIdosos.Domain.Common.Helpers
+@using GestaoSaudeIdosos.Web.Extensions
 @{
     ViewData["Title"] = "Excluir gráfico";
 }
@@ -15,6 +17,38 @@
 <div class="alert danger">
     Confirma a exclusão do gráfico <strong>@Model.Descricao</strong>? A remoção é apenas visual nesta demonstração.
 </div>
+
+<article class="detail-card">
+    <h2>Resumo do gráfico</h2>
+    <dl class="detail-list">
+        <div class="detail-list__item">
+            <dt>Origem</dt>
+            <dd>@Model.Origem.GetDisplayName()</dd>
+        </div>
+        <div class="detail-list__item">
+            <dt>Tipo</dt>
+            <dd>@Model.Tipo.GetDisplayName()</dd>
+        </div>
+        @if (Model.Origem == Enums.TipoOrigemGrafico.Paciente && !string.IsNullOrWhiteSpace(Model.CampoDescricao))
+        {
+            <div class="detail-list__item">
+                <dt>Campo do paciente</dt>
+                <dd>@Model.CampoDescricao</dd>
+            </div>
+        }
+        @if (Model.Origem == Enums.TipoOrigemGrafico.Formulario)
+        {
+            <div class="detail-list__item">
+                <dt>Formulário</dt>
+                <dd>@(string.IsNullOrWhiteSpace(Model.FormularioDescricao) ? "Formulário selecionado" : Model.FormularioDescricao)</dd>
+            </div>
+            <div class="detail-list__item">
+                <dt>Campo</dt>
+                <dd>@(string.IsNullOrWhiteSpace(Model.CampoDescricao) ? "Campo selecionado" : Model.CampoDescricao)</dd>
+            </div>
+        }
+    </dl>
+</article>
 
 <form action='@Url.Action("Delete", "Graficos")' method="post"
       data-success-tab="Gráficos"

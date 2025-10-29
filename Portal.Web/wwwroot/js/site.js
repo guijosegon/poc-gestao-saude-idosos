@@ -382,6 +382,10 @@ function atualizarConteudoDaAba(conteudo, documento, mensagensTempData) {
     aplicarValidacao(conteudo);
     inicializarMultiSelects(conteudo);
     inicializarGerenciadoresDeFoto(conteudo);
+    if (window.Graficos) {
+        window.Graficos.renderChartsIn(conteudo);
+        window.Graficos.initializeForms(conteudo);
+    }
 }
 
 let menuIsOpen = false;
@@ -798,6 +802,10 @@ document.addEventListener('DOMContentLoaded', () => {
     configurarResetDeFiltros();
     configurarAlertasGlobais();
     configurarSelecaoDeFormularios();
+    if (window.Graficos) {
+        window.Graficos.renderChartsIn(document);
+        window.Graficos.initializeForms(document);
+    }
 });
 
 function configurarAtalhosDeAbas() {
