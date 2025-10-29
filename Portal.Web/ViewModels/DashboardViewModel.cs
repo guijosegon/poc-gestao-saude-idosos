@@ -15,5 +15,6 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public IEnumerable<RelatorioPacienteViewModel> Relatorios { get; set; } = Enumerable.Empty<RelatorioPacienteViewModel>();
         public IEnumerable<PacienteListItemViewModel> PacientesRecentes { get; set; } = Enumerable.Empty<PacienteListItemViewModel>();
         public IEnumerable<UsuarioListItemViewModel> UsuariosRecentes { get; set; } = Enumerable.Empty<UsuarioListItemViewModel>();
+        public IEnumerable<GraficoVisualizacaoViewModel> Graficos { get; set; } = Enumerable.Empty<GraficoVisualizacaoViewModel>();
     }
 }

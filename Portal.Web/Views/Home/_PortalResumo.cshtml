@@ -1,5 +1,7 @@
 @using System;
 @using System.Linq;
+@using GestaoSaudeIdosos.Domain.Common.Helpers;
+@using GestaoSaudeIdosos.Web.Extensions;
 @model GestaoSaudeIdosos.Web.ViewModels.DashboardViewModel
 
 @{
@@ -55,13 +57,39 @@
 
 <section class="content-block">
     <header class="content-block__header">
-        <h3>Indicadores gráficos</h3>
-        <span>Os gráficos em tempo real serão carregados automaticamente via Google Charts.</span>
+        <h3>Indicadores visuais</h3>
+        <span>Gráficos configurados no dashboard do cliente.</span>
     </header>
-    <div id="portal-dashboard-charts" class="content-block__charts" data-gcharts-root>
-        <span class="placeholder-icon" aria-hidden="true">📊</span>
-        <p>Quando configurado pelo cliente, os gráficos do Google Charts serão renderizados neste espaço.</p>
-    </div>
+
+    @if (!Model.Graficos.Any())
+    {
+        <div class="content-block__charts" data-grafico-placeholder>
+            <span class="placeholder-icon" aria-hidden="true">📊</span>
+            <p>Quando configurado pelo cliente, os gráficos do Google Charts serão renderizados neste espaço.</p>
+        </div>
+    }
+    else
+    {
+        <div class="content-block__charts" data-grafico-portal>
+            @foreach (var grafico in Model.Graficos)
+            {
+                <article class="chart-card" data-grafico-element
+                         data-grafico-id="@grafico.GraficoId"
+                         data-grafico-tipo="@((int)grafico.Tipo)"
+                         data-grafico-origem="@((int)grafico.Origem)"
+                         data-grafico-descricao="@grafico.Descricao"
+                         data-grafico-dados-url='@Url.Action("Dados", "Graficos", new { id = grafico.GraficoId })'>
+                    <header class="chart-card__header">
+                        <h4>@grafico.Descricao</h4>
+                        <span class="badge">@grafico.Origem.GetDisplayName()</span>
+                    </header>
+                    <div class="chart-card__body">
+                        <p class="chart-placeholder">Carregando visualização...</p>
+                    </div>
+                </article>
+            }
+        </div>
+    }
 </section>
 
 <section class="content-block">
@@ -115,14 +143,14 @@
         else
         {
             <ul class="list list-divided">
-            @foreach (var form in Model.FormulariosRecentes)
-            {
-                <li>
-                    <strong>@form.Descricao</strong>
-                    <span>@form.CamposTotais campo(s) • @form.PacientesAssociados paciente(s)</span>
-                    <small>Criado em @form.DataCadastro.ToString("dd/MM/yyyy")</small>
-                </li>
-            }
+                @foreach (var form in Model.FormulariosRecentes)
+                {
+                    <li>
+                        <strong>@form.Descricao</strong>
+                        <span>@form.CamposTotais campo(s) • @form.PacientesAssociados paciente(s)</span>
+                        <small>Criado em @form.DataCadastro.ToString("dd/MM/yyyy")</small>
+                    </li>
+                }
             </ul>
         }
     </section>
@@ -140,72 +168,24 @@
         else
         {
             <ul class="alert-list">
-            @foreach (var relatorio in relatoriosAltoRisco)
-            {
-                <li class="alert-card">
-                    <div class="alert-card__title">
-                        <strong>@relatorio.PacienteNome</strong>
-                        <span class="status-badge danger">@relatorio.NivelRisco</span>
-                    </div>
-                    <div class="alert-card__field">
-                        <span class="field-label">Resumo</span>
-                        <p>@relatorio.Resumo</p>
-                    </div>
-                    <div class="alert-card__field">
-                        <span class="field-label">Recomendação</span>
-                        <p class="field-recommendation">@relatorio.Sugestao</p>
-                    </div>
-                </li>
-            }
+                @foreach (var relatorio in relatoriosAltoRisco)
+                {
+                    <li class="alert-card">
+                        <div class="alert-card__title">
+                            <strong>@relatorio.PacienteNome</strong>
+                            <span class="status-badge danger">@relatorio.NivelRisco</span>
+                        </div>
+                        <div class="alert-card__field">
+                            <span class="field-label">Resumo</span>
+                            <p>@relatorio.Resumo</p>
+                        </div>
+                        <div class="alert-card__field">
+                            <span class="field-label">Recomendação</span>
+                            <p class="field-recommendation">@relatorio.Sugestao</p>
+                        </div>
+                    </li>
+                }
             </ul>
         }
-    </section>
-
-    <section class="content-block">
-        <header class="content-block__header">
-            <h3>Novos cadastros</h3>
-        </header>
-
-        <div class="new-records">
-            <div class="new-records__column">
-                <h4>Pacientes recentes</h4>
-                @if (!pacientesRecentes.Any())
-                {
-                    <p class="empty-state">Sem novos pacientes cadastrados.</p>
-                }
-                else
-                {
-                    <ul class="list list-divided compact">
-                    @foreach (var paciente in pacientesRecentes)
-                    {
-                        <li>
-                            <strong>@paciente.NomeCompleto</strong>
-                            <small>Idade @paciente.Idade anos</small>
-                        </li>
-                    }
-                    </ul>
-                }
-            </div>
-            <div class="new-records__divider"></div>
-            <div class="new-records__column">
-                <h4>Usuários recentes</h4>
-                @if (!usuariosRecentes.Any())
-                {
-                    <p class="empty-state">Sem novos usuários cadastrados.</p>
-                }
-                else
-                {
-                    <ul class="list list-divided compact">
-                    @foreach (var usuario in usuariosRecentes)
-                    {
-                        <li>
-                            <strong>@usuario.NomeCompleto</strong>
-                            <small>@usuario.Email</small>
-                        </li>
-                    }
-                    </ul>
-                }
-            </div>
-        </div>
     </section>
 </div>

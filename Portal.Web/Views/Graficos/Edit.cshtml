@@ -6,26 +6,24 @@
 <section class="page-header">
     <div>
         <h1>Editar gráfico</h1>
-        <p class="page-subtitle">Ajuste dados de origem, campos analisados e configurações visuais.</p>
+        <p class="page-subtitle">Ajuste os dados de origem, campos analisados e aparência da visualização.</p>
     </div>
     <a asp-action="Details" asp-route-id="@Model.GraficoId" class="btn-link"
        data-open-tab data-tab="Gráficos"
        data-url='@Url.Action("Details", "Graficos", new { id = Model.GraficoId })'>Ver detalhes</a>
 </section>
 
-<form action="@Url.Action("Create", "Graficos")" method="post" class="form-card" novalidate
+<form action="@Url.Action("Edit", "Graficos", new { id = Model.GraficoId })" method="post" class="form-card" novalidate
+      data-grafico-form
+      data-preview-url='@Url.Action("Preview", "Graficos")'
+      data-campos-url='@Url.Action("CamposFormulario", "Graficos")'
       data-success-tab="Gráficos"
       data-success-url='@Url.Action("Index", "Graficos")'
       data-close-on-success="true">
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.GraficoId)
-    <div class="form-grid">
-        <div class="form-group">
-            @Html.LabelFor(m => m.Descricao)
-            @Html.TextBoxFor(m => m.Descricao, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Descricao, "", new { @class = "field-validation-error" })
-        </div>
-    </div>
+
+    @Html.Partial("_FormFields", Model)
 
     <div class="form-actions">
         <button type="submit" class="btn-primary">Salvar alterações</button>
@@ -33,3 +31,13 @@
            data-open-tab data-close-current-tab data-tab="Gráficos" data-url='@Url.Action("Index", "Graficos")'>Cancelar</a>
     </div>
 </form>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.Graficos) {
+                window.Graficos.initializeForms(document);
+            }
+        });
+    </script>
+}

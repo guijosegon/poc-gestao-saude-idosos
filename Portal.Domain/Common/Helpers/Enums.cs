@@ -129,5 +129,47 @@ namespace GestaoSaudeIdosos.Domain.Common.Helpers
             [Display(Name = "Outro")]
             Outro = 99
         }
+
+        public enum TipoOrigemGrafico
+        {
+            [Display(Name = "Dados de pacientes")]
+            Paciente = 1,
+
+            [Display(Name = "Resultados de formulários")]
+            Formulario = 2
+        }
+
+        public enum TipoGrafico
+        {
+            [Display(Name = "Gráfico de pizza")]
+            Pizza = 1,
+
+            [Display(Name = "Gráfico de colunas")]
+            Coluna = 2,
+
+            [Display(Name = "Gráfico de barras")]
+            Barra = 3,
+
+            [Display(Name = "Gráfico de linha")]
+            Linha = 4
+        }
+
+        public enum GraficoPacienteCampo
+        {
+            [Display(Name = "Sexo do paciente")]
+            Sexo = 1,
+
+            [Display(Name = "Risco de queda")]
+            RiscoQueda = 2,
+
+            [Display(Name = "Mobilidade")]
+            Mobilidade = 3,
+
+            [Display(Name = "Status de acompanhamento")]
+            StatusAtivo = 4,
+
+            [Display(Name = "Faixa etária")]
+            FaixaEtaria = 5
+        }
     }
 }

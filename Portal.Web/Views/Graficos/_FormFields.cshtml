@@ -1,0 +1,90 @@
+@model GestaoSaudeIdosos.Web.ViewModels.GraficoFormViewModel
+@using GestaoSaudeIdosos.Domain.Common.Helpers
+
+<div class="form-grid">
+    <div class="form-group">
+        @Html.LabelFor(m => m.Descricao)
+        @Html.TextBoxFor(m => m.Descricao, new { @class = "form-control", placeholder = "Ex.: Distribuição por sexo" })
+        @Html.ValidationMessageFor(m => m.Descricao, "", new { @class = "field-validation-error" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Origem)
+        @Html.DropDownListFor(m => m.Origem, Model.Origens, "Selecione a origem", new { @class = "form-control", data_grafico_origem = "true" })
+        @Html.ValidationMessageFor(m => m.Origem, "", new { @class = "field-validation-error" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Tipo)
+        @Html.DropDownListFor(m => m.Tipo, Model.TiposGrafico, "Selecione o tipo", new { @class = "form-control", data_grafico_tipo = "true" })
+        @Html.ValidationMessageFor(m => m.Tipo, "", new { @class = "field-validation-error" })
+    </div>
+</div>
+
+<div class="form-grid">
+    <div class="form-group">
+        <label class="checkbox">
+            @Html.CheckBoxFor(m => m.ExibirNoPortal)
+            <span>@Html.DisplayNameFor(m => m.ExibirNoPortal)</span>
+        </label>
+        <span class="help-text">Ao marcar, o gráfico será exibido no Portal para visão rápida.</span>
+    </div>
+</div>
+
+<div class="form-section" data-grafico-origem-section="@Enums.TipoOrigemGrafico.Paciente" @(Model.Origem == Enums.TipoOrigemGrafico.Paciente ? string.Empty : "hidden")>
+    <header class="form-section__header">
+        <h3>Configuração dos dados de pacientes</h3>
+        <span>Escolha qual característica servirá como base para agrupamento.</span>
+    </header>
+    <div class="form-group">
+        @Html.LabelFor(m => m.PacienteCampoCategoria)
+        @Html.DropDownListFor(m => m.PacienteCampoCategoria, Model.CamposPaciente, "Selecione o campo", new { @class = "form-control", data_grafico_campo_paciente = "true" })
+        @Html.ValidationMessageFor(m => m.PacienteCampoCategoria, "", new { @class = "field-validation-error" })
+    </div>
+</div>
+
+<div class="form-section" data-grafico-origem-section="@Enums.TipoOrigemGrafico.Formulario" @(Model.Origem == Enums.TipoOrigemGrafico.Formulario ? string.Empty : "hidden")>
+    <header class="form-section__header">
+        <h3>Configuração dos dados de formulários</h3>
+        <span>Selecione o formulário e o campo que fornecerá os valores.</span>
+    </header>
+    <div class="form-grid">
+        <div class="form-group">
+            @Html.LabelFor(m => m.FormularioId)
+            @Html.DropDownListFor(m => m.FormularioId, Model.Formularios, "Selecione o formulário", new { @class = "form-control", data_grafico_formulario = "true" })
+            @Html.ValidationMessageFor(m => m.FormularioId, "", new { @class = "field-validation-error" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.FormularioCampoId)
+            @Html.DropDownListFor(m => m.FormularioCampoId, Model.CamposFormulario, "Selecione o campo", new { @class = "form-control", data_grafico_campo_formulario = "true" })
+            @Html.ValidationMessageFor(m => m.FormularioCampoId, "", new { @class = "field-validation-error" })
+        </div>
+    </div>
+</div>
+
+<div class="form-grid">
+    <div class="form-group">
+        @Html.LabelFor(m => m.TituloEixoHorizontal)
+        @Html.TextBoxFor(m => m.TituloEixoHorizontal, new { @class = "form-control", placeholder = "Eixo horizontal" })
+        @Html.ValidationMessageFor(m => m.TituloEixoHorizontal, "", new { @class = "field-validation-error" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.TituloEixoVertical)
+        @Html.TextBoxFor(m => m.TituloEixoVertical, new { @class = "form-control", placeholder = "Eixo vertical" })
+        @Html.ValidationMessageFor(m => m.TituloEixoVertical, "", new { @class = "field-validation-error" })
+    </div>
+    <div class="form-group form-group--checkbox">
+        <label class="checkbox">
+            @Html.CheckBoxFor(m => m.MostrarLegenda, new { data_grafico_legenda = "true" })
+            <span>@Html.DisplayNameFor(m => m.MostrarLegenda)</span>
+        </label>
+    </div>
+</div>
+
+<div class="preview-toolbar">
+    <button type="button" class="btn-secondary" data-grafico-preview>
+        Pré-visualizar gráfico
+    </button>
+</div>
+
+<div class="chart-preview" data-grafico-preview-area>
+    <p class="empty-state">Configure os dados e clique em "Pré-visualizar" para gerar o gráfico.</p>
+</div>

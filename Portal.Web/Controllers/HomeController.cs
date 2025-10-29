@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using GestaoSaudeIdosos.Application.Interfaces;
 using GestaoSaudeIdosos.Domain.Common.Helpers;
+using GestaoSaudeIdosos.Domain.Entities;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,18 +16,28 @@ namespace GestaoSaudeIdosos.Web.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        private static readonly JsonSerializerOptions GraficoJsonOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            Converters = { new JsonStringEnumConverter() }
+        };
+
         private readonly IUsuarioAppService _usuarioAppService;
         private readonly IPacienteAppService _pacienteAppService;
         private readonly IFormularioAppService _formularioAppService;
+        private readonly IGraficoAppService _graficoAppService;
 
         public HomeController(
             IUsuarioAppService usuarioAppService,
             IPacienteAppService pacienteAppService,
-            IFormularioAppService formularioAppService)
+            IFormularioAppService formularioAppService,
+            IGraficoAppService graficoAppService)
         {
             _usuarioAppService = usuarioAppService;
             _pacienteAppService = pacienteAppService;
             _formularioAppService = formularioAppService;
+            _graficoAppService = graficoAppService;
         }
 
         public async Task<IActionResult> Index()
@@ -44,6 +58,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
             var usuarios = await _usuarioAppService.AsQueryable().ToListAsync();
             var pacientes = await _pacienteAppService.AsQueryable().ToListAsync();
             var formularios = await _formularioAppService.AsQueryable().ToListAsync();
+            var graficos = await _graficoAppService.AsQueryable().ToListAsync();
 
             var usuarioAtualEmail = User.Identity?.Name;
             var usuarioAtual = !string.IsNullOrWhiteSpace(usuarioAtualEmail)
@@ -106,6 +121,11 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
             var alertasAtivos = relatorios.Count(r => !string.Equals(r.NivelRisco, "Baixo", StringComparison.OrdinalIgnoreCase));
 
+            var graficosPortal = graficos
+                .Where(g => g.ExibirNoPortal)
+                .Select(CriarGraficoPortal)
+                .ToList();
+
             return new DashboardViewModel
             {
                 UsuarioNome = !string.IsNullOrWhiteSpace(usuarioAtual?.NomeCompleto)
@@ -119,7 +139,8 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 UsuariosRecentes = usuariosRecentes,
                 PacientesRecentes = pacientesRecentes,
                 FormulariosRecentes = formulariosRecentes,
-                Relatorios = relatorios
+                Relatorios = relatorios,
+                Graficos = graficosPortal
             };
         }
 
@@ -232,6 +253,35 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 }
 
                 return false;
+            }
+        }
+
+        private static GraficoVisualizacaoViewModel CriarGraficoPortal(Grafico grafico)
+        {
+            var configuracao = DeserializarConfiguracao(grafico.Configuracao);
+            return new GraficoVisualizacaoViewModel
+            {
+                GraficoId = grafico.GraficoId,
+                Descricao = grafico.Descricao,
+                Origem = grafico.Origem,
+                Tipo = grafico.Tipo,
+                Configuracao = configuracao
+            };
+        }
+
+        private static GraficoConfiguracaoModel DeserializarConfiguracao(string? configuracao)
+        {
+            if (string.IsNullOrWhiteSpace(configuracao))
+                return new GraficoConfiguracaoModel();
+
+            try
+            {
+                return JsonSerializer.Deserialize<GraficoConfiguracaoModel>(configuracao, GraficoJsonOptions)
+                    ?? new GraficoConfiguracaoModel();
+            }
+            catch
+            {
+                return new GraficoConfiguracaoModel();
             }
         }
     }

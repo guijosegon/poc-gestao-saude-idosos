@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-
 namespace GestaoSaudeIdosos.Web.ViewModels
 {
-    public class GraficoDetalheViewModel
+    public class GraficoDetalheViewModel : GraficoVisualizacaoViewModel
     {
-        public int GraficoId { get; set; }
-        public string Descricao { get; set; } = string.Empty;
+        public string? CampoDescricao { get; set; }
+        public string? FormularioDescricao { get; set; }
     }
 }
