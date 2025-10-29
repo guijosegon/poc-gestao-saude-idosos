@@ -107,8 +107,7 @@
             {
                 <li>
                     <strong>@formulario.Formulario</strong>
-                    <span>@formulario.DataAplicacao.ToString("dd/MM/yyyy") • @formulario.ResponsavelAplicacao</span>
-                    <small>@formulario.Destaque</small>
+                        <span>@formulario.DataAplicacao.ToString("dd/MM/yyyy") • @(string.IsNullOrWhiteSpace(formulario.ResponsavelAplicacao) ? "Aplicador não informado" : formulario.ResponsavelAplicacao)</span>
                     <button type="button"
                             class="btn-link"
                             data-open-tab

@@ -75,10 +75,6 @@
             <li>
                 <strong>@(string.IsNullOrWhiteSpace(aplicacao.Paciente) ? "Paciente não identificado" : aplicacao.Paciente)</strong>
                 <span>@aplicacao.DataAplicacao.ToLocalTime().ToString("dd/MM/yyyy HH:mm") • @(string.IsNullOrWhiteSpace(aplicacao.Responsavel) ? "Aplicador não informado" : aplicacao.Responsavel)</span>
-                @if (!string.IsNullOrWhiteSpace(aplicacao.Destaque))
-                {
-                    <small>@aplicacao.Destaque</small>
-                }
                 <button type="button"
                         class="btn-link"
                         data-open-tab

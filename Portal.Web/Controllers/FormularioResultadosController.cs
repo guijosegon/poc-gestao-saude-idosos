@@ -34,6 +34,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         public async Task<IActionResult> SelecionarPaciente(int formularioId)
         {
             var formulario = await _formularioAppService.AsQueryable().FirstOrDefaultAsync(f => f.FormularioId == formularioId);
+
             if (formulario is null)
                 return NotFound();
 
@@ -145,7 +146,10 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return NotFound();
 
             if (formulario.Campos is null || !formulario.Campos.Any())
+            {
+                TempData["Erro"] = "Este formulário ainda não possui campos configurados.";
                 return await ReexibirAplicacaoAsync(model, "Este formulário ainda não possui campos configurados.");
+            }
 
             var campos = formulario.Campos.ToDictionary(fc => fc.FormularioCampoId);
             var valores = new List<FormularioResultadoValor>();
@@ -182,7 +186,10 @@ namespace GestaoSaudeIdosos.Web.Controllers
             }
 
             if (!ModelState.IsValid)
+            {
+                TempData["Erro"] = "Não foi possível aplicar o formulário. Corrija os erros destacados.";
                 return await ReexibirAplicacaoAsync(model, "Não foi possível aplicar o formulário. Corrija os erros destacados.");
+            }
 
             var usuarioAplicacaoId = await ObterUsuarioAtualAsync();
 

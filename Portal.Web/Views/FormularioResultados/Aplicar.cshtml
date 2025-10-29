@@ -56,7 +56,7 @@
                 <input type="hidden" name="Campos[@i].FormularioCampoId" value="@campo.FormularioCampoId" />
                 <input type="hidden" name="Campos[@i].CampoId" value="@campo.CampoId" />
                 <input type="hidden" name="Campos[@i].Tipo" value="@campo.Tipo" />
-                <input type="hidden" name="Campos[@i].Obrigatorio" value="@campo.Obrigatorio" />
+                <input type="hidden" name="Campos[@i].Obrigatorio" value="@(campo.Obrigatorio ? "true" : "false")" />
 
                 <label class="form-label" for="campo-@campo.FormularioCampoId">
                     @campo.CampoDescricao
