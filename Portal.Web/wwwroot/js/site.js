@@ -802,28 +802,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function configurarAtalhosDeAbas() {
     document.addEventListener("click", (event) => {
-        const alvo = event.target.closest("[data-open-tab]");
+        const alvo = event.target.closest("[data-open-tab],[data-close-current-tab]");
         if (!alvo) {
             return;
         }
 
-        const nome = alvo.getAttribute("data-tab");
-        const url = alvo.getAttribute("data-url") || alvo.getAttribute("href");
+        const deveFecharAbaAtual = alvo.hasAttribute("data-close-current-tab");
+        const abaAtual = deveFecharAbaAtual ? obterNomeAbaAtual(alvo) : null;
 
-        if (!nome || !url) {
+        if (alvo.hasAttribute("data-open-tab")) {
+            const nome = alvo.getAttribute("data-tab");
+            const url = alvo.getAttribute("data-url") || alvo.getAttribute("href");
+
+            if (!nome || !url) {
+                if (deveFecharAbaAtual && abaAtual) {
+                    event.preventDefault();
+                    fecharAba(abaAtual);
+                }
+
+                return;
+            }
+
+            event.preventDefault();
+
+            if (deveFecharAbaAtual && abaAtual) {
+                fecharAba(abaAtual);
+            }
+
+            abrirAba(nome, url);
             return;
         }
 
-        event.preventDefault();
-
-        if (alvo.hasAttribute("data-close-current-tab")) {
-            const abaAtual = obterNomeAbaAtual(alvo);
-            if (abaAtual) {
-                fecharAba(abaAtual);
-            }
+        if (deveFecharAbaAtual && abaAtual) {
+            event.preventDefault();
+            fecharAba(abaAtual);
         }
-
-        abrirAba(nome, url);
     });
 }
 
