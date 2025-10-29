@@ -169,7 +169,10 @@ namespace GestaoSaudeIdosos.Domain.Common.Helpers
             StatusAtivo = 4,
 
             [Display(Name = "Faixa etária")]
-            FaixaEtaria = 5
+            FaixaEtaria = 5,
+
+            [Display(Name = "Responsável")]
+            Responsavel = 6
         }
     }
 }
