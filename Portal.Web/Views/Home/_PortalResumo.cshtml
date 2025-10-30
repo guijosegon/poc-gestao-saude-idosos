@@ -73,17 +73,17 @@
         <div class="content-block__charts" data-grafico-portal>
             @foreach (var grafico in Model.Graficos)
             {
-                <article class="chart-card" data-grafico-element
+                <article class="chart-card">
+                    <header class="chart-card__header">
+                        <h4>@grafico.Descricao</h4>
+                        <span class="badge">@grafico.Origem.GetDisplayName()</span>
+                    </header>
+                    <div class="chart-card__body" data-grafico-element
                          data-grafico-id="@grafico.GraficoId"
                          data-grafico-tipo="@((int)grafico.Tipo)"
                          data-grafico-origem="@((int)grafico.Origem)"
                          data-grafico-descricao="@grafico.Descricao"
                          data-grafico-dados-url='@Url.Action("Dados", "Graficos", new { id = grafico.GraficoId })'>
-                    <header class="chart-card__header">
-                        <h4>@grafico.Descricao</h4>
-                        <span class="badge">@grafico.Origem.GetDisplayName()</span>
-                    </header>
-                    <div class="chart-card__body">
                         <p class="chart-placeholder">Carregando visualização...</p>
                     </div>
                 </article>
