@@ -715,13 +715,14 @@ namespace GestaoSaudeIdosos.Web.Controllers
             {
                 ["title"] = titulo,
                 ["legend"] = new { position = configuracao.MostrarLegenda ? "right" : "none" },
-                ["chartArea"] = new { width = "80%", height = "70%" }
+                ["chartArea"] = new { width = "88%", height = "88%" }
             };
 
             switch (tipo)
             {
                 case Enums.TipoGrafico.Pizza:
                     opcoes["pieHole"] = 0.25;
+                    opcoes["chartArea"] = new { width = "92%", height = "92%" };
                     break;
                 case Enums.TipoGrafico.Barra:
                     opcoes["bars"] = "horizontal";
@@ -733,6 +734,28 @@ namespace GestaoSaudeIdosos.Web.Controllers
                     opcoes["legend"] = new { position = configuracao.MostrarLegenda ? "bottom" : "none" };
                     opcoes["hAxis"] = new { title = eixoHorizontal };
                     opcoes["vAxis"] = new { title = eixoVertical };
+                    break;
+                case Enums.TipoGrafico.Area:
+                    opcoes["legend"] = new { position = configuracao.MostrarLegenda ? "bottom" : "none" };
+                    opcoes["hAxis"] = new { title = eixoHorizontal };
+                    opcoes["vAxis"] = new { title = eixoVertical };
+                    opcoes["areaOpacity"] = 0.3;
+                    break;
+                case Enums.TipoGrafico.AreaEmDegraus:
+                    opcoes["legend"] = new { position = configuracao.MostrarLegenda ? "bottom" : "none" };
+                    opcoes["hAxis"] = new { title = eixoHorizontal };
+                    opcoes["vAxis"] = new { title = eixoVertical };
+                    opcoes["isStacked"] = true;
+                    break;
+                case Enums.TipoGrafico.Combinado:
+                    opcoes["legend"] = new { position = configuracao.MostrarLegenda ? "bottom" : "none" };
+                    opcoes["hAxis"] = new { title = eixoHorizontal };
+                    opcoes["vAxis"] = new { title = eixoVertical };
+                    opcoes["seriesType"] = "bars";
+                    opcoes["series"] = new Dictionary<int, object>
+                    {
+                        [0] = new { type = "line", curveType = "function" }
+                    };
                     break;
                 default:
                     opcoes["hAxis"] = new { title = eixoHorizontal };

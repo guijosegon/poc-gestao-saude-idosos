@@ -54,6 +54,12 @@
                 return new window.google.visualization.BarChart(element);
             case 4:
                 return new window.google.visualization.LineChart(element);
+            case 5:
+                return new window.google.visualization.AreaChart(element);
+            case 6:
+                return new window.google.visualization.SteppedAreaChart(element);
+            case 7:
+                return new window.google.visualization.ComboChart(element);
             default:
                 return new window.google.visualization.ColumnChart(element);
         }
