@@ -4,6 +4,7 @@
 
 ![Tela de Login](https://raw.githubusercontent.com/guijosegon/project-assets/master/GestaoIdosos/login.png)
 ![Painel Inicial](https://raw.githubusercontent.com/guijosegon/project-assets/master/GestaoIdosos/inicio.png)
+![Tela de Login](https://raw.githubusercontent.com/guijosegon/project-assets/master/GestaoIdosos/grafico.png)
 
 ## 📚 Sumário
 - [Visão Geral](#visão-geral)
@@ -54,13 +55,13 @@ Esta PoC entrega um ecossistema completo para acompanhamento contínuo da saúde
 
 ### Visão em Camadas
 ```
-Apresentação        → GestaoSaudeIdosos.Web (ASP.NET Core MVC) + GestaoSaudeIdosos.API (ASP.NET Core Web API)
-Aplicação           → Application/ (AppServices, validações de fluxo, políticas de senha)
-Domínio             → Portal.Domain/ (Entidades, agregados, enums, regras ricas)
-Infraestrutura      → Portal.Infra/ (EF Core, repositórios, migrations, providers externos)
-Testes Automatizados→ Portal.Tests/ (xUnit)
+Apresentação → GestaoSaudeIdosos.Web (ASP.NET Core MVC) + GestaoSaudeIdosos.API (ASP.NET Core Web API)
+Aplicação → Application/ (AppServices, validações de fluxo, políticas de senha)
+Domínio → Portal.Domain/ (Entidades, agregados, enums, regras ricas)
+Infraestrutura → Portal.Infra/ (EF Core, repositórios, migrations, providers externos)
+Testes Automatizados → Portal.Tests/ (xUnit)
 ```
-Cada camada é carregada via injeção de dependências (`AddInfraServices`, `AddApplicationServices`, `AddDomainServices`) nos projetos de apresentação, garantindo baixo acoplamento e alta testabilidade.【F:Portal.API/Program.cs†L9-L39】【F:Portal.Web/Program.cs†L13-L57】
+Cada camada é carregada via injeção de dependências (`AddInfraServices`, `AddApplicationServices`, `AddDomainServices`) nos projetos de apresentação, garantindo baixo acoplamento e alta testabilidade.
 
 ### Módulos do Repositório
 | Diretório | Descrição |
@@ -74,10 +75,10 @@ Cada camada é carregada via injeção de dependências (`AddInfraServices`, `Ad
 | `GestaoSaudeIdosos.sln` | Solution file para abrir no Visual Studio / Rider e orquestrar os projetos. |
 
 ### Fluxo de Dados
-1. O usuário autentica-se no portal web (`GestaoSaudeIdosos.Web`); cookies seguros protegem a sessão.【F:Portal.Web/Program.cs†L29-L55】
-2. As ações do portal acionam `AppServices` que orquestram regras e validam dados antes da persistência.【F:Application/AppServices/PacienteAppService.cs†L10-L58】
-3. O `AppContext` do EF Core grava e consulta dados no PostgreSQL, mantendo relacionamentos entre pacientes, formulários, usuários e gráficos.【F:Portal.Infra/Contexts/AppContext.cs†L5-L19】
-4. Integrações externas obtêm dados pela API (`GestaoSaudeIdosos.API`) autenticando-se via JWT emitido pelo `AuthController`.【F:Portal.API/Controllers/Authorize/AuthController.cs†L12-L60】
+1. O usuário autentica-se no portal web (`GestaoSaudeIdosos.Web`); cookies seguros protegem a sessão.
+2. As ações do portal acionam `AppServices` que orquestram regras e validam dados antes da persistência.
+3. O `AppContext` do EF Core grava e consulta dados no PostgreSQL, mantendo relacionamentos entre pacientes, formulários, usuários e gráficos.
+4. Integrações externas obtêm dados pela API (`GestaoSaudeIdosos.API`) autenticando-se via JWT emitido pelo `AuthController`.
 
 ---
 
@@ -85,7 +86,7 @@ Cada camada é carregada via injeção de dependências (`AddInfraServices`, `Ad
 | Entidade | Responsabilidade | Destaques |
 |----------|------------------|-----------|
 | `Usuario` | Representa profissionais e administradores do abrigo. | Guarda perfil (Administrador/Profissional), status ativo, login seguro com Argon2 e controle de criação/edição. |
-| `Paciente` | Registra dados cadastrais e clínicos do idoso. | Controla chave pública, idade, risco de queda, mobilidade, vínculo com responsável e histórico de formulários respondidos.【F:Portal.Domain/Entities/Paciente.cs†L10-L55】 |
+| `Paciente` | Registra dados cadastrais e clínicos do idoso. | Controla chave pública, idade, risco de queda, mobilidade, vínculo com responsável e histórico de formulários respondidos. |
 | `Formulario` / `FormularioCampo` | Modelam instrumentos de avaliação, perguntas e possíveis respostas. | Permitem configurar questionários reutilizáveis para diferentes áreas (nutrição, cognitivo, funcional). |
 | `FormularioResultado` | Persistem respostas de avaliações periódicas. | Conectam paciente, formulário e profissional responsável. |
 | `Grafico` | Configura dashboards (tipo, origem, exibição no portal). | Integra com Google Charts / Chart.js para monitoramento visual. |
@@ -93,12 +94,12 @@ Cada camada é carregada via injeção de dependências (`AddInfraServices`, `Ad
 ---
 
 ## Recursos Funcionais
-- **Gestão de Usuários (GestaoSaudeIdosos.API):** cadastro, edição, desativação e atribuição de perfis (Administrador ou Profissional).【F:Portal.API/Controllers/UsuarioController.cs†L12-L104】
-- **Gestão de Pacientes (GestaoSaudeIdosos.API):** CRUD completo, associação de responsável e registro de indicadores clínicos.【F:Portal.API/Controllers/PacienteController.cs†L10-L82】
+- **Gestão de Usuários (GestaoSaudeIdosos.API):** cadastro, edição, desativação e atribuição de perfis (Administrador ou Profissional).
+- **Gestão de Pacientes (GestaoSaudeIdosos.API):** CRUD completo, associação de responsável e registro de indicadores clínicos.
 - **Formulários Clínicos:** construção de formulários dinâmicos e registro de resultados periódicos para análises longitudinais.
 - **Dashboards Dinâmicos:** configuração de gráficos customizados a partir dos dados coletados, exibidos no portal web.
-- **Autenticação Segura:** JWT na API (`GestaoSaudeIdosos.API`) e cookies com expiração deslizante no portal (`GestaoSaudeIdosos.Web`), além de hashing Argon2 para senhas fortes.【F:Portal.API/Controllers/Authorize/AuthController.cs†L24-L60】【F:Application/Security/Argon2Password.cs†L5-L72】
-- **Alertas e UX:** filtros de TempData e validação antifalsificação protegem formulários e exibem mensagens amigáveis para o usuário final.【F:Portal.Web/Program.cs†L17-L45】
+- **Autenticação Segura:** JWT na API (`GestaoSaudeIdosos.API`) e cookies com expiração deslizante no portal (`GestaoSaudeIdosos.Web`), além de hashing Argon2 para senhas fortes.
+- **Alertas e UX:** filtros de TempData e validação antifalsificação protegem formulários e exibem mensagens amigáveis para o usuário final.
 
 ---
 
@@ -224,16 +225,16 @@ dotnet run
 cd Portal.Tests
 dotnet test
 ```
-- Os testes atuais validam, por exemplo, a política de senhas fortes implementada com Argon2, garantindo critérios de complexidade para novos cadastros.【F:Portal.Tests/PasswordPolicyTests.cs†L7-L56】
+- Os testes atuais validam, por exemplo, a política de senhas fortes implementada com Argon2, garantindo critérios de complexidade para novos cadastros.
 
 ---
 
 ## Boas Práticas e Segurança
-- **HTTPS obrigatório**: tanto `GestaoSaudeIdosos.Web` quanto `GestaoSaudeIdosos.API` aplicam redirecionamento HTTPS por padrão.【F:Portal.API/Program.cs†L45-L53】【F:Portal.Web/Program.cs†L47-L54】
-- **Proteção antifalsificação**: todas as ações `POST` do portal web (`GestaoSaudeIdosos.Web`) exigem tokens antiforgery automaticamente adicionados aos formulários.【F:Portal.Web/Program.cs†L21-L38】
-- **Sessões seguras**: cookies marcados como `HttpOnly` e com expiração deslizante reduzem o risco de sequestro de sessão no portal (`GestaoSaudeIdosos.Web`).【F:Portal.Web/Program.cs†L33-L45】
-- **Validação de entrada**: controllers conferem `ModelState` antes de processar dados, retornando erros claros para o front-end.【F:Portal.API/Controllers/PacienteController.cs†L38-L63】
-- **Regras de autorização**: endpoints utilizam `[Authorize]` e restrições de perfil para evitar acessos indevidos.【F:Portal.API/Controllers/UsuarioController.cs†L22-L93】
+- **HTTPS obrigatório**: tanto `GestaoSaudeIdosos.Web` quanto `GestaoSaudeIdosos.API` aplicam redirecionamento HTTPS por padrão.
+- **Proteção antifalsificação**: todas as ações `POST` do portal web (`GestaoSaudeIdosos.Web`) exigem tokens antiforgery automaticamente adicionados aos formulários.
+- **Sessões seguras**: cookies marcados como `HttpOnly` e com expiração deslizante reduzem o risco de sequestro de sessão no portal (`GestaoSaudeIdosos.Web`).
+- **Validação de entrada**: controllers conferem `ModelState` antes de processar dados, retornando erros claros para o front-end.
+- **Regras de autorização**: endpoints utilizam `[Authorize]` e restrições de perfil para evitar acessos indevidos.
 
 ---
 
