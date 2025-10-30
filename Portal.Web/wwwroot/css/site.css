@@ -907,17 +907,26 @@ button.btn-link {
     border: 1px dashed rgba(1, 146, 67, 0.2);
     border-radius: 12px;
     padding: 1rem;
-    min-height: 220px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgba(1, 146, 67, 0.04);
+    width: min(100%, 320px);
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .chart-preview .chart-placeholder,
 .chart-preview .chart-error,
 .chart-preview .chart-empty {
     width: 100%;
+}
+
+.chart-preview > div,
+.chart-preview > svg {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .form-grid {
@@ -1175,7 +1184,7 @@ button.btn-link {
 }
 
 .summary-card__chart {
-    min-height: 220px;
+    min-height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1183,7 +1192,16 @@ button.btn-link {
     border-radius: 12px;
     border: 1px dashed rgba(1, 146, 67, 0.18);
     background: rgba(1, 146, 67, 0.04);
-    width: 100%;
+    width: min(100%, 260px);
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+[data-grafico-element] > div,
+[data-grafico-element] > svg {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .chart-placeholder,
@@ -1693,6 +1711,7 @@ button.btn-link {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 1rem;
+    justify-items: center;
 }
 
 .chart-card {
@@ -1713,12 +1732,14 @@ button.btn-link {
 }
 
 .chart-card__body {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 200px;
-    width: 100%;
+    width: min(100%, 260px);
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .content-block__charts[data-grafico-portal] .chart-placeholder,

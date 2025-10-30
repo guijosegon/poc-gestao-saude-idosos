@@ -151,7 +151,16 @@ namespace GestaoSaudeIdosos.Domain.Common.Helpers
             Barra = 3,
 
             [Display(Name = "Gráfico de linha")]
-            Linha = 4
+            Linha = 4,
+
+            [Display(Name = "Gráfico de área")]
+            Area = 5,
+
+            [Display(Name = "Gráfico de área em degraus")]
+            AreaEmDegraus = 6,
+
+            [Display(Name = "Gráfico combinado")]
+            Combinado = 7
         }
 
         public enum GraficoPacienteCampo
