@@ -10,7 +10,6 @@ namespace GestaoSaudeIdosos.Domain.Entities
             DataCadastro = DateTime.UtcNow;
             Ativo = true;
             Campos = new List<FormularioCampo>();
-            Pacientes = new List<Paciente>();
             Resultados = new List<FormularioResultado>();
         }
 
@@ -31,7 +30,6 @@ namespace GestaoSaudeIdosos.Domain.Entities
         public Usuario? Usuario { get; set; }
 
         public ICollection<FormularioCampo> Campos { get; set; }
-        public ICollection<Paciente> Pacientes { get; set; }
         public ICollection<FormularioResultado> Resultados { get; set; }
     }
 }

@@ -5,7 +5,6 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         public int FormularioId { get; set; }
         public string Descricao { get; set; } = string.Empty;
         public int CamposTotais { get; set; }
-        public int PacientesAssociados { get; set; }
         public DateTime DataCadastro { get; set; }
     }
 }

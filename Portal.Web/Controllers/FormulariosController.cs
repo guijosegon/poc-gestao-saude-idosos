@@ -32,7 +32,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
         {
             filtro ??= new FormularioFiltroViewModel();
 
-            var query = _formularioAppService.AsQueryable(f => f.Campos, f => f.Pacientes);
+            var query = _formularioAppService.AsQueryable(f => f.Campos);
 
             if (!string.IsNullOrWhiteSpace(filtro.Busca))
                 query = query.Where(f => EF.Functions.ILike(f.Descricao, $"%{filtro.Busca.Trim()}%"));

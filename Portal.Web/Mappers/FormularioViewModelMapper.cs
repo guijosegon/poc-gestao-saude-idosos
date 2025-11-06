@@ -12,7 +12,6 @@ namespace GestaoSaudeIdosos.Web.Mappers
             FormularioId = formulario.FormularioId,
             Descricao = formulario.Descricao,
             QuantidadeCampos = formulario.Campos != null ? formulario.Campos.Count : 0,
-            QuantidadePacientes = formulario.Pacientes != null ? formulario.Pacientes.Count : 0,
             Ativo = formulario.Ativo,
             DataCadastro = formulario.DataCadastro
         };

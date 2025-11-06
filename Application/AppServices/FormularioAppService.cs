@@ -26,7 +26,6 @@ namespace GestaoSaudeIdosos.Application.AppServices
                 .AsQueryable(f => f.Usuario)
                 .Include(f => f.Campos)
                     .ThenInclude(fc => fc.Campo)
-                .Include(f => f.Pacientes)
                 .Include(f => f.Resultados)
                     .ThenInclude(r => r.Paciente)
                 .Include(f => f.Resultados)

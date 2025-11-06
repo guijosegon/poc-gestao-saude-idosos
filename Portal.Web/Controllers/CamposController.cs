@@ -82,7 +82,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return NotFound();
 
             var formularios = await _formularioAppService
-                .AsQueryable(a => a.Campos, a => a.Pacientes)
+                .AsQueryable(a => a.Campos)
                 .ToListAsync();
 
             var detalhes = campo.ToDetail(formularios);
@@ -176,7 +176,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return NotFound();
 
             var formularios = await _formularioAppService
-                .AsQueryable(f => f.Campos, f => f.Pacientes)
+                .AsQueryable(f => f.Campos)
                 .ToListAsync();
 
             var model = campo.ToDetail(formularios);

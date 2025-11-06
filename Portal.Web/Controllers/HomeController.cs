@@ -52,7 +52,7 @@ namespace GestaoSaudeIdosos.Web.Controllers
 
         private async Task<DashboardViewModel> CriarDashboardAsync()
         {
-            var formularios = await _formularioAppService.AsQueryable(a => a.Campos, a => a.Pacientes).ToListAsync();
+            var formularios = await _formularioAppService.AsQueryable(a => a.Campos).ToListAsync();
             var pacientes = await _pacienteAppService.AsQueryable(a => a.Responsavel).ToListAsync();
             var usuarios = await _usuarioAppService.AsQueryable().ToListAsync();
             var graficos = await _graficoAppService.AsQueryable().ToListAsync();
@@ -104,7 +104,6 @@ namespace GestaoSaudeIdosos.Web.Controllers
                     FormularioId = f.FormularioId,
                     Descricao = f.Descricao,
                     CamposTotais = f.Campos?.Count ?? 0,
-                    PacientesAssociados = f.Pacientes?.Count ?? 0,
                     DataCadastro = f.DataCadastro
                 })
                 .ToList();

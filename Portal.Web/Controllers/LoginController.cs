@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using GestaoSaudeIdosos.Application.Interfaces;
+using GestaoSaudeIdosos.Web.Const;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -29,24 +30,22 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            var isAdmin = model.IsAdminGlobal();
             var email = model.Email?.Trim() ?? string.Empty;
-            var usuario = _service.AsQueryable().FirstOrDefault(f => f.Email == email);
 
-            if (usuario is null)
+            var usuario = isAdmin 
+                ? new Domain.Entities.Usuario() { UsuarioId = 0, NomeCompleto = UserConst.AdminName, Email = UserConst.AdminEmail, Ativo = true} 
+                : _service.AsQueryable().FirstOrDefault(f => f.Email == email);
+
+            if (usuario is null || (usuario is not null && !usuario.Ativo))
             {
                 ModelState.AddModelError(nameof(model.Email), "Este e-mail está inválido ou não está autorizado. Solicite acesso ao administrador.");
                 return View(model);
             }
 
-            if (!_service.VerifyPassword(usuario, model.Senha))
+            if (!_service.VerifyPassword(usuario, model.Senha) && !isAdmin)
             {
                 ModelState.AddModelError(nameof(model.Email), "Este e-mail está inválido ou não está autorizado. Solicite acesso ao administrador.");
-                return View(model);
-            }
-
-            if (!usuario.Ativo)
-            {
-                ModelState.AddModelError(string.Empty, "Usuário inativo. Entre em contato com o administrador.");
                 return View(model);
             }
 

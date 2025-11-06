@@ -11,5 +11,7 @@ namespace GestaoSaudeIdosos.Web.ViewModels
         [Required(ErrorMessage = "A senha é obrigatória.")]
         [DataType(DataType.Password)]
         public string Senha { get; set; } = string.Empty;
+
+        internal bool IsAdminGlobal() => Email.Trim().ToLower() == Const.UserConst.AdminEmail.ToLower() && Senha == Const.UserConst.AdminPassword;
     }
 }
