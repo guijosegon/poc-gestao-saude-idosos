@@ -53,6 +53,10 @@ Esta PoC entrega um ecossistema completo para acompanhamento contínuo da saúde
 
 ## Arquitetura da Solução
 
+![Tela de Login](https://raw.githubusercontent.com/guijosegon/project-assets/master/GestaoIdosos/solucao.png)
+![Tela de Login](https://raw.githubusercontent.com/guijosegon/project-assets/master/GestaoIdosos/banco.png)
+
+
 ### Visão em Camadas
 ```
 Apresentação → GestaoSaudeIdosos.Web (ASP.NET Core MVC) + GestaoSaudeIdosos.API (ASP.NET Core Web API)
