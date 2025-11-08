@@ -1,21 +1,24 @@
 using System.Security.Claims;
 using GestaoSaudeIdosos.Application.Interfaces;
-using GestaoSaudeIdosos.Web.Const;
 using GestaoSaudeIdosos.Web.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using GestaoSaudeIdosos.Web.Options;
+using Microsoft.Extensions.Options;
 
 namespace GestaoSaudeIdosos.Web.Controllers
 {
     public class LoginController : Controller
     {
         private readonly IUsuarioAppService _service;
+        private readonly AdminUserOptions _adminUserOptions;
 
-        public LoginController(IUsuarioAppService service)
+        public LoginController(IUsuarioAppService service, IOptions<AdminUserOptions> adminUserOptions)
         {
             _service = service;
+            _adminUserOptions = adminUserOptions.Value;
         }
 
         [HttpGet]
@@ -30,11 +33,15 @@ namespace GestaoSaudeIdosos.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var isAdmin = model.IsAdminGlobal();
             var email = model.Email?.Trim() ?? string.Empty;
+            var adminEmail = _adminUserOptions.Email?.Trim() ?? string.Empty;
+            var isAdmin =
+                !string.IsNullOrWhiteSpace(adminEmail) &&
+                string.Equals(email, adminEmail, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(model.Senha, _adminUserOptions.Password);
 
-            var usuario = isAdmin 
-                ? new Domain.Entities.Usuario() { UsuarioId = 0, NomeCompleto = UserConst.AdminName, Email = UserConst.AdminEmail, Ativo = true} 
+            var usuario = isAdmin
+                ? new Domain.Entities.Usuario() { UsuarioId = 0, NomeCompleto = _adminUserOptions.Name, Email = _adminUserOptions.Email, Ativo = true }
                 : _service.AsQueryable().FirstOrDefault(f => f.Email == email);
 
             if (usuario is null || (usuario is not null && !usuario.Ativo))
