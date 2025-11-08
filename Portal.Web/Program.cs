@@ -2,6 +2,7 @@ using GestaoSaudeIdosos.Application;
 using GestaoSaudeIdosos.Domain;
 using GestaoSaudeIdosos.Infra;
 using GestaoSaudeIdosos.Web.Filters;
+using GestaoSaudeIdosos.Web.Options;
 using GestaoSaudeIdosos.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfraServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddDomainServices();
+builder.Services.Configure<AdminUserOptions>(builder.Configuration.GetSection("AdminUser"));
 
 builder.Services.AddScoped<TempDataAlertFilter>();
 builder.Services.AddScoped<IImagemStorageService, ImagemStorageService>();
