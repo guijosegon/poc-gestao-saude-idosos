@@ -34,15 +34,9 @@ namespace GestaoSaudeIdosos.Web.Controllers
                 return View(model);
 
             var email = model.Email?.Trim() ?? string.Empty;
-            var adminEmail = _adminUserOptions.Email?.Trim() ?? string.Empty;
-            var isAdmin =
-                !string.IsNullOrWhiteSpace(adminEmail) &&
-                string.Equals(email, adminEmail, StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(model.Senha, _adminUserOptions.Password);
+            var isAdmin = !string.IsNullOrWhiteSpace(_adminUserOptions.Email) && string.Equals(email, _adminUserOptions.Email, StringComparison.OrdinalIgnoreCase) && string.Equals(model.Senha, _adminUserOptions.Password);
 
-            var usuario = isAdmin
-                ? new Domain.Entities.Usuario() { UsuarioId = 0, NomeCompleto = _adminUserOptions.Name, Email = _adminUserOptions.Email, Ativo = true }
-                : _service.AsQueryable().FirstOrDefault(f => f.Email == email);
+            var usuario = isAdmin ? new Domain.Entities.Usuario() { UsuarioId = 0, NomeCompleto = _adminUserOptions.Name, Email = _adminUserOptions.Email, Ativo = true } : _service.AsQueryable().FirstOrDefault(f => f.Email == email);
 
             if (usuario is null || (usuario is not null && !usuario.Ativo))
             {
